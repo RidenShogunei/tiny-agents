@@ -30,6 +30,7 @@ class BaseAgent(ABC):
         self.role_prompt = role_prompt
         self.memory = memory
         self.backend = backend
+        self.bus = None  # injected by orchestrator
         self.message_history: List[Dict[str, Any]] = []
 
     @abstractmethod

@@ -25,13 +25,25 @@ class CoderAgent(BaseAgent):
         )
 
     async def run(self, input_data: Dict[str, Any]) -> AgentOutput:
-        """Generate code for the given task."""
+        """Generate code for the given task, optionally with review feedback."""
         task = input_data.get("task", "")
-        self.add_message("user", task)
+        feedback = input_data.get("review_feedback", "")
+        needs_fix = input_data.get("needs_fix", False)
+
+        if needs_fix and feedback:
+            prompt = (
+                f"Original task: {task}\n\n"
+                f"Review feedback:\n{feedback}\n\n"
+                "Please rewrite the code addressing ALL the issues mentioned above."
+            )
+            self.add_message("user", f"Rewrite with feedback: {feedback}")
+        else:
+            prompt = f"Write Python code for: {task}"
+            self.add_message("user", task)
 
         if self.backend is not None:
             code = self._call_llm(
-                f"Write Python code for: {task}",
+                prompt,
                 temperature=0.3,
                 max_tokens=1024,
             )
@@ -41,8 +53,8 @@ class CoderAgent(BaseAgent):
         self.add_message("assistant", code)
 
         return AgentOutput(
-            thought="Generated code using LLM",
+            thought="Generated code using LLM" + (" (rewrite with feedback)" if needs_fix else ""),
             action="respond",
-            payload={"code": code, "task": task},
+            payload={"code": code, "task": task, "feedback": feedback},
             finished=True,
         )

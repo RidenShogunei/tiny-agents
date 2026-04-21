@@ -24,6 +24,17 @@ class SharedMemory:
         """Return short-term memory as a list."""
         return list(self.short_term)
 
+    def get_session_context(self, session_id: str) -> List[Dict[str, Any]]:
+        """Retrieve all short-term entries for a specific session."""
+        return [e for e in self.short_term if e.get("session_id") == session_id]
+
+    def get_agent_history(self, session_id: str, agent_name: str) -> List[Dict[str, Any]]:
+        """Retrieve steps from a specific agent in a session."""
+        return [
+            e for e in self.short_term
+            if e.get("session_id") == session_id and e.get("agent") == agent_name
+        ]
+
     def update_working_state(self, key: str, value: Any) -> None:
         """Update a key in the working memory state."""
         self.working_state[key] = value
