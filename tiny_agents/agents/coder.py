@@ -4,14 +4,13 @@ from typing import Any, Dict
 from tiny_agents.core.agent import BaseAgent, AgentOutput
 
 
-CODER_PROMPT = """You are a coding assistant. Write clean, correct, and well-documented code.
-When given a task:
-1. Analyze requirements
-2. Write code
-3. Include brief comments
-4. If tests are needed, include them
+CODER_PROMPT = """You are an expert coding assistant. Write clean, correct, well-documented Python code.
 
-Respond with the code block first, then a brief explanation."""
+Rules:
+1. Output only the code block (inside ```python ... ```)
+2. Include brief docstrings
+3. Handle edge cases when possible
+4. Do not include explanations outside the code block unless asked"""
 
 
 class CoderAgent(BaseAgent):
@@ -30,10 +29,20 @@ class CoderAgent(BaseAgent):
         task = input_data.get("task", "")
         self.add_message("user", task)
 
-        # TODO: call LLM for code generation
+        if self.backend is not None:
+            code = self._call_llm(
+                f"Write Python code for: {task}",
+                temperature=0.3,
+                max_tokens=1024,
+            )
+        else:
+            code = "# Backend not available\ndef placeholder():\n    pass"
+
+        self.add_message("assistant", code)
+
         return AgentOutput(
-            thought="Generated code for the task",
+            thought="Generated code using LLM",
             action="respond",
-            payload={"code": "# TODO: generated code", "task": task},
+            payload={"code": code, "task": task},
             finished=True,
         )

@@ -23,11 +23,13 @@ class BaseAgent(ABC):
         model_name: str,
         role_prompt: str,
         memory: Optional[Any] = None,
+        backend: Optional[Any] = None,
     ):
         self.name = name
         self.model_name = model_name
         self.role_prompt = role_prompt
         self.memory = memory
+        self.backend = backend
         self.message_history: List[Dict[str, Any]] = []
 
     @abstractmethod
@@ -49,3 +51,16 @@ class BaseAgent(ABC):
     def reset(self) -> None:
         """Clear message history."""
         self.message_history.clear()
+
+    def _call_llm(self, user_message: str, temperature: float = 0.7, max_tokens: int = 512) -> str:
+        """Call the backend LLM with the current context + new user message."""
+        if self.backend is None:
+            raise RuntimeError(f"Agent '{self.name}' has no backend configured")
+        messages = self.get_messages()
+        messages.append({"role": "user", "content": user_message})
+        return self.backend.generate(
+            model_key=self.name,
+            messages=messages,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
