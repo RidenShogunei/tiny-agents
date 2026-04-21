@@ -1,0 +1,51 @@
+"""Base agent class for Tiny Agents."""
+
+from abc import ABC, abstractmethod
+from typing import Any, Dict, List, Optional
+from pydantic import BaseModel
+
+
+class AgentOutput(BaseModel):
+    """Standardized agent output format."""
+    thought: str
+    action: str
+    target_agent: Optional[str] = None
+    payload: Dict[str, Any] = {}
+    finished: bool = False
+
+
+class BaseAgent(ABC):
+    """Base class for all agents in the framework."""
+
+    def __init__(
+        self,
+        name: str,
+        model_name: str,
+        role_prompt: str,
+        memory: Optional[Any] = None,
+    ):
+        self.name = name
+        self.model_name = model_name
+        self.role_prompt = role_prompt
+        self.memory = memory
+        self.message_history: List[Dict[str, Any]] = []
+
+    @abstractmethod
+    async def run(self, input_data: Dict[str, Any]) -> AgentOutput:
+        """Execute one agent step. Must be implemented by subclasses."""
+        pass
+
+    def add_message(self, role: str, content: str, **kwargs) -> None:
+        """Add a message to the agent's local history."""
+        msg = {"role": role, "content": content}
+        msg.update(kwargs)
+        self.message_history.append(msg)
+
+    def get_messages(self) -> List[Dict[str, Any]]:
+        """Return conversation history for LLM prompt construction."""
+        system_msg = {"role": "system", "content": self.role_prompt}
+        return [system_msg] + self.message_history
+
+    def reset(self) -> None:
+        """Clear message history."""
+        self.message_history.clear()
