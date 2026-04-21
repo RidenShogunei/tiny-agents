@@ -22,18 +22,18 @@ async def main():
     # Initialize inference backend
     backend = VLLMBackend(default_gpu=0)
 
-    # Load models (will take a moment on first run)
-    # Router uses 1.5B for fast decision-making
+    # Load models on separate GPUs to avoid OOM
     backend.load_model(
         model_key="router",
         model_name="Qwen/Qwen2.5-1.5B-Instruct",
+        gpu=0,
         max_model_len=4096,
     )
 
-    # Coder uses 3B for better code generation
     backend.load_model(
         model_key="coder",
-        model_name="Qwen/Qwen2.5-Coder-3B-Instruct",
+        model_name="Qwen/Qwen2.5-3B-Instruct",  # use 3B base as coder until Coder-3B downloads
+        gpu=1,
         max_model_len=4096,
     )
 
