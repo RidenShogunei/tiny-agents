@@ -54,7 +54,7 @@ class CoderAgent(BaseAgent):
             temp = context.config.get("temperature", 0.3)
             max_tok = context.config.get("max_tokens", 1024)
             code = self.backend.generate(
-                model_key=self.name,
+                model_key=self.model_name,
                 messages=messages,
                 temperature=temp,
                 max_tokens=max_tok,

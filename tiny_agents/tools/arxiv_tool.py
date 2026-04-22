@@ -42,11 +42,23 @@ class ArxivTool(BaseTool):
 
     def _execute(
         self,
-        query: str,
+        query: str = None,
+        topic: str = None,
         max_results: int = None,
     ) -> ToolResult:
         """Search arXiv and return structured paper metadata."""
         import arxiv
+
+        # Support both 'query' and 'topic' parameter names
+        search_query = query or topic or ""
+        if not search_query:
+            return ToolResult(
+                tool_name=self.name,
+                args={"query": query, "topic": topic, "max_results": max_results},
+                success=False,
+                output=None,
+                error="No query or topic provided",
+            )
 
         max_results = max_results or self.max_results
         max_results = max(1, min(max_results, 100))
@@ -61,7 +73,7 @@ class ArxivTool(BaseTool):
         try:
             client = arxiv.Client()
             search = arxiv.Search(
-                query=query,
+                query=search_query,
                 max_results=max_results,
                 sort_by=getattr(arxiv.SortCriterion, self.sort_by.capitalize())
                     if hasattr(arxiv.SortCriterion, self.sort_by.capitalize())
@@ -87,14 +99,14 @@ class ArxivTool(BaseTool):
                 })
             return ToolResult(
                 tool_name=self.name,
-                args={"query": query, "max_results": max_results},
+                args={"query": search_query, "max_results": max_results},
                 success=True,
-                output={"papers": papers, "count": len(papers), "query": query},
+                output={"papers": papers, "count": len(papers), "query": search_query},
             )
         except Exception as e:
             return ToolResult(
                 tool_name=self.name,
-                args={"query": query, "max_results": max_results},
+                args={"query": search_query, "max_results": max_results},
                 success=False,
                 error=f"arXiv search failed: {str(e)}",
             )

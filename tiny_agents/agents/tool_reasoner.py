@@ -97,7 +97,7 @@ class ToolReasonerAgent(BaseAgent):
 
         # Step 1: Generate initial reasoning (may include Python code)
         response1 = self.backend.generate(
-            model_key=self.name,
+            model_key=self.model_name,
             messages=messages,
             temperature=temp,
             max_tokens=max_tok,
@@ -117,7 +117,7 @@ class ToolReasonerAgent(BaseAgent):
 
             # Step 3: Generate final answer with tool output
             response2 = self.backend.generate(
-                model_key=self.name,
+                model_key=self.model_name,
                 messages=context.get_messages(self.name),
                 temperature=temp,
                 max_tokens=256,

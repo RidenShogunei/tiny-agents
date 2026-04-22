@@ -117,7 +117,7 @@ Follow the output format exactly.
             temp = context.config.get("temperature", 0.3)
             max_tok = context.config.get("max_tokens", 2048)
             content = self.backend.generate(
-                model_key=self.name,
+                model_key=self.model_name,
                 messages=messages,
                 temperature=temp,
                 max_tokens=max_tok,

@@ -100,7 +100,7 @@ Papers:\n{papers_text}\n\n{CITATION_PROMPT}\n"""
         if self.backend is not None:
             temp = context.config.get("temperature", 0.1)  # low temp for formatting
             response = self.backend.generate(
-                model_key=self.name,
+                model_key=self.model_name,
                 messages=messages,
                 temperature=temp,
                 max_tokens=2048,

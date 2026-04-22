@@ -17,7 +17,7 @@ from tiny_agents.core.session import SessionContext
 class AgentOutput(BaseModel):
     """Standardized agent output format returned by every agent.run()."""
     thought: str = ""
-    action: str = "respond"   # respond | delegate | tool_call | review
+    action: str = "respond"   # respond | delegate | tool_call | review | parallel
     target_agent: Optional[str] = None
     payload: Dict[str, Any] = Field(default_factory=dict)
     finished: bool = True

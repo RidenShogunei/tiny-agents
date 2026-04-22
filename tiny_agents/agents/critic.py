@@ -58,7 +58,7 @@ class CriticAgent(BaseAgent):
             temp = context.config.get("temperature", 0.2)
             max_tok = context.config.get("max_tokens", 512)
             review_text = self.backend.generate(
-                model_key=self.name,
+                model_key=self.model_name,
                 messages=messages,
                 temperature=temp,
                 max_tokens=max_tok,

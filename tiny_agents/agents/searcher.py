@@ -81,7 +81,7 @@ class SearchAgent(BaseAgent):
         if self.backend is not None:
             temp = context.config.get("temperature", 0.1)
             response = self.backend.generate(
-                model_key=self.name,
+                model_key=self.model_name,
                 messages=messages,
                 temperature=temp,
                 max_tokens=512,
