@@ -7,7 +7,7 @@ models:
     device: "cuda:0"
 
   coder:
-    name: "Qwen/Qwen2.5-Coder-3B-Instruct"
+    name: "Qwen/Qwen2.5-3B-Instruct"
     type: "llm"
     device: "cuda:0"
 

@@ -44,6 +44,7 @@ checkpoints/
 .benchmark_cache/
 outputs/
 results/
+benchmark_results/
 
 # Logs
 *.log

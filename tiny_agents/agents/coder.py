@@ -16,7 +16,7 @@ Rules:
 class CoderAgent(BaseAgent):
     """Generates code and handles programming tasks."""
 
-    def __init__(self, model_name: str = "Qwen/Qwen2.5-Coder-3B-Instruct", **kwargs):
+    def __init__(self, model_name: str = "Qwen/Qwen2.5-3B-Instruct", **kwargs):
         super().__init__(
             name="coder",
             model_name=model_name,
