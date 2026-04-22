@@ -256,13 +256,9 @@ class ResearchOrchestrator:
         print(f"[{session_id}] Step 6/7: Formatting references...")
         step_start = time.time()
         try:
-            # Collect all cited papers
-            all_papers = []
-            for sec in drafted_sections:
-                all_papers.extend(sec.get("papers_cited", []))
-
+            # Pass the full paper list collected from search results
             citation_output: AgentOutput = await self._citation.run(
-                {"papers": all_papers, "full_paper": full_paper}, context
+                {"papers": papers, "full_paper": full_paper}, context
             )
             references = citation_output.payload.get("references", "")
             bibtex = citation_output.payload.get("bibtex", "")

@@ -16,6 +16,7 @@ from tiny_agents.tools.calculator_tool import CalculatorTool
 from tiny_agents.tools.web_search_tool import WebSearchTool
 from tiny_agents.tools.arxiv_tool import ArxivTool
 from tiny_agents.tools.markdown_writer_tool import MarkdownWriterTool
+from tiny_agents.tools.cluster_tool import ClusterTool
 
 __all__ = [
     "BaseTool",
@@ -28,6 +29,7 @@ __all__ = [
     "WebSearchTool",
     "ArxivTool",
     "MarkdownWriterTool",
+    "ClusterTool",
     "get_registry",
     "register_tool",
     "tool_schema",

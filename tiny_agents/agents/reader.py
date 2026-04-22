@@ -7,10 +7,12 @@ Given a list of papers (with abstracts), extracts key information from each:
 - category/theme
 
 Works in batches to avoid context overflow. Each batch = up to 10 papers.
+Supports true parallel processing of batches using asyncio for speed.
 """
 
 from __future__ import annotations
 
+import asyncio
 import json
 import re
 from typing import Any, Dict, List
@@ -93,15 +95,13 @@ class ReaderAgent(BaseAgent):
                 finished=True,
             )
 
-        # Process in batches
-        all_summaries = []
-        batch_num = 0
-
+        # Process in batches — all at once (parallel)
+        all_summaries: List[Dict] = []
+        batch_list: List[List] = []
         for i in range(0, len(papers), self.batch_size):
-            batch = papers[i:i + self.batch_size]
-            batch_num += 1
+            batch_list.append(papers[i:i + self.batch_size])
 
-            # Build batch input
+        async def process_batch(batch: List, batch_num: int) -> List[Dict]:
             batch_input = self._build_batch_input(batch, topic)
             messages = context.get_messages(self.name)
             messages.append({"role": "user", "content": batch_input})
@@ -117,12 +117,22 @@ class ReaderAgent(BaseAgent):
             else:
                 response = "[]"
 
-            # Parse JSON
             summaries = self._parse_summaries(response, batch)
-            all_summaries.extend(summaries)
-
             context.add_message(self.name, "user", f"[Batch {batch_num}] Read {len(batch)} papers")
             context.add_message(self.name, "assistant", f"Extracted {len(summaries)} summaries")
+            return summaries
+
+        # Run all batches in parallel
+        results = await asyncio.gather(
+            *[process_batch(batch, i + 1) for i, batch in enumerate(batch_list)],
+            return_exceptions=True,
+        )
+
+        # Collect successful results
+        for result in results:
+            if isinstance(result, Exception):
+                continue
+            all_summaries.extend(result)
 
         # Sort by relevance score descending
         all_summaries.sort(key=lambda s: s.get("relevance_score", 0), reverse=True)

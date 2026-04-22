@@ -63,3 +63,93 @@ This survey paper provides an overview of LoRA in Vision Models, covering its ba
 3. Wang, Y., et al. (2022). Low-rank adaptation for efficient semantic segmentation. arXiv preprint arXiv:2201.03364. 
 
 This is the complete survey paper on LoRA in Vision Models. It covers the background, methods, applications, challenges, and future directions of LoRA. The paper is written in a clear and concise style, with references to the relevant literature to support the claims made in the paper. The paper is suitable for researchers and practitioners in the field of computer vision and deep learning. The paper is also suitable for graduate students and researchers who are interested in the latest developments in the field of computer vision and deep learning. The paper is also suitable for students who are interested in the latest developments in the field of computer vision and deep learning. The paper is also suitable for students who are interested in the latest developments in the field of computer vision and deep learning. The paper is also suitable for students who are interested in the latest developments in the
+---
+
+```plaintext
+REFERENCES
+==========
+[1] Lee, E., Chang, T-Y., Tsai, J-H., Diao, J., Lee, C-Y. (2026). Hierarchical Pre-Training of Vision Encoders with Large Language Models. None. http://arxiv.org/abs/2604.00086v1
+[2] Ogawa, K., Yamamoto, B., Lauton de Alcantara, L., Pellicer, L., Costa, R. et al. (2026). Layer-wise LoRA fine-tuning: a similarity metric approach. None. http://arxiv.org/abs/2602.05988v1
+[3] Polaczek, S., Patashnik, O., Mahdavi-Amiri, A., Cohen-Or, D. (2025). In-Context Sync-LoRA for Portrait Video Editing. None. http://arxiv.org/abs/2512.03013v1
+[4] Chen, C-Y., Wang, Z., Chen, Q., Ye, Z., Shi, M. et al. (2025). MapReduce LoRA: Advancing the Pareto Front in Multi-Preference Optimization for Generative Models. None. http://arxiv.org/abs/2511.20629v5
+[5] Cho, M., Ohana, R., Jacobsen, C., Jothi, A., Chen, M-H. et al. (2025). TC-LoRA: Temporally Modulated Conditional LoRA for Adaptive Diffusion Control. None. http://arxiv.org/abs/2510.09561v2
+[6] Sapkota, R., Karkee, M. (2025). Object Detection with Multimodal Large Vision-Language Models: An In-depth Review. Information Fusion, 2025. http://arxiv.org/abs/2508.19294v2
+[7] Chitty-Venkata, K., Emani, M., Vishwanath, V. (2025). LangVision-LoRA-NAS: Neural Architecture Search for Variable LoRA Rank in Vision Language Models. None. http://arxiv.org/abs/2508.12512v1
+[8] Farooq, A., Iqbal, K. (2025). Integrating Vision Foundation Models with Reinforcement Learning for Enhanced Object Interaction. RCVE'25: Proceedings of the 2025 3rd International Conference on Robotics, Control and Vision Engineering. http://arxiv.org/abs/2508.05838v1
+[9] Hayou, S., Ghosh, N., Yu, B. (2025). PLoP: Precise LoRA Placement for Efficient Finetuning of Large Models. None. http://arxiv.org/abs/2506.20629v1
+[10] Salles, M., Goyal, P., Sekhsaria, P., Huang, H., Balestriero, R. (2025). LoRA Users Beware: A Few Spurious Tokens Can Manipulate Your Finetuned Model. None. http://arxiv.org/abs/2506.11402v2
+[11] Wang, H., Ye, Y., Li, B., Nie, Y., Lu, J et al. (2025). Vision as LoRA. None. http://arxiv.org/abs/2503.20680v1
+[12] Tang, P., Hu, X., Liu, Y., Ding, L., Zhang, D. et al. (2025). Put the Space of LoRA Initialization to the Extreme to Preserve Pre-trained Knowledge. None. http://arxiv.org/abs/2503.02659v2
+[13] Vision Team, Karlinsky, L., Arbelle, A., Daniels, A., Nassar, A. et al. (2025). Granite Vision: a lightweight, open-source multimodal model for enterprise Intelligence. None. http://arxiv.org/abs/2502.09927v1
+[14] Klotz, J., Nayar, S. (2024). Minimalist Vision with Freeform Pixels. European Conference on Computer Vision (ECCV), 2024. http://arxiv.org/abs/2501.00142v1
+[15] Bian, J., Wang, J., Zhang, L., Xu, J. (2024). LoRA-FAIR: Federated LoRA Fine-Tuning with Aggregation and Initialization Refinement. None. http://arxiv.org/abs/2411.14961v3
+
+---
+
+## BibTeX
+
+@article{lee2026,
+  author = {Lee, Eugene and Chang, Ting-Yu and Tsai, Jui-Huang and Diao, Jiajie and Lee, Chen-Yi},
+  title = {Hierarchical Pre-Training of Vision Encoders with Large Language Models},
+  year = {2026},
+  venue = {None},
+  url = {http://arxiv.org/abs/2604.00086v1}
+}
+@article{ogawa2026,
+  author = {Ogawa, Keith Ando and Yamamoto, Bruno Lopes and Lauton de Alcantara, Lucas Lauton and Pellicer, Lucas and Costa, Rosimeire Pereira},
+  title = {Layer-wise LoRA fine-tuning: a similarity metric approach},
+  year = {2026},
+  venue = {None},
+  url = {http://arxiv.org/abs/2602.05988v1}
+}
+@article{polaczek2025,
+  author = {Polaczek, Sagi and Patashnik, Or and Mahdavi-Amiri, Ali and Cohen-Or, Daniel},
+  title = {In-Context Sync-LoRA for Portrait Video Editing},
+  year = {2025},
+  venue = {None},
+  url = {http://arxiv.org/abs/2512.03013v1}
+}
+@article{chen2025,
+  author = {Chen, Chieh-Yun and Wang, Zhonghao and Chen, Qi and Ye, Zhifan and Shi, Min},
+  title = {MapReduce LoRA: Advancing the Pareto Front in Multi-Preference Optimization for Generative Models},
+  year = {2025},
+  venue = {None},
+  url = {http://arxiv.org/abs/2511.20629v5}
+}
+@article{cho2025,
+  author = {Cho, Minkyoung and Ohana, Ruben and Jacobsen, Christian and Jothi, Adityan and Chen, Min-Hung},
+  title = {TC-LoRA: Temporally Modulated Conditional LoRA for Adaptive Diffusion Control},
+  year = {2025},
+  venue = {None},
+  url = {http://arxiv.org/abs/2510.09561v2}
+}
+@article{sapkota2025,
+  author = {Sapkota, Ranjan and Karkee, Manoj},
+  title = {Object Detection with Multimodal Large Vision-Language Models: An In-depth Review},
+  year = {2025},
+  venue = {Information Fusion, 2025},
+  url = {http://arxiv.org/abs/2508.19294v2}
+}
+@article{chitty2025,
+  author = {Chitty-Venkata, Krishna Teja and Emani, Murali and Vishwanath, Venkatram},
+  title = {LangVision-LoRA-NAS: Neural Architecture Search for Variable LoRA Rank in Vision Language Models},
+  year = {2025},
+  venue = {None},
+  url = {http://arxiv.org/abs/2508.12512v1}
+}
+@article{farooq2025,
+  author = {Farooq, Ahmad and Iqbal, Kamran},
+  title = {Integrating Vision Foundation Models with Reinforcement Learning for Enhanced Object Interaction},
+  year = {2025},
+  venue = {RCVE'25: Proceedings of the 2025 3rd International Conference on Robotics, Control and Vision Engineering},
+  url = {http://arxiv.org/abs/2508.05838v1}
+}
+@article{hayou2025,
+  author = {Hayou, Soufiane and Ghosh, Nikhil and Yu, Bin},
+  title = {PLoP: Precise LoRA Placement for Efficient Finetuning of Large Models},
+  year = {2025},
+  venue = {None},
+  url = {http://arxiv.org/abs/2506.20629v1}
+}
+@article{salles2025,
+  author = {Salles, Marcel Mate
