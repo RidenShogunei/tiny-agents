@@ -68,6 +68,24 @@ class ToolReasonerAgent(BaseAgent):
 
         return ""
 
+    def _extract_answer(self, text: str) -> str:
+        """Extract numerical answer from model output."""
+        if "####" in text:
+            parts = text.split("####")
+            last = parts[-1].strip().split()[0] if parts[-1].strip() else ""
+            return last.replace(",", "")
+        # Try \boxed{}
+        match = re.search(r"\\boxed\{(.*?)\}", text)
+        if match:
+            return match.group(1).replace(",", "")
+        # Fallback: last non-empty line
+        lines = text.strip().splitlines()
+        for line in reversed(lines):
+            line = line.strip()
+            if line:
+                return line.replace(",", "")
+        return text.strip().replace(",", "")
+
     async def run(self, input_data: Dict[str, Any]) -> AgentOutput:
         """Solve problem with optional Python tool use."""
         task = input_data.get("task", "")
@@ -113,9 +131,9 @@ class ToolReasonerAgent(BaseAgent):
                 temperature=0.1,
                 max_tokens=256,
             )
-            final_answer = response2
+            final_answer = self._extract_answer(response2)
         else:
-            final_answer = response1
+            final_answer = self._extract_answer(response1)
 
         return AgentOutput(
             thought="Solved with tool-augmented reasoning" + (" (used Python)" if code else ""),

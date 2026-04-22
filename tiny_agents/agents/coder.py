@@ -7,10 +7,11 @@ from tiny_agents.core.agent import BaseAgent, AgentOutput
 CODER_PROMPT = """You are an expert coding assistant. Write clean, correct, well-documented Python code.
 
 Rules:
-1. Output only the code block (inside ```python ... ```)
-2. Include brief docstrings
-3. Handle edge cases when possible
-4. Do not include explanations outside the code block unless asked"""
+1. Include ALL necessary imports at the top (e.g., from typing import List)
+2. Output only the code block (inside ```python ... ```)
+3. Include brief docstrings
+4. Handle edge cases when possible
+5. Do not include explanations outside the code block unless asked"""
 
 
 class CoderAgent(BaseAgent):
