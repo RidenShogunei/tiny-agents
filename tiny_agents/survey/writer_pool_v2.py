@@ -33,7 +33,7 @@ from typing import Any, Dict, List, Optional
 
 from tiny_agents.core.agent import BaseAgent, AgentOutput
 from tiny_agents.core.session import SessionContext
-from tiny_agents.core.knowledge_graph import KnowledgeGraph, PaperNode
+from tiny_agents.survey.paper_kg import KnowledgeGraph, PaperNode
 
 logger = logging.getLogger(__name__)
 

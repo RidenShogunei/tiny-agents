@@ -1,23 +1,19 @@
-from .router import RouterAgent
-from .coder import CoderAgent
-from .vl_perception import VLPerceptionAgent
-from .critic import CriticAgent
-from .planner import PlanningAgent
-from .searcher import SearchAgent
-from .reader import ReaderAgent
-from .writer import WriterAgent
-from .synthesizer import SynthesizerAgent
-from .citation_agent import CitationAgent
+"""Generic agents — not domain-specific.
+
+These agents are task-type agnostic (routing, coding, reviewing, etc.)
+and can be reused across different pipelines.
+"""
+
+from tiny_agents.agents.router import RouterAgent
+from tiny_agents.agents.coder import CoderAgent
+from tiny_agents.agents.critic import CriticAgent
+from tiny_agents.agents.vl_perception import VLPerceptionAgent
+from tiny_agents.agents.tool_reasoner import ToolReasonerAgent
 
 __all__ = [
     "RouterAgent",
     "CoderAgent",
-    "VLPerceptionAgent",
     "CriticAgent",
-    "PlanningAgent",
-    "SearchAgent",
-    "ReaderAgent",
-    "WriterAgent",
-    "SynthesizerAgent",
-    "CitationAgent",
+    "VLPerceptionAgent",
+    "ToolReasonerAgent",
 ]

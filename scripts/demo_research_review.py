@@ -1,6 +1,8 @@
-"""Demo: Research Orchestrator — generate a survey paper.
+"""Demo: SurveyPipeline — generate a survey paper.
 
-Minimal end-to-end test of the full survey generation pipeline.
+Minimal end-to-end test of the survey generation pipeline.
+This script demonstrates how to use the survey package as a concrete application
+of the generic multi-agent core.
 
 GPU layout:
     GPU 0: planner/reader/synthesizer/citation (1.5B, shared KV cache)
@@ -15,20 +17,20 @@ import sys
 
 sys.path.insert(0, "/home/jinxu/tiny-agents")
 
-from tiny_agents.core.research_orchestrator import ResearchOrchestrator
+from tiny_agents.survey import SurveyPipeline
 
 
 def main():
     topic = "LoRA in Vision Models"
 
     print(f"{'=' * 60}")
-    print(f"Research Orchestrator Demo")
+    print(f"Survey Pipeline Demo")
     print(f"Topic: {topic}")
     print(f"{'=' * 60}")
 
-    # Initialize orchestrator with 5 writers spread across 4 GPUs
+    # Initialize pipeline with 5 writers spread across 4 GPUs
     # GPU 3 = 9B (Qwen3.5-9B), GPU 0/1/2 = 1.5B
-    orchestrator = ResearchOrchestrator(
+    pipeline = SurveyPipeline(
         num_writers=5,
         writer_model="Qwen/Qwen2.5-1.5B-Instruct",
         planner_model="Qwen/Qwen2.5-1.5B-Instruct",
@@ -63,13 +65,12 @@ def main():
         enforce_eager=True,
     )
 
-    # Orchestrator detects GPU assignment and distributes writers
-    # Writers on GPU 3 use 9B for higher quality output
-    orchestrator.set_backend(backend)
+    # Wire up backend
+    pipeline.set_backend(backend)
 
     # Run the pipeline
     result = asyncio.run(
-        orchestrator.run(
+        pipeline.run(
             topic=topic,
             num_sections=6,
             max_papers=15,

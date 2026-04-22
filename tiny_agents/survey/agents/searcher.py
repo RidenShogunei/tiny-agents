@@ -11,7 +11,8 @@ from typing import Any, Dict, List
 
 from tiny_agents.core.agent import BaseAgent, AgentOutput
 from tiny_agents.core.session import SessionContext
-from tiny_agents.tools import ArxivTool, WebSearchTool
+from tiny_agents.survey.tools.arxiv_tool import ArxivTool
+from tiny_agents.tools.web_search_tool import WebSearchTool
 
 
 SEARCH_PROMPT = """You are a research paper search specialist. Given a research topic and section keywords, generate effective search queries to find the most relevant academic papers.
