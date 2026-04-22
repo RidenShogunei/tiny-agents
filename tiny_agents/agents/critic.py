@@ -26,13 +26,19 @@ Be concise and actionable."""
 class CriticAgent(BaseAgent):
     """Reviews code, logic, and reasoning from worker agents (stateless)."""
 
-    def __init__(self, model_name: str = "Qwen/Qwen2.5-1.5B-Instruct", **kwargs):
+    def __init__(
+        self,
+        model_name: str = "Qwen/Qwen2.5-1.5B-Instruct",
+        model_key: str = None,
+        **kwargs,
+    ):
         super().__init__(
             name="critic",
             model_name=model_name,
             role_prompt=CRITIC_PROMPT,
             **kwargs,
         )
+        self._model_key = model_key or model_name
 
     async def run(
         self,
@@ -58,7 +64,7 @@ class CriticAgent(BaseAgent):
             temp = context.config.get("temperature", 0.2)
             max_tok = context.config.get("max_tokens", 512)
             review_text = self.backend.generate(
-                model_key=self.model_name,
+                model_key=self._model_key,
                 messages=messages,
                 temperature=temp,
                 max_tokens=max_tok,

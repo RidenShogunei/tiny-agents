@@ -33,13 +33,20 @@ Rules:
 class ToolReasonerAgent(BaseAgent):
     """Reasoner that can execute Python code to verify calculations (stateless)."""
 
-    def __init__(self, model_name: str = "Qwen/Qwen2.5-3B-Instruct", **kwargs):
+    def __init__(
+        self,
+        model_name: str = "Qwen/Qwen2.5-3B-Instruct",
+        model_key: str = None,
+        **kwargs,
+    ):
         super().__init__(
             name="tool_reasoner",
             model_name=model_name,
             role_prompt=TOOL_REASONER_PROMPT,
             **kwargs,
         )
+        # model_key defaults to model_name for backward compatibility
+        self._model_key = model_key or model_name
         self.executor = PythonExecutor(timeout=10)
 
     def _extract_python_code(self, text: str) -> str:
@@ -96,8 +103,10 @@ class ToolReasonerAgent(BaseAgent):
         max_tok = context.config.get("max_tokens", 1024)
 
         # Step 1: Generate initial reasoning (may include Python code)
+        # Use model_key="tool_reasoner" — matches how benchmark loads the model
+        model_key = getattr(self, '_model_key', self.model_name)
         response1 = self.backend.generate(
-            model_key=self.model_name,
+            model_key=model_key,
             messages=messages,
             temperature=temp,
             max_tokens=max_tok,
@@ -117,7 +126,7 @@ class ToolReasonerAgent(BaseAgent):
 
             # Step 3: Generate final answer with tool output
             response2 = self.backend.generate(
-                model_key=self.model_name,
+                model_key=model_key,
                 messages=context.get_messages(self.name),
                 temperature=temp,
                 max_tokens=256,

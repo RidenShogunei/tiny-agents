@@ -63,7 +63,9 @@ async def main(limit: int = 20):
     )
 
     agent = ToolReasonerAgent(backend=backend)
-    orch = Orchestrator()
+    # max_iterations must be ≥2 so agent gets tool result + generates final answer
+    # enable_review=False so it returns immediately after "respond"
+    orch = Orchestrator(max_iterations=3, enable_review=False)
     orch.register_agent(agent)
 
     results = []

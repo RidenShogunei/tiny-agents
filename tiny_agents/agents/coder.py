@@ -19,13 +19,19 @@ Rules:
 class CoderAgent(BaseAgent):
     """Generates code and handles programming tasks (stateless)."""
 
-    def __init__(self, model_name: str = "Qwen/Qwen2.5-3B-Instruct", **kwargs):
+    def __init__(
+        self,
+        model_name: str = "Qwen/Qwen2.5-3B-Instruct",
+        model_key: str = None,
+        **kwargs,
+    ):
         super().__init__(
             name="coder",
             model_name=model_name,
             role_prompt=CODER_PROMPT,
             **kwargs,
         )
+        self._model_key = model_key or model_name
 
     async def run(
         self,
@@ -54,7 +60,7 @@ class CoderAgent(BaseAgent):
             temp = context.config.get("temperature", 0.3)
             max_tok = context.config.get("max_tokens", 1024)
             code = self.backend.generate(
-                model_key=self.model_name,
+                model_key=self._model_key,
                 messages=messages,
                 temperature=temp,
                 max_tokens=max_tok,
