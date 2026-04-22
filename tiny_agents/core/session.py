@@ -38,6 +38,17 @@ class SessionContext:
     # Config overrides for this session (temperature, max_tokens, etc.)
     config: Dict[str, Any] = field(default_factory=dict)
 
+    # Lazily-created tool registry for this session (set by Orchestrator)
+    _tools: Optional[Any] = field(default=None)
+
+    @property
+    def tools(self) -> "ToolRegistry":
+        """Tool registry available to agents. Set by Orchestrator via register_tool()."""
+        if self._tools is None:
+            from tiny_agents.tools.base import ToolRegistry
+            object.__setattr__(self, '_tools', ToolRegistry())
+        return self._tools
+
     # ── message API ──────────────────────────────────────────────
 
     def add_message(self, agent_name: str, role: str, content: str) -> None:

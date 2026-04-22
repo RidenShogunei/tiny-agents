@@ -5,15 +5,16 @@ Core contract change from v1:
 - Every agent.run(input_data, context) receives the same context object.
 - No agent holds message_history internally — context.messages is the sole record.
 - No manual reset() needed; each execute() call gets a fresh context.
+- tool_call action: orchestrator executes tool and re-calls agent with result.
 
 Workflow (serial chain):
-    Entry agent -> Worker -> [optional Critic -> loop back] -> respond
+    Entry agent -> Worker -> [tool_call loop] -> [optional Critic] -> respond
 
 Supported action types:
-    respond  — agent produced final output; return to caller
-    delegate — agent hands off to another agent (target in payload["target"])
-    review   — critic has reviewed; orchestrator handles loop-back logic
-    tool_call — agent requested tool execution; handled inline (see tools/)
+    respond   — agent produced final output; return to caller
+    delegate  — agent hands off to another agent (target in payload["target"])
+    review    — critic has reviewed; orchestrator handles loop-back logic
+    tool_call — agent requested a tool; orchestrator executes, injects result, re-calls
 """
 
 import uuid
@@ -22,6 +23,7 @@ from typing import Any, Dict, List, Optional
 from tiny_agents.core.agent import BaseAgent, AgentOutput
 from tiny_agents.core.session import SessionContext
 from tiny_agents.core.message_bus import MessageBus
+from tiny_agents.tools.base import ToolRegistry
 
 
 class Orchestrator:
@@ -31,12 +33,14 @@ class Orchestrator:
         self,
         max_iterations: int = 3,
         enable_review: bool = False,
+        tools: Optional[ToolRegistry] = None,
     ):
         self.agents: Dict[str, BaseAgent] = {}
         self.bus = MessageBus()
         self.max_iterations = max_iterations
         self.enable_review = enable_review
         self.critic_agent: Optional[str] = None
+        self.tools = tools or ToolRegistry()
 
     def register_agent(self, agent: BaseAgent) -> None:
         """Register an agent. Inject the shared message bus."""
@@ -49,6 +53,10 @@ class Orchestrator:
             raise ValueError(f"Critic agent '{agent_name}' not registered")
         self.critic_agent = agent_name
 
+    def register_tool(self, tool) -> None:
+        """Register a tool with the orchestrator's tool registry."""
+        self.tools.register(tool)
+
     async def execute(
         self,
         task_input: Dict[str, Any],
@@ -56,28 +64,21 @@ class Orchestrator:
         session_id: Optional[str] = None,
         config: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        """Execute a task with a fresh SessionContext.
-
-        Args:
-            task_input:  the initial payload for the entry agent
-            entry_agent: name of the agent to start with
-            session_id:  optional stable ID (auto-generated if omitted)
-            config:      per-session overrides (temperature, max_tokens, etc.)
-        """
+        """Execute a task with a fresh SessionContext."""
         session_id = session_id or f"sess_{uuid.uuid4().hex[:8]}"
         config = config or {}
 
-        # Fresh context per call — no cross-call leakage
         ctx = SessionContext(
             session_id=session_id,
             config=config,
         )
+        # Expose tools to agents via context
+        ctx._tools = self.tools
 
         # Register system prompts for all agents
         for name, agent in self.agents.items():
             ctx.set_system_prompt(name, agent.role_prompt)
 
-        # Store task start
         ctx.add_step({
             "event": "task_start",
             "session_id": session_id,
@@ -87,6 +88,7 @@ class Orchestrator:
         current_agent = entry_agent
         current_input = task_input.copy()
         iteration = 0
+        tool_call_depth = 0   # prevent infinite tool loops
 
         while iteration < self.max_iterations:
             iteration += 1
@@ -98,26 +100,50 @@ class Orchestrator:
 
             agent = self.agents[current_agent]
 
-            # Record step start
             ctx.add_step({
                 "step": iteration,
                 "agent": current_agent,
-                "input": dict(current_input),   # copy to avoid mutation
+                "input": dict(current_input),
             })
 
-            # Call agent with BOTH input_data and context
             output: AgentOutput = await agent.run(current_input, ctx)
 
-            # Record step end (attach output)
             ctx.short_term[-1]["output"] = output.model_dump()
 
-            # Publish to bus
             await self.bus.publish(
                 f"session.{session_id}",
                 {"agent": current_agent, "output": output.model_dump()},
             )
 
-            # ── action routing ──────────────────────────────────
+            # ── tool_call: execute tool and re-call same agent with result ──
+            if output.action == "tool_call":
+                tool_call_depth += 1
+                if tool_call_depth > 10:
+                    return self._failure(
+                        session_id,
+                        "Tool call depth limit (10) exceeded — possible infinite loop",
+                        ctx.short_term,
+                    )
+
+                tool_name = output.payload.get("tool") or output.payload.get("tool_name", "")
+                tool_args = output.payload.get("args", {})
+
+                tool = self.tools.get(tool_name)
+                if tool is None:
+                    ctx.add_message(
+                        current_agent, "user",
+                        f"Tool '{tool_name}' not found. Available tools: {self.tools.list_names()}"
+                    )
+                    continue   # re-call same agent with error message
+
+                result = tool.execute(tool_args)
+                ctx.add_message(current_agent, "user", result_to_message(result))
+                # Same agent continues in next iteration with tool result in context
+                continue
+
+            tool_call_depth = 0   # reset on any non-tool action
+
+            # ── delegate ───────────────────────────────────────────
             if output.action == "delegate":
                 target = output.target_agent or output.payload.get("target")
                 if not target or target not in self.agents:
@@ -130,8 +156,8 @@ class Orchestrator:
                 current_input = output.payload.copy()
                 continue
 
+            # ── respond ─────────────────────────────────────────────
             elif output.action == "respond":
-                # Final output — optionally route to critic for review
                 if (
                     self.enable_review
                     and self.critic_agent
@@ -140,13 +166,12 @@ class Orchestrator:
                     current_agent = self.critic_agent
                     current_input = output.payload.copy()
                     continue
-
                 return self._success(session_id, output.payload, ctx.short_term)
 
+            # ── review ─────────────────────────────────────────────
             elif output.action == "review":
                 verdict = output.payload.get("verdict", "PASS")
                 if verdict == "NEEDS_FIX" and iteration < self.max_iterations:
-                    # Loop back to last worker with feedback
                     worker_steps = [s for s in ctx.short_term
                                     if s.get("agent") != self.critic_agent]
                     if worker_steps:
@@ -159,8 +184,6 @@ class Orchestrator:
                             "needs_fix": True,
                         }
                         continue
-
-                # PASS or max iterations -> done
                 return self._success(session_id, output.payload, ctx.short_term)
 
             else:
@@ -170,7 +193,6 @@ class Orchestrator:
                     ctx.short_term,
                 )
 
-        # Max iterations reached
         return self._failure(
             session_id,
             f"Max iterations ({self.max_iterations}) reached",
@@ -204,3 +226,20 @@ class Orchestrator:
             "steps": steps,
             "session_id": session_id,
         }
+
+
+# ── tool result serializer ───────────────────────────────────────────────────
+
+def result_to_message(result) -> str:
+    """Convert a ToolResult to a user message injected into the agent context."""
+    if result.success:
+        return (
+            f"Tool '{result.tool_name}' executed successfully.\n"
+            f"Output: {result.output!r}\n"
+        )
+    else:
+        return (
+            f"Tool '{result.tool_name}' failed.\n"
+            f"Error: {result.error}\n"
+            f"Please fix your arguments or try a different approach."
+        )
