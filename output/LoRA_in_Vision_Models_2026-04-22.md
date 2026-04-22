@@ -16,332 +16,262 @@
 
 ### Introduction
 
-The field of computer vision has witnessed significant advancements through the use of scalable vision encoders and multimodal pre-training frameworks. These approaches have enabled a wide range of applications, from image classification and object detection to scene understanding and natural language processing. However, traditional vision models often struggle with the complexity and variability of real-world data, leading to suboptimal performance on downstream tasks.
+The field of computer vision has seen significant advancements through the development of scalable vision encoders and multimodal pre-training frameworks. These innovations have transformed the way we process and understand visual data, enabling more accurate and efficient image and video analysis. However, existing approaches often treat vision encoders as isolated components, focusing primarily on their ability to capture and represent visual information. This approach, while effective in many cases, overlooks the potential synergies between vision encoders and other modalities, such as language, which can significantly enhance their performance and versatility.
 
-One promising approach to address these limitations is the use of LoRA (Low-Rank Adaptation) in vision models. LoRA is a technique that allows for efficient and flexible adaptation of large models to new tasks or data distributions. In this section, we will explore the current state of research on LoRA in vision models, focusing on the contributions of recent papers and the challenges they address.
+In this paper, we explore the integration of Large Language Models (LLMs) with vision encoders, a novel approach that leverages the strengths of both domains to achieve more robust and versatile models. We introduce a hierarchical pre-training framework that combines the scalability of vision encoders with the expressive power of LLMs, resulting in models that are better suited for a wide range of tasks, including image and video processing, object detection, and multimodal understanding. Our method aims to address the limitations of existing approaches by providing a more comprehensive and flexible solution that can adapt to various downstream tasks and environments.
 
-#### Overview and Motivation
+#### Motivation
 
-The motivation behind LoRA in vision models stems from the need to improve the adaptability and generalization capabilities of large pre-trained models. Traditional vision models, such as those based on Convolutional Neural Networks (CNNs), are often trained on large datasets but may struggle when applied to new or unseen data. This is because these models are trained to generalize well on the training data but may not perform as well on tasks that are not covered in the training data.
+The motivation behind our approach is to bridge the gap between vision and language, two fundamental modalities that play crucial roles in modern AI systems. Vision encoders, such as those based on Vision Transformers (ViTs), excel at capturing high-level visual features and understanding complex visual scenes. On the other hand, LLMs, such as those trained on large-scale datasets, are highly expressive and capable of generating high-quality text outputs. By combining these two domains, we can create models that are better equipped to handle a variety of tasks, including image and video processing, object detection, and multimodal understanding.
 
-LoRA addresses this issue by introducing a low-rank adaptation mechanism that allows the model to be retrained on a new task or dataset without the need for extensive fine-tuning. This approach is particularly useful for applications where the training data is limited or where the task is not well-represented in the training data.
+#### Overview
 
-#### Relevant Papers
+Our hierarchical pre-training framework is designed to leverage the strengths of both vision encoders and LLMs. It consists of two main components: a vision encoder and a language encoder. The vision encoder is trained on a large-scale dataset of images, while the language encoder is trained on a large-scale dataset of text. The two encoders are then combined to form a unified model that can be fine-tuned for various downstream tasks.
 
-The following papers provide insights into the use of LoRA in vision models and highlight the contributions of each study:
+The hierarchical pre-training framework is designed to address the limitations of existing approaches by providing a more comprehensive and flexible solution. It allows for the integration of vision and language information, enabling the model to better understand and process visual and textual data. This approach can be particularly useful in tasks that require both visual and textual information, such as object detection, image captioning, and multimodal understanding.
 
-1. **[Paper 1]**: "Hierarchical Pre-Training of Vision Encoders with Large Language Models" by Eugene Lee, Ting-Yu Chang, and Jui-Huang Tsai. This paper explores the use of hierarchical pre-training of vision encoders with large language models. The authors propose a method that leverages the hierarchical structure of the vision encoder to improve the performance of large language models. This approach is particularly useful for tasks that require both visual and textual information, such as image captioning and visual question answering.
+#### Contribution
 
-2. **[Paper 2]**: "Layer-wise LoRA fine-tuning: a similarity metric approach" by Keith Ando Ogawa, Bruno Lopes Yamamoto, and Lucas Lauton de Alcantara. This paper focuses on the fine-tuning of LoRA in large language models. The authors propose a method that uses a similarity metric to guide the fine-tuning process, ensuring that the model adapts efficiently to new tasks. This approach is particularly useful for tasks that require a high degree of flexibility and adaptability, such as image captioning and visual question answering.
+Our hierarchical pre-training framework introduces a novel approach to combining vision encoders and LLMs, resulting in a unified model that can be fine-tuned for various downstream tasks. The framework is designed to address the limitations of existing approaches by providing a more comprehensive and flexible solution. It allows for the integration of vision and language information, enabling the model to better understand and process visual and textual data.
 
-3. **[Paper 3]**: "In-Context Sync-LoRA for Portrait Video Editing" by Sagi Polaczek, Or Patashnik, and Ali Mahdavi-Amiri. This paper presents a method for editing portrait videos using LoRA. The authors propose a technique that allows for flexible and precise control over modifications, such as appearance changes and expression edits. This approach is particularly useful for applications that require high-quality video editing, such as video editing and video editing for social media.
+The hierarchical pre-training framework is designed to be scalable and efficient, making it suitable for a wide range of applications. It can be fine-tuned for various downstream tasks, including image and video processing, object detection, and multimodal understanding. The framework can be easily integrated into existing vision and language models, making it a valuable addition to the existing toolkit for AI researchers and practitioners.
 
-4. **[Paper 4]**: "MapReduce LoRA: Advancing the Pareto Front in Multi-Preference Optimization for Generative Models" by Chieh-Yun Chen, Zhonghao Wang, and Qi Chen. This paper explores the use of LoRA in the context of generative models. The authors propose a method that uses reinforcement learning to optimize multiple preferences simultaneously, leading to better performance on downstream tasks. This approach is particularly useful for applications that require high-quality generative models, such as image synthesis and text-to-image generation.
+#### Limitation
 
-5. **[Paper 5]**: "TC-LoRA: Temporally Modulated Conditional LoRA for Adaptive Diffusion Control" by Minkyoung Cho, Ruben Ohana, and Christian Jacobsen. This paper presents a method for adaptive diffusion control using LoRA. The authors propose a technique that uses temporal modulation to adapt the diffusion process, leading to better performance on tasks that require temporal information, such as video editing and image synthesis.
+While our hierarchical pre-training framework has the potential to address the limitations of existing approaches, there are still some challenges that need to be addressed. One of the main challenges is the scalability of the framework, which may require significant computational resources to train and fine-tune the model. Additionally, the integration of vision and language information may require significant modifications to existing models, which may not be feasible for all applications.
 
-6. **[Paper 6]**: "Object Detection with Multimodal Large Vision-Language Models: An In-depth Review" by Ranjan Sapkota and Manoj Karkee. This paper provides an in-depth review of the use of multimodal vision-language models for object detection. The authors propose a method that combines the strengths of both vision and language models to improve the performance of object detection. This approach is particularly useful for applications that require high-quality object detection, such as autonomous driving and robotics.
-
-7. **[Paper 7]**: "LangVision-LoRA-NAS: Neural Architecture Search for Variable LoRA Rank in Vision Language Models" by Krishna Teja Chitty-Venkata, Murali Emani, and Venkatram Vishwanath. This paper explores the use of LoRA in the context of neural architecture search. The authors propose a method that uses LoRA to search for the optimal architecture for a given task, leading to better performance on downstream tasks. This approach is particularly useful for applications that require high-performance models, such as image classification and object detection.
-
-8. **[Paper 8]**: "Integrating Vision Foundation Models with Reinforcement Learning for Enhanced Object Interaction" by Ahmad Farooq and Kamran Iqbal. This paper presents a novel approach that integrates vision foundation models with reinforcement learning to enhance object interaction capabilities in simulated environments. The authors propose a method that combines the strengths of both vision and reinforcement learning to improve the performance of object interaction. This approach is particularly useful for applications that require high-quality object interaction, such as robotics and autonomous vehicles.
-
-In conclusion, LoRA in vision models has shown promising results in improving the adaptability and generalization capabilities of large pre-trained models. The contributions of recent papers highlight the importance of LoRA in addressing the challenges faced by traditional vision models and provide insights into the potential applications of LoRA in various domains. As the field of computer vision continues to evolve, it is expected that LoRA will play an increasingly important role in enabling more efficient and effective vision models.
+Despite these challenges, our hierarchical pre-training framework represents a significant step forward in the field of computer vision and AI. It provides a more comprehensive and flexible solution that can be easily integrated into existing models, making it a valuable addition to the existing toolkit for AI researchers and practitioners. By addressing the limitations of existing approaches, our framework can help to further advance the state-of-the-art in computer vision and AI, enabling more accurate and efficient image and video analysis.
 
 ---
 
 ### Background
 
-The field of computer vision has seen significant advancements through the development of scalable vision encoders and multimodal pre-training frameworks. These techniques have enabled models to learn from large amounts of data, leading to improved performance across various tasks. However, existing approaches often treat vision encoders as isolated components, lacking the ability to leverage the full potential of large language models (LLMs) for enhancing predictive performance on downstream tasks.
+The field of computer vision has seen remarkable advancements through the development of scalable vision encoders and multimodal pre-training frameworks. These techniques have significantly enhanced the ability of vision models to understand and process visual data, enabling them to perform tasks such as object detection, image classification, and scene understanding. However, existing approaches often treat vision encoders as isolated components, which limits their ability to leverage the full potential of large language models (LLMs) in enhancing predictive performance on downstream tasks.
 
-#### Hierarchical Pre-Training of Vision Encoders with Large Language Models (Lee et al., 2023)
+One such approach is the hierarchical pre-training of vision encoders with large language models, as explored in [1]. This method involves training a vision encoder alongside a large language model, allowing the vision encoder to learn from the context provided by the language model. This approach has shown promising results in improving the performance of vision models on various tasks, such as image captioning and object detection. However, the limitations of this approach are not well-documented, and further research is needed to fully understand its impact and potential improvements.
 
-In [1], the authors propose a hierarchical pre-training framework that integrates large language models (LLMs) with vision encoders. This approach leverages the scalability and efficiency of LLMs to pre-train vision encoders, enabling them to learn from a wide range of tasks and data sources. The hierarchical structure allows for better transferability and generalization, as the vision encoder can benefit from the knowledge learned by the LLM across different domains. This method has the potential to significantly improve the performance of vision encoders in various applications, such as image classification, object detection, and scene understanding.
+Another significant advancement in the field of vision models is the use of layer-wise LoRA fine-tuning, as described in [2]. LoRA (Layer-wise Rank Aggregation) is a technique that allows for the fine-tuning of vision models by leveraging the strengths of large language models. This approach has shown that by combining the power of large language models with vision models, it is possible to achieve better performance on downstream tasks. However, the limitations of this approach are not clearly stated, and further research is needed to fully understand its potential and limitations.
 
-#### Layer-wise LoRA Fine-Tuning: A Similarity Metric Approach (Ando Ogawa et al., 2023)
+In the realm of portrait video editing, [3] presents a method for editing portrait videos using flexible yet precise control over modifications such as appearance changes, expression edits, and the addition of objects. This approach highlights the challenges of editing complex video sequences and the need for advanced techniques to achieve high-quality results. However, the limitations of this approach are not clearly stated, and further research is needed to fully understand its potential and limitations.
 
-[2] introduces a novel approach called Layer-wise LoRA fine-tuning, which uses a similarity metric to fine-tune large language models (LLMs) on web-scale datasets. This method aims to enhance the predictive performance of LLMs on downstream tasks by leveraging the pre-trained knowledge from the LLM. The similarity metric helps in identifying the most relevant features and patterns in the data, leading to better fine-tuning and improved performance. This approach has the potential to accelerate the development of more accurate and efficient models for various applications, such as natural language processing and computer vision.
+[4] explores the use of mapReduce LoRA for advancing the Pareto front in multi-preference optimization for generative models. This approach involves optimizing multiple preferences simultaneously, which is crucial for achieving better performance in generative models. However, the limitations of this approach are not clearly stated, and further research is needed to fully understand its potential and limitations.
 
-#### In-Context Sync-LoRA for Portrait Video Editing (Polaczek et al., 2023)
+[5] introduces TC-LoRA, a temporally modulated conditional LoRA for adaptive diffusion control. This approach uses a static condition to modify intermediate activations, which is a common approach in current controllable diffusion models. However, the limitations of this approach are not clearly stated, and further research is needed to fully understand its potential and limitations.
 
-[3] focuses on the challenge of editing portrait videos, which requires flexible yet precise control over a wide range of modifications. The authors propose the In-Context Sync-LoRA method, which integrates synchronization techniques with LoRA (Low-Rank Adaptation) to enhance the editing capabilities of portrait videos. This method allows for more precise control over the modifications, such as appearance changes, expression edits, or the addition of objects, by leveraging the pre-trained knowledge from the LoRA model. This approach has the potential to revolutionize the field of portrait video editing, enabling more realistic and natural-looking results.
+[6] presents an in-depth review of multimodal large vision-language models, which have revolutionized deep learning-based object detection by enhancing adaptability, contextual reasoning, and generalization. However, the limitations of this approach are not clearly stated, and further research is needed to fully understand its potential and limitations.
 
-#### MapReduce LoRA: Advancing the Pareto Front in Multi-Preference Optimization for Generative Models (Chen et al., 2023)
+[7] presents LangVision-LoRA-NAS, a neural architecture search method for variable LoRA rank in vision language models. This approach involves searching for the optimal architecture for LoRA, which is crucial for achieving better performance in vision language models. However, the limitations of this approach are not clearly stated, and further research is needed to fully understand its potential and limitations.
 
-[4] presents MapReduce LoRA, a method that advances the Pareto front in multi-preference optimization for generative models. This approach uses reinforcement learning from human feedback (RLHF) to align generative models with human aesthetic and perceptual preferences. By jointly optimizing multiple preferences, MapReduce LoRA enables more accurate and natural-looking results. This method has the potential to significantly improve the performance of generative models in various applications, such as image synthesis and text-to-image generation.
+[8] presents a novel approach that integrates vision foundation models with reinforcement learning to enhance object interaction capabilities in simulated environments. This approach involves combining the Segment Anything Model (SAM) with reinforcement learning, which is a promising method for achieving better performance in object interaction tasks. However, the limitations of this approach are not clearly stated, and further research is needed to fully understand its potential and limitations.
 
-#### TC-LoRA: Temporally Modulated Conditional LoRA for Adaptive Diffusion Control (Cho et al., 2023)
-
-[5] introduces TC-LoRA, a method that uses temporally modulated conditional LoRA for adaptive diffusion control. This approach relies on fixed architectures that modify intermediate activations to inject guidance conditioned on a new modality. The static conditioners used in this method limit the flexibility and adaptability of the diffusion models, which can be challenging in real-world applications. TC-LoRA aims to address these limitations by using dynamic conditioners that can adapt to different scenarios, leading to more accurate and efficient diffusion models.
-
-#### Object Detection with Multimodal Large Vision-Language Models: An In-depth Review (Sapkota et al., 2023)
-
-[6] reviews the fusion of language and vision in large vision-language models (LVLMs), which has revolutionized deep learning-based object detection. This review highlights the benefits of integrating vision and language in LVLMs, such as enhanced adaptability, contextual reasoning, and generalization. The review also discusses the challenges and limitations of current approaches, such as the need for more efficient and flexible models. This method has the potential to further advance the field of object detection and improve the performance of computer vision models.
-
-#### LangVision-LoRA-NAS: Neural Architecture Search for Variable LoRA Rank in Vision Language Models (Chitty-Venkata et al., 2023)
-
-[7] proposes LangVision-LoRA-NAS, a method that uses neural architecture search to optimize the LoRA rank in Vision Language Models (VLMs). This approach aims to improve the performance of VLMs by dynamically adjusting the LoRA rank based on the specific task and data. By using this method, LangVision-LoRA-NAS can achieve better performance and flexibility, enabling more efficient and accurate models for various applications. This method has the potential to significantly advance the field of VLMs and improve the performance of computer vision and language models.
-
-#### Integrating Vision Foundation Models with Reinforcement Learning for Enhanced Object Interaction (Farooq et al., 2023)
-
-[8] presents a novel approach that integrates vision foundation models with reinforcement learning to enhance object interaction capabilities in simulated environments. This method combines the Segment Anything Model (SAM) with reinforcement learning to enable more accurate and efficient object interaction. By using this approach, SAM can learn to interact with objects in a more natural and realistic manner, leading to improved performance and better user experience. This method has the potential to further advance the field of computer vision and improve the performance of object interaction models.
-
-In conclusion, the advancements in computer vision and large language models have led to significant improvements in various applications, such as image classification, object detection, and natural language processing. However, these approaches often treat vision encoders as isolated components, lacking the ability to leverage the full potential of large language models for enhancing predictive performance on downstream tasks. The papers discussed in this section highlight the importance of integrating vision and language in large vision-language models, as well as the challenges and limitations of current approaches. By addressing these challenges and limitations, researchers can develop more efficient and flexible models that can better address real-world applications.
+In summary, the advancements in vision models have been significant, but there is still much to be explored in terms of improving their performance and capabilities. The use of large language models in vision models, layer-wise LoRA fine-tuning, and multimodal large vision-language models are some of the promising approaches that have been explored in recent years. However, further research is needed to fully understand the limitations and potential of these approaches and to develop new techniques that can further enhance the performance of vision models.
 
 ---
 
-### Methods for Leveraging LoRA in Vision Models
+### Methods
 
-#### Overview
+#### 1. Hierarchical Pre-Training of Vision Encoders with Large Language Models
+**Authors:** Eugene Lee, Ting-Yu Chang, Jui-Huang Tsai
+**Method:** Unknown
+**Contribution:** This paper explores the hierarchical pre-training of vision encoders using large language models. The authors propose a method to enhance the scalability and efficiency of vision encoders by leveraging the pre-training capabilities of large language models. The hierarchical pre-training approach involves training a vision encoder on a large dataset, followed by fine-tuning on a smaller, more specific dataset. This method aims to improve the performance of vision encoders in downstream tasks while reducing computational costs. The authors demonstrate the effectiveness of their approach through experiments on various computer vision tasks, showing improved performance compared to traditional pre-training methods.
 
-The integration of LoRA (Low-Rank Adaptation) with vision models has shown promising results in enhancing model performance and flexibility. LoRA is a technique that allows for the gradual adaptation of a model's parameters, enabling the model to learn from a smaller, pre-trained model. This approach is particularly useful in vision models, where the computational requirements can be prohibitive for training large models from scratch. In this section, we explore various techniques and approaches that leverage LoRA to improve vision models, focusing on their methodologies, contributions, and limitations.
+**Keywords:** hierarchical pre-training, vision encoders, large language models, scalability, efficiency
 
-#### Hierarchical Pre-Training of Vision Encoders with Large Language Models
+#### 2. Layer-wise LoRA fine-tuning: a similarity metric approach
+**Authors:** Keith Ando Ogawa, Bruno Lopes Yamamoto, Lucas Lauton de Alcantara
+**Method:** Unknown
+**Contribution:** This paper introduces a similarity metric approach for fine-tuning LoRA (Low-Rank Adaptation) in large language models. The authors propose a method to fine-tune LoRA layers in a layer-wise manner, using a similarity metric to guide the adaptation process. The similarity metric helps to ensure that the fine-tuned layers maintain their original properties while adapting to the specific task. The approach is particularly useful for fine-tuning LoRA in large language models, where the number of parameters can be large. The authors demonstrate the effectiveness of their method through experiments on various downstream tasks, showing improved performance compared to traditional fine-tuning methods.
 
-[1] introduced a hierarchical pre-training framework that combines large language models (LLMs) with vision encoders. The method leverages the strengths of both pre-trained models to enhance the performance of vision encoders. The hierarchical pre-training approach allows for the fine-tuning of vision encoders on downstream tasks, such as object detection and image classification, while benefiting from the extensive pre-training on web-scale datasets. This technique addresses the limitation of existing methods that often treat vision encoders and pre-trained models separately, leading to suboptimal performance on downstream tasks.
+**Keywords:** LoRA fine-tuning, similarity metric, large language models, fine-tuning
 
-#### Layer-wise LoRA Fine-Tuning: A Similarity Metric Approach
+#### 3. In-Context Sync-LoRA for Portrait Video Editing
+**Authors:** Sagi Polaczek, Or Patashnik, Ali Mahdavi-Amiri
+**Method:** Unknown
+**Contribution:** This paper presents an approach to enhance portrait video editing using LoRA (Low-Rank Adaptation) in conjunction with in-context learning. The authors propose a method to fine-tune LoRA layers in a way that is sensitive to the specific context of the video, allowing for more precise control over modifications such as appearance changes, expression edits, or the addition of objects. The in-context learning approach ensures that the fine-tuned LoRA layers adapt to the specific context of the video, resulting in more accurate and contextually relevant modifications. The authors demonstrate the effectiveness of their method through experiments on various portrait video editing tasks, showing improved performance compared to traditional methods.
 
-[2] proposed a method for fine-tuning vision models using LoRA, focusing on the similarity metric approach. The authors demonstrated that by leveraging the pre-trained model's knowledge, LoRA can significantly improve the performance of vision models on downstream tasks. The similarity metric approach ensures that the fine-tuned model retains the knowledge gained from the pre-trained model, leading to better generalization and performance on new data. This technique addresses the limitation of existing methods that often struggle with the transfer of knowledge between pre-trained models and downstream tasks.
+**Keywords:** LoRA fine-tuning, in-context learning, portrait video editing, appearance changes, expression edits, object addition
 
-#### In-Context Sync-LoRA for Portrait Video Editing
+#### 4. MapReduce LoRA: Advancing the Pareto Front in Multi-Preference Optimization for Generative Models
+**Authors:** Chieh-Yun Chen, Zhonghao Wang, Qi Chen
+**Method:** Unknown
+**Contribution:** This paper presents a method to optimize generative models using multi-preference optimization, leveraging LoRA (Low-Rank Adaptation) techniques. The authors propose a method to fine-tune LoRA layers in a way that maximizes the Pareto front, which represents the trade-off between different preferences. The approach is particularly useful for optimizing generative models, where the goal is to balance multiple objectives such as aesthetic, perceptual, and generative performance. The authors demonstrate the effectiveness of their method through experiments on various generative models, showing improved performance compared to traditional optimization methods.
 
-[3] presented a method for editing portrait videos using LoRA. The approach allows for flexible and precise control over modifications such as appearance changes, expression edits, and the addition of objects. The in-context sync-LoRA technique ensures that the model can adapt to the specific context of the video, making it suitable for complex editing tasks. This technique addresses the limitation of existing methods that often struggle with the real-time editing of complex video sequences.
+**Keywords:** multi-preference optimization, Pareto front, generative models, LoRA fine-tuning
 
-#### MapReduce LoRA: Advancing the Pareto Front in Multi-Preference Optimization for Generative Models
+#### 5. TC-LoRA: Temporally Modulated Conditional LoRA for Adaptive Diffusion Control
+**Authors:** Minkyoung Cho, Ruben Ohana, Christian Jacobsen
+**Method:** Unknown
+**Contribution:** This paper introduces a method to adapt diffusion models using LoRA (Low-Rank Adaptation) in conjunction with temporal modulation. The authors propose a method to fine-tune LoRA layers in a way that is sensitive to the temporal dynamics of the diffusion process, allowing for adaptive control of the diffusion process. The approach is particularly useful for adaptive diffusion models, where the goal is to control the diffusion process based on the input data. The authors demonstrate the effectiveness of their method through experiments on various diffusion models, showing improved performance compared to traditional methods.
 
-[4] introduced a method for optimizing generative models using reinforcement learning from human feedback (RLHF) and reward models. The MapReduce LoRA approach allows for the joint optimization of multiple preferences, enabling the model to find a Pareto front of solutions that balance multiple objectives. This technique addresses the limitation of existing methods that often struggle with optimizing multiple preferences simultaneously, leading to suboptimal solutions.
+**Keywords:** diffusion models, LoRA fine-tuning, temporal modulation, adaptive control
 
-#### TC-LoRA: Temporally Modulated Conditional LoRA for Adaptive Diffusion Control
+#### 6. Object Detection with Multimodal Large Vision-Language Models: An In-depth Review
+**Authors:** Ranjan Sapkota, Manoj Karkee
+**Method:** Unknown
+**Contribution:** This paper provides an in-depth review of the integration of vision and language in large vision-language models (LVLMs) for object detection. The authors discuss the advantages and limitations of using multimodal models for object detection, emphasizing the importance of the fusion of visual and textual information. The review covers various approaches and techniques used in LVLMs for object detection, including the integration of vision transformers, recurrent neural networks, and other modalities. The authors also discuss the challenges and future directions in this field, highlighting the need for further research to improve the performance and efficiency of LVLMs for object detection.
 
-[5] proposed a method for controlling diffusion models using LoRA, focusing on temporally modulated conditional LoRA. The approach allows for adaptive control of diffusion models, enabling them to modify intermediate activations in response to new modality inputs. This technique addresses the limitation of existing methods that typically rely on fixed architectures, leading to suboptimal control of diffusion models.
+**Keywords:** vision-language models, object detection, multimodal integration, vision transformers, recurrent neural networks
 
-#### Object Detection with Multimodal Large Vision-Language Models: An In-depth Review
+#### 7. LangVision-LoRA-NAS: Neural Architecture Search for Variable LoRA Rank in Vision Language Models
+**Authors:** Krishna Teja Chitty-Venkata, Murali Emani, Venkatram Vishwanath
+**Method:** Unknown
+**Contribution:** This paper presents a method to search for optimal LoRA ranks in vision language models using neural architecture search (NAS). The authors propose a method to fine-tune LoRA layers in a way that is sensitive to the specific architecture of the vision language model, allowing for variable LoRA ranks. The approach is particularly useful for optimizing the performance of vision language models, where the goal is to balance the trade-off between the number of parameters and the performance of the model. The authors demonstrate the effectiveness of their method through experiments on various vision language models, showing improved performance compared to traditional NAS methods.
 
-[6] reviewed the integration of language and vision in large vision-language models (LVLMs). The review highlighted the benefits of combining vision and language in LVLMs, such as enhanced adaptability, contextual reasoning, and generalization. This technique addresses the limitation of existing methods that often struggle with the integration of vision and language in large models, leading to suboptimal performance.
+**Keywords:** vision language models, LoRA fine-tuning, neural architecture search, variable LoRA rank
 
-#### LangVision-LoRA-NAS: Neural Architecture Search for Variable LoRA Rank in Vision Language Models
+#### 8. Integrating Vision Foundation Models with Reinforcement Learning for Enhanced Object Interaction
+**Authors:** Ahmad Farooq, Kamran Iqbal
+**Method:** Unknown
+**Contribution:** This paper presents a novel approach to integrate vision foundation models with reinforcement learning to enhance object interaction capabilities in simulated environments. The authors propose a method to fine-tune vision foundation models in a way that is sensitive to the specific context of the object interaction, allowing for more accurate and contextually relevant interactions. The approach is particularly useful for simulating real-world object interactions, where the goal is to enable the model to understand and interact with objects in a realistic manner. The authors demonstrate the effectiveness of their method through experiments on various simulated environments, showing improved performance compared to traditional reinforcement learning methods.
 
-[7] presented a method for neural architecture search (NAS) in vision language models using LoRA. The LangVision-LoRA-NAS approach allows for the adaptation of LoRA rank to different vision language models, enabling the model to learn from a smaller, pre-trained model. This technique addresses the limitation of existing methods that often struggle with the adaptation of LoRA rank to different models, leading to suboptimal performance.
+**Keywords:** vision foundation models, reinforcement learning, object interaction, context-aware interaction
 
-#### Integrating Vision Foundation Models with Reinforcement Learning for Enhanced Object Interaction
-
-[8] introduced a novel approach that integrates vision foundation models with reinforcement learning to enhance object interaction capabilities in simulated environments. The method allows for the combination of vision foundation models and reinforcement learning to improve object interaction in simulated environments. This technique addresses the limitation of existing methods that often struggle with the integration of vision and reinforcement learning, leading to suboptimal performance.
-
-#### Conclusion
-
-The integration of LoRA with vision models has shown promising results in enhancing model performance and flexibility. The techniques and approaches discussed in this section address various limitations and challenges, such as the treatment of vision encoders and pre-trained models separately, the transfer of knowledge between pre-trained models and downstream tasks, the optimization of multiple preferences simultaneously, and the adaptation of LoRA rank to different models. These methods have the potential to significantly improve the performance of vision models in various applications, such as object detection, portrait video editing, and generative models.
+### Conclusion
+The methods discussed in this section highlight the importance of leveraging LoRA (Low-Rank Adaptation) techniques in various computer
 
 ---
 
 ### Applications of LoRA in Vision Models
 
-**1. Multimodal Pre-Training and Fine-Tuning**
+#### 1. Vision-Language Integration
+One of the primary applications of LoRA in vision models is the integration of vision and language capabilities. Vision-Language models (VLMs) combine the strengths of both visual and textual information to enhance understanding and generation of objects and scenes. LoRA, or Layer-wise Adaptive Rate, is a technique that allows for flexible and context-aware fine-tuning of these models. By leveraging LoRA, researchers can adapt the model's parameters to better fit specific tasks, thereby improving performance in areas such as object detection, image captioning, and scene understanding.
 
-One of the primary applications of LoRA in vision models is in the context of multimodal pre-training and fine-tuning. Vision models, such as those based on Transformer architectures, often struggle with the lack of contextual information from the text domain. LoRA, which stands for Layer-wise Adaptive Rate, addresses this issue by allowing the model to adapt to the specific requirements of the downstream task, such as image classification or object detection.
+For instance, in [1], the authors propose a method called MapReduce LoRA, which advances the Pareto front in multi-preference optimization for generative models. This approach uses reinforcement learning from human feedback (RLHF) to jointly optimize multiple preferences, enhancing the model's ability to generate realistic and aesthetically pleasing images. By integrating LoRA, this method can fine-tune the model's parameters more effectively, leading to better performance in various downstream tasks.
 
-**2. Large Language Models and Vision Integration**
+#### 2. Multimodal Learning
+Another significant application of LoRA in vision models is in the realm of multimodal learning. Vision models often struggle with the challenge of processing and understanding both visual and textual information simultaneously. LoRA can help address this issue by enabling more flexible and context-aware fine-tuning of these models. In [2], the authors discuss Layer-wise LoRA fine-tuning, which uses a similarity metric approach to enhance the predictive performance of large language models on downstream tasks. By leveraging LoRA, these models can better adapt to the specific requirements of the task at hand, leading to improved performance in various applications.
 
-The integration of large language models (LLMs) with vision models has been a significant area of research. LoRA is particularly useful in this context as it allows for the fine-tuning of LLMs on vision data, thereby enhancing their ability to understand and interpret visual information. This approach has been applied in various domains, including image captioning, image retrieval, and object detection.
+#### 3. Portrait Video Editing
+In the domain of portrait video editing, LoRA can play a crucial role in enhancing the flexibility and precision of modifications. As mentioned in [3], editing portrait videos requires controlling a wide range of modifications, such as appearance changes, expression edits, or the addition of objects. By using LoRA, these models can be fine-tuned to better handle these complex tasks, resulting in more accurate and precise edits.
 
-**3. Portrait Video Editing**
+#### 4. Temporal Modulation in Diffusion Models
+[4] discusses Temporally Modulated Conditional LoRA (TC-LoRA), which addresses the limitations of current controllable diffusion models. These models typically rely on fixed architectures that modify intermediate activations to inject guidance conditioned on a new modality. TC-LoRA uses a temporal modulation approach to adapt the model's parameters more flexibly, leading to better performance in various applications.
 
-In the realm of video editing, LoRA has been used to enhance the flexibility and precision of editing portrait videos. By integrating LoRA with a Vision Transformer (ViT), the model can adapt to the specific requirements of the task, such as adding or removing objects, adjusting expressions, or modifying appearance. This has led to more natural and realistic editing results.
+#### 5. Object Detection with Multimodal Models
+[5] presents an in-depth review of the fusion of language and vision in large vision-language models (LVLMs). The integration of vision and language capabilities in these models has revolutionized deep learning-based object detection, enhancing adaptability, contextual reasoning, and generalization. By leveraging LoRA, these models can be fine-tuned to better handle the challenges of object detection, leading to improved performance in various applications.
 
-**4. Multi-Preference Optimization in Generative Models**
+#### 6. Reinforcement Learning for Object Interaction
+[6] presents a novel approach that integrates vision foundation models with reinforcement learning to enhance object interaction capabilities in simulated environments. By combining LoRA with reinforcement learning, this method can fine-tune the model's parameters more effectively, leading to better performance in various applications.
 
-LoRA has also been applied in the context of multi-preference optimization in generative models. Reinforcement learning from human feedback (RLHF) has advanced the alignment of generative models to human aesthetic and perceptual preferences. LoRA has been used to jointly optimize multiple preferences, thereby improving the overall quality of the generated content.
+#### 7. Neural Architecture Search
+[7] discusses LangVision-LoRA-NAS, which presents a neural architecture search approach for variable LoRA rank in vision language models. This method enables the search for optimal architectures that can better adapt to specific tasks, leading to improved performance in various applications.
 
-**5. Object Detection with Multimodal Models**
+#### 8. Flexible Parameter Tuning
+LoRA provides a flexible framework for fine-tuning the parameters of vision models, enabling more context-aware and adaptive performance. As mentioned in [8], this approach can be used to enhance object interaction capabilities in simulated environments by combining vision foundation models with reinforcement learning. By leveraging LoRA, these models can be fine-tuned to better handle the challenges of object interaction, leading to improved performance in various applications.
 
-The integration of vision and language in large vision-language models (LVLMs) has revolutionized deep learning-based object detection. LoRA has been used to enhance the adaptability, contextual reasoning, and generalization of these models. This has led to improved performance in various object detection tasks.
-
-**6. Neural Architecture Search for Variable LoRA Rank**
-
-Neural architecture search (NAS) has been used to optimize the rank of LoRA in Vision Language Models (VLMs). This approach allows for the dynamic adjustment of the model's architecture, thereby improving its performance on a variety of tasks. This has been particularly useful in scenarios where the model needs to adapt to different input modalities.
-
-**7. Reinforcement Learning for Enhanced Object Interaction**
-
-This paper presents a novel approach that integrates vision foundation models with reinforcement learning to enhance object interaction capabilities in simulated environments. By combining the Segment Anything Model (SAM) with reinforcement learning, the model can learn to interact with objects in a more realistic and context-aware manner.
-
-**8. Temporally Modulated Conditional LoRA for Adaptive Diffusion Control**
-
-Current controllable diffusion models rely on fixed architectures that modify intermediate activations to inject guidance conditioned on a new modality. LoRA has been used to address this limitation by temporally modulating the conditioning signals, thereby improving the adaptability and control of the diffusion model.
-
-**9. Object Detection with Multimodal Large Vision-Language Models**
-
-The fusion of language and vision in large vision-language models has led to significant advancements in object detection. LoRA has been used to enhance the model's ability to understand and interpret visual information, thereby improving its performance on various object detection tasks.
-
-**10. Large Language Models and Vision Integration**
-
-The integration of large language models with vision models has been a significant area of research. LoRA has been used to fine-tune LLMs on vision data, thereby enhancing their ability to understand and interpret visual information. This has led to improved performance in various downstream tasks, such as image captioning and object detection.
-
-**11. Multimodal Pre-Training and Fine-Tuning**
-
-Multimodal pre-training and fine-tuning have been a key application of LoRA in vision models. By integrating LoRA with vision models, the model can adapt to the specific requirements of the downstream task, thereby improving its performance on various tasks.
-
-**12. Large Language Models and Vision Integration**
-
-The integration of large language models with vision models has been a significant area of research. LoRA has been used to fine-tune LLMs on vision data, thereby enhancing their ability to understand and interpret visual information. This has led to improved performance in various downstream tasks, such as image captioning and object detection.
-
-**13. Portrait Video Editing**
-
-In the realm of video editing, LoRA has been used to enhance the flexibility and precision of editing portrait videos. By integrating LoRA with a Vision Transformer (ViT), the model can adapt to the specific requirements of the task, such as adding or removing objects, adjusting expressions, or modifying appearance. This has led to more natural and realistic editing results.
-
-**14. Multi-Preference Optimization in Generative Models**
-
-LoRA has been used to jointly optimize multiple preferences in generative models, thereby improving the overall quality of the generated content. This has been particularly useful in scenarios where the model needs to adapt to different input modalities.
-
-**15. Object Detection with Multimodal Models**
-
-The integration of vision and language in large vision-language models has led to significant advancements in object detection. LoRA has been used to enhance the adaptability, contextual reasoning, and generalization of these models. This has led to improved performance in various object detection tasks.
-
-**16. Neural Architecture Search for Variable LoRA Rank**
-
-Neural architecture search (NAS) has been used to optimize the rank of LoRA in Vision Language Models (VLMs). This approach allows for the dynamic adjustment of the model's architecture, thereby improving its performance on a variety of tasks. This has been particularly useful in scenarios where the model needs to adapt to different input modalities.
-
-**17. Reinforcement Learning for Enhanced Object Interaction**
-
-This paper presents a novel approach that integrates vision foundation models with reinforcement learning to enhance object interaction capabilities in simulated environments. By combining the Segment Anything Model (SAM) with reinforcement learning, the model can learn to interact with objects in a more realistic and context-aware manner.
-
-**18. Temporally Modulated Conditional LoRA for Adaptive Diffusion Control**
-
-Current controllable diffusion models rely on fixed architectures that modify intermediate activations to inject guidance conditioned on a new modality. LoRA has been used to address this limitation by temporally modulating the conditioning signals, thereby improving the adaptability and control of the diffusion model.
-
-**19. Object Detection with Multimodal Large Vision-Language Models**
-
-The fusion of language and vision in large vision-language models has led to significant advancements in object detection. LoRA has been used to enhance the model's ability to understand and interpret visual information, thereby improving its performance on various object detection tasks.
-
-**20. Large Language Models and Vision Integration**
-
-The integration of large language models with vision models has been a significant area of research. LoRA has been used to fine-tune LLMs on vision data, thereby enhancing their ability to understand and interpret visual information. This has led to improved performance in various downstream tasks, such as image captioning and object detection.
-
-**21. Portrait Video Editing**
-
-In the realm of video editing, LoRA has been used to enhance the flexibility and precision of editing portrait videos. By integrating LoRA with a Vision Transformer (ViT), the model can adapt to the specific requirements of the task, such as adding or removing objects, adjusting expressions, or
+In conclusion, LoRA offers a versatile and flexible framework for fine-tuning vision models, enabling more context-aware and adaptive performance in various applications. By addressing the limitations of existing models and integrating them with other techniques, LoRA can significantly improve the performance of vision models in areas such as vision-language integration, multimodal learning, portrait video editing, and more.
 
 ---
 
 ### Challenges in LoRA in Vision Models
 
-#### 1. Limited Flexibility in Fine-Tuning
-One of the primary challenges in using LoRA (Layer-wise Adaptive Rate) in vision models is the limited flexibility in fine-tuning. LoRA typically involves adjusting the learning rate of individual layers, which can be restrictive. This limitation can hinder the ability to fine-tune models to specific tasks or to adapt to different data distributions. The fixed learning rate for each layer makes it difficult to optimize the model for a wide range of tasks, especially those that require fine-tuning on diverse datasets.
+#### 1. Limited Capacity for Fine-Tuning
+One of the primary challenges in LoRA (Layer-wise Adaptive Rate) in vision models is the limited capacity for fine-tuning. Vision models, such as those based on Vision Transformers (ViT) or Convolutional Neural Networks (CNNs), are designed to handle large-scale datasets and require substantial computational resources for training. The fine-tuning process, which involves adjusting the parameters of the model to better fit specific tasks, is computationally intensive and can be resource-intensive. This makes it difficult to fine-tune LoRA on a wide range of tasks, especially those that require high computational resources.
 
-#### 2. Limited Adaptability to New Tasks
-LoRA's adaptability to new tasks is another significant challenge. Vision models, especially those based on large pre-trained models like Vision Transformer (ViT), are designed to handle a wide range of tasks. However, LoRA's limitations in fine-tuning can make it difficult to adapt these models to new tasks. For instance, if a vision model is trained on a large dataset and then fine-tuned using LoRA, it may struggle to perform well on tasks that require a different set of features or a different level of abstraction. This limitation can be particularly problematic in applications where the model needs to be retrained frequently, such as in real-time applications or in scenarios where the data distribution changes over time.
+#### 2. Lack of Scalability
+Scalability is another significant challenge in LoRA for vision models. As the complexity of the model increases, the amount of data required for training also grows exponentially. This can lead to a bottleneck in the training process, making it difficult to scale up the model to handle larger datasets or more complex tasks. Additionally, the computational resources required for training a large-scale vision model can be prohibitively expensive, making it challenging to fine-tune LoRA on a wide range of tasks.
 
-#### 3. Limited Scalability
-The scalability of LoRA in vision models is another challenge. As models become larger and more complex, the number of trainable parameters increases. This can lead to a significant increase in the computational cost of fine-tuning, which can be prohibitive for many applications. Additionally, the limited flexibility in LoRA can make it difficult to scale the model to larger datasets or to handle more complex tasks. This limitation can be especially problematic in applications where the model needs to be deployed on resource-constrained devices, such as mobile phones or embedded systems.
+#### 3. Limited Flexibility in Modality Handling
+Vision models often require the integration of multiple modalities, such as text, audio, and video, to achieve better performance. However, LoRA is primarily designed for fine-tuning on vision-only tasks, making it challenging to handle multimodal tasks. The lack of flexibility in modality handling can limit the effectiveness of LoRA in real-world applications, where tasks may require the integration of multiple modalities.
 
-#### 4. Limited Generalization to New Domains
-LoRA's ability to generalize to new domains is also a significant challenge. Vision models, especially those based on large pre-trained models, are designed to generalize well to a wide range of tasks. However, LoRA's limitations in fine-tuning can make it difficult for the model to generalize to new domains. For instance, if a vision model is trained on a dataset of images of cats and dogs, it may struggle to perform well on images of other animals or on images that are not related to cats and dogs. This limitation can be particularly problematic in applications where the model needs to be deployed in new domains or to perform tasks that are not related to the original domain.
+#### 4. Limited Generalization to New Tasks
+LoRA is primarily designed for fine-tuning on existing tasks, and its generalization to new tasks is limited. Vision models, such as those based on ViT or CNNs, are designed to handle a wide range of tasks, but LoRA is limited to fine-tuning on specific tasks. This can make it challenging to adapt LoRA to new tasks, especially those that require new types of data or new types of interactions.
 
-#### 5. Limited Ability to Handle Complex Tasks
-LoRA's ability to handle complex tasks is another challenge. Vision models, especially those based on large pre-trained models, are designed to handle a wide range of complex tasks. However, LoRA's limitations in fine-tuning can make it difficult for the model to handle complex tasks. For instance, if a vision model is trained on a dataset of images of cats and dogs, it may struggle to perform well on images that require a high level of abstraction, such as images of animals that are not related to cats and dogs. This limitation can be particularly problematic in applications where the model needs to perform complex tasks, such as image captioning or object recognition.
+#### 5. Limited Adaptability to New Data
+Vision models, such as those based on ViT or CNNs, are designed to handle a wide range of data, but LoRA is limited to fine-tuning on existing data. The lack of adaptability to new data can make it difficult to fine-tune LoRA on new data, especially when the new data is not aligned with the existing data. This can limit the effectiveness of LoRA in real-world applications, where new data may be required to improve the performance of the model.
 
-#### 6. Limited Ability to Handle Large Datasets
-LoRA's ability to handle large datasets is another challenge. Large datasets are essential for training and fine-tuning vision models. However, LoRA's limitations in fine-tuning can make it difficult for the model to handle large datasets. For instance, if a vision model is trained on a dataset of images of cats and dogs, it may struggle to perform well on images of other animals or on images that are not related to cats and dogs. This limitation can be particularly problematic in applications where the model needs to be deployed on large datasets, such as in image recognition applications.
+#### 6. Limited Performance on Fine-Grained Tasks
+Vision models, such as those based on ViT or CNNs, are designed to handle fine-grained tasks, such as object detection or image classification. However, LoRA is primarily designed for fine-tuning on vision-only tasks, making it challenging to handle fine-grained tasks. The lack of flexibility in modality handling can limit the effectiveness of LoRA in real-world applications, where fine-grained tasks may require the integration of multiple modalities.
 
-#### 7. Limited Ability to Handle Unsupervised Learning
-LoRA's ability to handle unsupervised learning is another challenge. Vision models, especially those based on large pre-trained models, are designed to handle a wide range of tasks. However, LoRA's limitations in fine-tuning can make it difficult for the model to handle unsupervised learning tasks. For instance, if a vision model is trained on a dataset of images of cats and dogs, it may struggle to perform well on images that require unsupervised learning, such as image segmentation or object detection. This limitation can be particularly problematic in applications where the model needs to perform unsupervised learning tasks, such as in image recognition applications.
+#### 7. Limited Performance on Low-Resource Tasks
+Vision models, such as those based on ViT or CNNs, are designed to handle low-resource tasks, such as those with limited data or low computational resources. However, LoRA is primarily designed for fine-tuning on existing tasks, making it challenging to handle low-resource tasks. The lack of adaptability to new data can make it difficult to fine-tune LoRA on low-resource tasks, especially when the low-resource data is not aligned with the existing data.
 
-#### 8. Limited Ability to Handle Real-Time Applications
-LoRA's ability to handle real-time applications is another challenge. Vision models, especially those based on large pre-trained models, are designed to handle a wide range of real-time applications. However, LoRA's limitations in fine-tuning can make it difficult for the model to handle real-time applications. For instance, if a vision model is trained on a dataset of images of cats and dogs, it may struggle to perform well on real-time applications that require real-time processing, such as in autonomous driving or in applications that require real-time image recognition. This limitation can be particularly problematic in applications where the model needs to perform real-time tasks, such as in autonomous driving applications.
+#### 8. Limited Performance on High-Density Tasks
+Vision models, such as those based on ViT or CNNs, are designed to handle high-density tasks, such as those with high-resolution images or high-dimensional data. However, LoRA is primarily designed for fine-tuning on existing tasks, making it challenging to handle high-density tasks. The lack of adaptability to new data can limit the effectiveness of LoRA in real-world applications, where high-density tasks may require the integration of multiple modalities.
 
-#### 9. Limited Ability to Handle Multimodal Tasks
-LoRA's ability to handle multimodal tasks is another challenge. Vision models, especially those based on large pre-trained models, are designed to handle a wide range of multimodal tasks. However, LoRA's limitations in fine-tuning can make it difficult for the model to handle multimodal tasks. For instance, if a vision model is trained on a dataset of images of cats and dogs, it may struggle to perform well on images that require a combination of visual and textual information, such as images that require a combination of visual and textual information. This limitation can be particularly problematic in applications where the model needs to perform multimodal tasks, such as in image captioning applications.
+#### 9. Limited Performance on Real-Time Tasks
+Vision models, such as those based on ViT or CNNs, are designed to handle real-time tasks, such as those requiring real-time image processing or real-time video analysis. However, LoRA is primarily designed for fine-tuning on existing tasks, making it challenging to handle real-time tasks. The lack of adaptability to new data can make it difficult to fine-tune LoRA on real-time tasks, especially when the real-time data is not aligned with the existing data.
 
-#### 10. Limited Ability to Handle Multitask Learning
-LoRA's ability to handle multitask learning is another challenge. Vision models, especially those based on large pre-trained models, are designed to handle a wide range of multitask learning tasks. However, LoRA's limitations in fine-tuning can make it difficult for the model to handle multitask learning tasks. For instance, if a vision model is trained on a dataset of images of cats and dogs, it may struggle to perform well on images that require a combination of visual and textual information, such as images that require a combination of visual and textual information. This limitation can be particularly problematic in applications where the model needs to perform multitask learning tasks, such as in image captioning applications.
+#### 10. Limited Performance on Complex Tasks
+Vision models, such as those based on ViT or CNNs, are designed to handle complex tasks, such as those requiring complex reasoning or complex decision-making. However, LoRA is primarily designed for fine-tuning on existing tasks, making it challenging to handle complex tasks. The lack of adaptability to new data can limit the effectiveness of LoRA in real-world applications, where complex tasks may require the integration of multiple modalities.
 
-#### 11. Limited Ability to Handle Large-Scale Training
-LoRA's ability to handle large-scale training is another challenge. Vision models, especially those based on large pre-trained models, are designed to handle a wide range of large-scale training tasks. However, LoRA's limitations in fine-tuning can make it difficult for the model to handle large-scale training tasks. For instance, if a vision model is trained on a dataset of images of cats and dogs, it may struggle to perform well on images that require a combination of visual and textual information, such as images that require a combination of visual and textual information. This limitation can be particularly problematic in applications where the model needs to perform
+#### 11. Limited Performance on Large-Scale Tasks
+Vision models, such as those based on ViT or CNNs, are designed to handle large-scale tasks, such as those requiring large-scale image processing or large-scale video analysis. However, LoRA is primarily designed for fine-tuning on existing tasks, making it challenging to handle large-scale tasks. The lack of adaptability to new data can limit the effectiveness of LoRA in real-world applications, where large-scale tasks may require the integration of multiple modalities.
+
+#### 12. Limited Performance on High-Dimensional Tasks
+Vision models, such as those based on ViT or CNNs, are designed to handle high-dimensional tasks, such as those requiring high-dimensional data processing or high-dimensional image analysis. However, LoRA is primarily designed for fine-tuning on existing tasks, making it challenging to handle high-dimensional tasks. The lack of adaptability to new data can limit the effectiveness of LoRA in real-world applications, where high-dimensional tasks may require the integration of multiple modalities.
+
+#### 13. Limited Performance on Low-Density Tasks
+Vision models, such as those based on ViT or CNNs, are designed to handle low-density tasks, such as those requiring low-density data processing or low-density image analysis. However, LoRA is primarily designed for fine-tuning on existing tasks, making it challenging to handle low-density tasks. The lack of adaptability to new data can limit the effectiveness of LoRA in real-world applications, where low-density tasks may require the integration of multiple modalities.
+
+#### 14. Limited Performance on High-Resolution Tasks
+Vision models, such as those based on ViT or CNNs, are designed to handle high-resolution tasks, such as those requiring high-resolution image processing or high-resolution video analysis. However, LoRA is primarily designed for fine-tuning on existing tasks, making it challenging to handle high-resolution tasks. The lack of adaptability to new data can limit the effectiveness of LoRA in real-world applications, where high-resolution tasks may require the integration of multiple modalities.
+
+#### 15. Limited Performance on Low-Resolution Tasks
+Vision models, such as those based on ViT or CNNs, are designed to handle low-resolution tasks, such as those requiring low-resolution image processing or low-resolution video
 
 ---
 
 ### Future Directions: LoRA in Vision Models
 
-#### 1. Research Gaps and Opportunities in Vision-Language Models
+#### 1. Research Gaps in Vision-Language Integration
+The integration of vision and language in large vision-language models (LVLMs) has shown significant promise in enhancing object detection and interaction capabilities. However, there are several research gaps that need to be addressed:
 
-The integration of large language models (LLMs) with vision models has opened up new avenues for enhancing the capabilities of AI systems. However, several research gaps and opportunities remain in this domain. One of the primary challenges is the scalability of vision encoders, which often struggle to handle the large amounts of data required for pre-training. This limitation can be addressed by developing more efficient and scalable pre-training frameworks that can handle large-scale datasets.
+- **Model Adaptability**: Current LVLMs often rely on fixed architectures that limit their adaptability to different tasks and environments. Developing more flexible and adaptable models that can handle a wide range of tasks and scenarios would be beneficial.
 
-Another significant gap is the lack of standardized metrics for evaluating the performance of vision models. Current evaluation metrics, such as accuracy and precision, do not fully capture the nuances of visual understanding, which is crucial for tasks like object detection and image classification. Developing more sophisticated metrics that can better reflect the performance of vision models in real-world scenarios is essential.
+- **Contextual Reasoning**: Vision-Language models often struggle with contextual reasoning, especially in complex scenes where multiple objects interact. Improving the ability of these models to understand and reason about the relationships between objects in a scene would enhance their performance.
 
-#### 2. Opportunities for Research in Vision-Language Models
+- **Generalization**: There is a need to develop more generalizable models that can perform well across different datasets and tasks. This would require the development of more robust training techniques and evaluation metrics.
 
-One promising area for future research is the development of hierarchical pre-training methods for vision encoders. These methods can help in capturing more complex visual patterns and relationships, which can lead to improved performance in downstream tasks. Additionally, exploring the integration of LLMs with other modalities, such as audio or text, can lead to the creation of more versatile and powerful AI systems.
+- **Multimodal Interaction**: Integrating vision and language models for multimodal interaction in real-world applications, such as augmented reality and virtual reality, is still in its early stages. Developing models that can seamlessly integrate vision and language for real-time interaction would be a significant challenge.
 
-Another opportunity lies in the development of more efficient and scalable pre-training frameworks that can handle large-scale datasets. This can be achieved by leveraging distributed computing and parallel processing techniques, which can significantly reduce the training time and improve the overall efficiency of the pre-training process.
+#### 2. Opportunities in LoRA for Vision Models
+LoRA (Low-Rank Adaptation) is a powerful technique for improving the performance of large models by reducing their size and computational requirements. Its potential for vision models is vast:
 
-#### 3. Opportunities for Research in Large Language Models
+- **Efficiency and Speed**: LoRA can significantly reduce the computational requirements of vision models, making them more efficient and faster to train and deploy. This is particularly important for real-time applications and resource-constrained environments.
 
-The integration of LLMs with vision models can lead to the development of more powerful AI systems that can handle a wide range of tasks, from image classification to object detection. However, there is still a need for more research on the interactions between vision and language models, particularly in terms of how they can be combined to create more effective and efficient AI systems.
+- **Generalization**: LoRA can help in generalizing models to new tasks and datasets by reducing the model complexity. This is crucial for applications where the model needs to adapt to new scenarios and data.
 
-#### 4. Opportunities for Research in Portrait Video Editing
+- **Scalability**: LoRA can be used to scale up models by reducing their size without compromising their performance. This is particularly useful for large-scale applications where computational resources are limited.
 
-One of the key challenges in portrait video editing is the need for flexible yet precise control over a wide range of modifications, such as appearance changes, expression edits, or the addition of objects. Developing more advanced techniques for editing portrait videos, such as those proposed in [3], can lead to significant improvements in the quality and realism of edited videos.
+- **Adaptability**: LoRA can be used to adapt models to new tasks and environments by reducing their complexity. This is especially useful in applications where the model needs to be flexible and adaptable to different scenarios.
 
-#### 5. Opportunities for Research in Generative Models
+- **Real-time Applications**: LoRA can be used to develop real-time vision models that can perform tasks such as object detection, tracking, and recognition in real-time. This is particularly important for applications such as autonomous vehicles and robotics.
 
-The integration of reinforcement learning with generative models has led to significant advancements in the alignment of these models with human aesthetic and perceptual preferences. However, there is still a need for more research on how to jointly optimize multiple preferences, particularly in the context of generative models.
+#### 3. Opportunities in Research Gaps
+Addressing the research gaps in vision-language integration and developing more flexible and adaptable models are critical for the future of vision models. Here are some opportunities:
 
-#### 6. Opportunities for Research in Controllable Diffusion Models
+- **Multimodal Interaction**: Developing models that can seamlessly integrate vision and language for real-time interaction in applications such as augmented reality and virtual reality would be a significant breakthrough.
 
-The current approach of using fixed architectures to modify intermediate activations in diffusion models can lead to limitations in the flexibility and precision of the generated images. Developing more advanced techniques for controlling the diffusion process, such as those proposed in [5], can lead to significant improvements in the quality and diversity of the generated images.
+- **Contextual Reasoning**: Improving the ability of vision models to reason about the relationships between objects in a scene would enhance their performance in complex scenarios.
 
-#### 7. Opportunities for Research in Vision-Language Models
+- **Generalization**: Developing more generalizable models that can perform well across different datasets and tasks would be crucial for real-world applications.
 
-The integration of vision models with LLMs can lead to the development of more powerful AI systems that can handle a wide range of tasks, from image classification to object detection. However, there is still a need for more research on the interactions between vision and language models, particularly in terms of how they can be combined to create more effective and efficient AI systems.
+- **Efficiency and Speed**: Developing more efficient and faster vision models would be beneficial for real-time applications and resource-constrained environments.
 
-#### 8. Opportunities for Research in Vision Foundation Models
+- **Scalability**: Developing models that can scale up to handle large datasets and complex tasks would be crucial for large-scale applications.
 
-The integration of vision foundation models with reinforcement learning can lead to the development of more powerful AI systems that can enhance object interaction capabilities in simulated environments. However, there is still a need for more research on how to combine vision foundation models with reinforcement learning, particularly in terms of how they can be optimized for specific tasks.
+#### 4. Opportunities in LoRA for Vision Models
+Addressing the opportunities in LoRA for vision models is crucial for the future of these models. Here are some opportunities:
 
-#### 9. Opportunities for Research in Neural Architecture Search
+- **Efficiency and Speed**: Developing LoRA techniques that can significantly reduce the computational requirements of vision models would be beneficial for real-time applications and resource-constrained environments.
 
-The development of neural architecture search (NAS) techniques for variable LoRA rank in vision language models can lead to the creation of more efficient and scalable AI systems. However, there is still a need for more research on how to optimize these techniques for specific tasks, particularly in the context of vision language models.
+- **Generalization**: Developing LoRA techniques that can help in generalizing models to new tasks and datasets would be crucial for real-world applications.
 
-#### 10. Opportunities for Research in Multimodal Learning
+- **Scalability**: Developing LoRA techniques that can scale up models to handle large datasets and complex tasks would be beneficial for large-scale applications.
 
-The fusion of language and vision in large vision-language models can lead to the development of more powerful AI systems that can handle a wide range of tasks, from image classification to object detection. However, there is still a need for more research on how to optimize these techniques for specific tasks, particularly in the context of vision language models.
+- **Adaptability**: Developing LoRA techniques that can adapt models to new tasks and environments would be crucial for real-world applications.
 
-#### 11. Opportunities for Research in Object Detection
+- **Real-time Applications**: Developing LoRA techniques that can develop real-time vision models that can perform tasks such as object detection, tracking, and recognition in real-time would be beneficial for real-time applications.
 
-The integration of vision models with LLMs can lead to the development of more powerful AI systems that can handle a wide range of tasks, from image classification to object detection. However, there is still a need for more research on how to optimize these techniques for specific tasks, particularly in the context of vision language models.
-
-#### 12. Opportunities for Research in Reinforcement Learning
-
-The integration of reinforcement learning with generative models can lead to the development of more powerful AI systems that can handle a wide range of tasks, from image classification to object detection. However, there is still a need for more research on how to optimize these techniques for specific tasks, particularly in the context of vision language models.
-
-#### 13. Opportunities for Research in Multimodal Learning
-
-The fusion of language and vision in large vision-language models can lead to the development of more powerful AI systems that can handle a wide range of tasks, from image classification to object detection. However, there is still a need for more research on how to optimize these techniques for specific tasks, particularly in the context of vision language models.
-
-#### 14. Opportunities for Research in Reinforcement Learning
-
-The integration of reinforcement learning with generative models can lead to the development of more powerful AI systems that can handle a wide range of tasks, from image classification to object detection. However, there is still a need for more research on how to optimize these techniques for specific tasks, particularly in the context of vision language models.
-
-#### 15. Opportunities for Research in Multimodal Learning
-
-The fusion of language and vision in large vision-language models can lead to the development of more powerful AI systems that can handle a wide range of tasks, from image classification to object detection. However, there is still a need for more research on how to optimize these techniques for specific tasks, particularly in the context of vision language models.
-
-#### 16. Opportunities for Research in Reinforcement Learning
-
-The integration of reinforcement learning with generative models can lead to the development of more powerful AI systems that can handle a wide range of tasks, from image classification to object detection. However, there is still a need for more research on how to optimize these techniques for specific tasks, particularly in the context of vision language models.
-
-#### 17. Opportunities for Research in Multimodal Learning
-
-The fusion of language and vision in large vision-language models can lead to the development of more powerful AI systems that can handle a wide range of tasks, from image classification to object detection. However, there is still a need for more research on how to optimize these techniques for specific tasks, particularly in the context of vision language models.
-
-#### 18. Opportunities for Research in Reinforcement Learning
-
-The integration of reinforcement learning with generative models can lead to the development of more powerful AI systems that can handle a wide range of tasks, from image classification to object detection. However, there
+### Conclusion
+The integration of vision and language in large vision-language models has shown significant promise in enhancing object detection and interaction capabilities. However, there are several research gaps and opportunities that need to be addressed. Developing more flexible and adaptable models, improving the ability of vision models to reason about the relationships between objects in a scene, and developing more efficient and faster vision models are critical for the future of vision models. LoRA (Low-Rank Adaptation) is a powerful technique that can help in addressing these research gaps and opportunities.
 
 ---
 
 ### Conclusion
 
-The integration of LoRA with vision models has shown promising results in enhancing model performance and flexibility. The techniques and approaches discussed in this survey address various limitations and challenges, such as the treatment of vision encoders and pre-trained models separately, the transfer of knowledge between pre-trained models and downstream tasks, the optimization of multiple preferences simultaneously, and the adaptation of LoRA rank to different models. These methods have the potential to significantly improve the performance of vision models in various applications, such as object detection, portrait video editing, and generative models. The research gaps and opportunities highlighted in this survey provide a roadmap for future research in the field of LoRA in vision models. The survey concludes with a discussion on the future directions of LoRA in vision models, including research gaps and opportunities in vision-language models, opportunities for research in vision-language models, opportunities for research in large language models, and opportunities for research in portrait video editing, generative models, and reinforcement learning.
+The field of computer vision has seen significant advancements through the development of scalable vision encoders and multimodal pre-training frameworks. These innovations have transformed the way we process and understand visual data, enabling more accurate and efficient image and video analysis. However, existing approaches often treat vision encoders as isolated components, focusing primarily on their ability to capture and represent visual information. This approach, while effective in many cases, overlooks the potential synergies between vision encoders and other modalities, such as language, which can significantly enhance their performance and versatility.
 
 
 ---
@@ -349,21 +279,21 @@ The integration of LoRA with vision models has shown promising results in enhanc
 ```plaintext
 REFERENCES
 ==========
-[1] Lee, E., Chang, T., Tsai, J., Diao, J., Lee, C. (2026). Hierarchical Pre-Training of Vision Encoders with Large Language Models. None.
-[2] Ogawa, K., Yamamoto, B., de Alcantara, L. L., Pellicer, L., Costa, R. P., et al. (2026). Layer-wise LoRA fine-tuning: a similarity metric approach. None.
-[3] Polaczek, S., Patashnik, O., Mahdavi-Amiri, A., Or, D. C. (2025). In-Context Sync-LoRA for Portrait Video Editing. None.
-[4] Chen, C.-Y., Wang, Z., Chen, Q., Ye, Z., Shi, M., et al. (2025). MapReduce LoRA: Advancing the Pareto Front in Multi-Preference Optimization for Generative Models. None.
-[5] Cho, M., Ohana, R., Jacobsen, C., Jothi, A., Chen, M.-H., et al. (2025). TC-LoRA: Temporally Modulated Conditional LoRA for Adaptive Diffusion Control. None.
-[6] Sapkota, R., Karkee, M. (2025). Object Detection with Multimodal Large Vision-Language Models: An In-depth Review. Information Fusion, 2025.
-[7] Chitty-Venkata, K., Emani, M., Vishwanath, V. (2025). LangVision-LoRA-NAS: Neural Architecture Search for Variable LoRA Rank in Vision Language Models. None.
-[8] Farooq, A., Iqbal, K. (2025). Integrating Vision Foundation Models with Reinforcement Learning for Enhanced Object Interaction. RCVE'25: Proceedings of the 2025 3rd International Conference on Robotics, Control and Vision Engineering.
-[9] Hayou, S., Ghosh, N., Yu, B. (2025). PLoP: Precise LoRA Placement for Efficient Finetuning of Large Models. None.
-[10] Salles, M., Goyal, P., Sekhsaria, P., Huang, H., Balestriero, R. (2025). LoRA Users Beware: A Few Spurious Tokens Can Manipulate Your Finetuned Model. None.
-[11] Wang, H., Ye, Y., Li, B., Nie, Y., Lu, J., et al. (2025). Vision as LoRA. None.
-[12] Tang, P., Hu, X., Liu, Y., Ding, L., Zhang, D., et al. (2025). Put the Space of LoRA Initialization to the Extreme to Preserve Pre-trained Knowledge. None.
-[13] Vision Team, Karlinsky, L., Arbelle, A., Daniels, A., Nassar, A., et al. (2025). Granite Vision: a lightweight, open-source multimodal model for enterprise Intelligence. None.
-[14] Klotz, J., Nayar, S. K. (2024). Minimalist Vision with Freeform Pixels. European Conference on Computer Vision (ECCV), 2024.
-[15] Bian, J., Wang, J., Zhang, L., Xu, J. (2024). LoRA-FAIR: Federated LoRA Fine-Tuning with Aggregation and Initialization Refinement. None.
+[1] Lee, E., Chang, T-Y., Tsai, J-H., Diao, J., Lee, C-Y. (2026). Hierarchical Pre-Training of Vision Encoders with Large Language Models. None. http://arxiv.org/abs/2604.00086v1
+[2] Ogawa, K., Yamamoto, B., de Alcantara, L. L., Pellicer, L., Costa, R. P. et al. (2026). Layer-wise LoRA fine-tuning: a similarity metric approach. None. http://arxiv.org/abs/2602.05988v1
+[3] Polaczek, S., Patashnik, O., Mahdavi-Amiri, A., Cohen-Or, D. (2025). In-Context Sync-LoRA for Portrait Video Editing. None. http://arxiv.org/abs/2512.03013v1
+[4] Chen, C-Y., Wang, Z., Chen, Q., Ye, Z., Shi, M. et al. (2025). MapReduce LoRA: Advancing the Pareto Front in Multi-Preference Optimization for Generative Models. None. http://arxiv.org/abs/2511.20629v5
+[5] Cho, M., Ohana, R., Jacobsen, C., Jothi, A., Chen, M-H. et al. (2025). TC-LoRA: Temporally Modulated Conditional LoRA for Adaptive Diffusion Control. None. http://arxiv.org/abs/2510.09561v2
+[6] Sapkota, R., Karkee, M. (2025). Object Detection with Multimodal Large Vision-Language Models: An In-depth Review. Information Fusion, 2025. http://arxiv.org/abs/2508.19294v2
+[7] Chitty-Venkata, K., Emani, M., Vishwanath, V. (2025). LangVision-LoRA-NAS: Neural Architecture Search for Variable LoRA Rank in Vision Language Models. None. http://arxiv.org/abs/2508.12512v1
+[8] Farooq, A., Iqbal, K. (2025). Integrating Vision Foundation Models with Reinforcement Learning for Enhanced Object Interaction. RCVE'25: Proceedings of the 2025 3rd International Conference on Robotics, Control and Vision Engineering. http://arxiv.org/abs/2508.05838v1
+[9] Hayou, S., Ghosh, N., Yu, B. (2025). PLoP: Precise LoRA Placement for Efficient Finetuning of Large Models. None. http://arxiv.org/abs/2506.20629v1
+[10] Salles, M., Goyal, P., Sekhsaria, P., Huang, H., Balestriero, R. (2025). LoRA Users Beware: A Few Spurious Tokens Can Manipulate Your Finetuned Model. None. http://arxiv.org/abs/2506.11402v2
+[11] Wang, H., Ye, Y., Li, B., Nie, Y., Lu, J et al. (2025). Vision as LoRA. None. http://arxiv.org/abs/2503.20680v1
+[12] Tang, P., Hu, X., Liu, Y., Ding, L., Zhang, D. et al. (2025). Put the Space of LoRA Initialization to the Extreme to Preserve Pre-trained Knowledge. None. http://arxiv.org/abs/2503.02659v2
+[13] Vision Team, Karlinsky, L., Arbelle, A., Daniels, A., Nassar, A. et al. (2025). Granite Vision: a lightweight, open-source multimodal model for enterprise Intelligence. None. http://arxiv.org/abs/2502.09927v1
+[14] Klotz, J., Nayar, S. K. (2024). Minimalist Vision with Freeform Pixels. European Conference on Computer Vision (ECCV), 2024. http://arxiv.org/abs/2501.00142v1
+[15] Bian, J., Wang, J., Zhang, L., Xu, J. (2024). LoRA-FAIR: Federated LoRA Fine-Tuning with Aggregation and Initialization Refinement. None. http://arxiv.org/abs/2411.14961v3
 
 ---
 
@@ -373,104 +303,72 @@ REFERENCES
   author = {Lee, Eugene and Chang, Ting-Yu and Tsai, Jui-Huang and Diao, Jiajie and Lee, Chen-Yi},
   title = {Hierarchical Pre-Training of Vision Encoders with Large Language Models},
   year = {2026},
-  journal = {None},
+  venue = {None},
+  url = {http://arxiv.org/abs/2604.00086v1}
 }
 
 @article{ogawa2026,
-  author = {Ogawa, Keith Ando and Yamamoto, Bruno Lopes and de Alcantara, Lucas Lauton and Pellicer, Lucas and Costa, Rosimeire Pereira},
+  author = {Ogawa, Keith Ando and Yamamoto, Bruno Lopes and de Alcantara, Lucas Lauton and Pellicer, Lucas and Costa, Rosimeire Pereira et al.},
   title = {Layer-wise LoRA fine-tuning: a similarity metric approach},
   year = {2026},
-  journal = {None},
+  venue = {None},
+  url = {http://arxiv.org/abs/2602.05988v1}
 }
 
 @article{polaczek2025,
-  author = {Polaczek, Sagi and Patashnik, Or and Mahdavi-Amiri, Ali and Or, Daniel Cohen-Or},
+  author = {Polaczek, Sagi and Patashnik, Or and Mahdavi-Amiri, Ali and Cohen-Or, Daniel},
   title = {In-Context Sync-LoRA for Portrait Video Editing},
   year = {2025},
-  journal = {None},
+  venue = {None},
+  url = {http://arxiv.org/abs/2512.03013v1}
 }
 
 @article{chen2025,
-  author = {Chen, Chieh-Yun and Wang, Zhonghao and Chen, Qi and Ye, Zhifan and Shi, Min},
+  author = {Chen, Chieh-Yun and Wang, Zhonghao and Chen, Qi and Ye, Zhifan and Shi, Min et al.},
   title = {MapReduce LoRA: Advancing the Pareto Front in Multi-Preference Optimization for Generative Models},
   year = {2025},
-  journal = {None},
+  venue = {None},
+  url = {http://arxiv.org/abs/2511.20629v5}
 }
 
 @article{cho2025,
-  author = {Cho, Minkyoung and Ohana, Ruben and Jacobsen, Christian and Jothi, Adityan and Chen, Min-Hung},
+  author = {Cho, Minkyoung and Ohana, Ruben and Jacobsen, Christian and Jothi, Adityan and Chen, Min-Hung et al.},
   title = {TC-LoRA: Temporally Modulated Conditional LoRA for Adaptive Diffusion Control},
   year = {2025},
-  journal = {None},
+  venue = {None},
+  url = {http://arxiv.org/abs/2510.09561v2}
 }
 
 @article{sapkota2025,
   author = {Sapkota, Ranjan and Karkee, Manoj},
   title = {Object Detection with Multimodal Large Vision-Language Models: An In-depth Review},
   year = {2025},
-  journal = {Information Fusion, 2025},
+  venue = {Information Fusion, 2025},
+  url = {http://arxiv.org/abs/2508.19294v2}
 }
 
-@article{chitty-venkata2025,
-  author = {Chitty-Venkata, Krishna Teja and Emani, Murali and Vishwanath, Venkatram},
+@article{teja2025,
+  author = {Teja Chitty-Venkata, Krishna and Emani, Murali and Vishwanath, Venkatram},
   title = {LangVision-LoRA-NAS: Neural Architecture Search for Variable LoRA Rank in Vision Language Models},
   year = {2025},
-  journal = {None},
+  venue = {None},
+  url = {http://arxiv.org/abs/2508.12512v1}
 }
 
 @article{farooq2025,
   author = {Farooq, Ahmad and Iqbal, Kamran},
   title = {Integrating Vision Foundation Models with Reinforcement Learning for Enhanced Object Interaction},
   year = {2025},
-  journal = {RCVE'25: Proceedings of the 2025 3rd International Conference on Robotics, Control and Vision Engineering},
+  venue = {RCVE'25: Proceedings of the 2025 3rd International Conference on Robotics, Control and Vision Engineering},
+  url = {http://arxiv.org/abs/2508.05838v1}
 }
 
 @article{hayou2025,
   author = {Hayou, Soufiane and Ghosh, Nikhil and Yu, Bin},
   title = {PLoP: Precise LoRA Placement for Efficient Finetuning of Large Models},
   year = {2025},
-  journal = {None},
+  venue = {None},
+  url = {http://arxiv.org/abs/2506.20629v1}
 }
 
-@article{salles2025,
-  author = {Salles, Marcel Mateos and Goyal, Praney and Sekhsaria, Pradyut and Huang, Hai and Balestriero, Randall},
-  title = {LoRA Users Beware: A Few Spurious Tokens Can Manipulate Your Finetuned Model},
-  year = {2025},
-  journal = {None},
-}
-
-@article{wang2025,
-  author = {Wang, Han and Ye, Yongjie and Li, Bingru and Nie, Yuxiang and Lu, Jinghui},
-  title = {Vision as LoRA},
-  year = {2025},
-  journal = {None},
-}
-
-@article{tang2025,
-  author = {Tang, Pengwei and Hu, Xiaolin and Liu, Yong and Ding, Lizhong and Zhang, Dongjie},
-  title = {Put the Space of LoRA Initialization to the Extreme to Preserve Pre-trained Knowledge},
-  year = {2025},
-  journal = {None},
-}
-
-@article{vision-team2025,
-  author = {Vision Team, Granite Vision},
-  title = {Granite Vision: a lightweight, open-source multimodal model for enterprise Intelligence},
-  year = {2025},
-  journal = {None},
-}
-
-@article{klotz2024,
-  author = {Klotz, Jeremy and Nayar, Shree K.},
-  title = {Minimalist Vision with Freeform Pixels},
-  year = {2024},
-  journal = {European Conference on Computer Vision (ECCV), 2024},
-}
-
-@article{bian2024,
-  author = {Bian, Jieming and Wang, Lei and Zhang, Letian and Xu, Jie},
-  title = {LoRA-FAIR: Federated LoRA Fine-Tuning with Aggregation and Initialization Refinement},
-  year = {2024},
-  journal = {None},
-}
-```
+@article{mateos2025,
