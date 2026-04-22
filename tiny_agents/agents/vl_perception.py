@@ -1,6 +1,11 @@
-"""VL Perception agent: understands images using Qwen2.5-VL."""
+"""VL Perception agent: understands images using Qwen2.5-VL.
+
+Fully stateless — receives (input_data, context) and returns AgentOutput.
+The backend (VLMBackend) must be set before use via register_backend().
+"""
 
 import base64
+import re
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -19,8 +24,8 @@ Your capabilities:
 Be precise and thorough. If the image contains math problems, solve them step by step."""
 
 
-def _encode_image(image_path: str) -> str:
-    """Encode an image file to base64 data URL."""
+def encode_image_base64(image_path: str) -> str:
+    """Encode an image file to a base64 data URL."""
     path = Path(image_path)
     suffix = path.suffix.lower()
     mime = {
@@ -29,6 +34,7 @@ def _encode_image(image_path: str) -> str:
         ".jpeg": "image/jpeg",
         ".gif": "image/gif",
         ".webp": "image/webp",
+        ".bmp": "image/bmp",
     }.get(suffix, "image/png")
     with open(path, "rb") as f:
         data = base64.b64encode(f.read()).decode("utf-8")
@@ -36,15 +42,33 @@ def _encode_image(image_path: str) -> str:
 
 
 class VLPerceptionAgent(BaseAgent):
-    """Processes images and visual content using Qwen2.5-VL-3B (stateless)."""
+    """Processes images and visual content using Qwen2.5-VL-3B (fully stateless)."""
 
-    def __init__(self, model_name: str = "Qwen/Qwen2.5-VL-3B-Instruct", **kwargs):
+    def __init__(
+        self,
+        model_name: str = "Qwen2.5-VL-3B-Instruct",
+        **kwargs,
+    ):
         super().__init__(
             name="vl_perception",
             model_name=model_name,
             role_prompt=VL_PROMPT,
             **kwargs,
         )
+        # Lazy backend reference (set by orchestrator or direct initialization)
+        self._vl_backend: Optional[Any] = None
+
+    @property
+    def vl_backend(self):
+        return self._vl_backend
+
+    @vl_backend.setter
+    def vl_backend(self, backend: Any) -> None:
+        self._vl_backend = backend
+
+    def set_backend(self, backend: Any) -> None:
+        """Set the VLM backend (compatibility alias for vl_backend setter)."""
+        self._vl_backend = backend
 
     async def run(
         self,
@@ -52,44 +76,55 @@ class VLPerceptionAgent(BaseAgent):
         context: SessionContext,
     ) -> AgentOutput:
         """Process an image and answer the task question (stateless)."""
-        task = input_data.get("task", "")
+        task = input_data.get("task", "Describe this image.")
         image = input_data.get("image")
         image_path = input_data.get("image_path")
+        image_url: Optional[str] = None
 
-        # Resolve image URL
+        # Resolve image to data URL
         if image_path:
-            image_url = _encode_image(image_path)
-        elif image and isinstance(image, str) and image.startswith("data:"):
-            image_url = image
-        else:
-            image_url = None
+            image_url = encode_image_base64(image_path)
+        elif image and isinstance(image, str):
+            if image.startswith("data:"):
+                image_url = image
+            elif image.startswith("http"):
+                # Remote URL — pass as-is (vLLM will fetch)
+                image_url = image
+            else:
+                image_url = image
+        elif image and isinstance(image, dict):
+            # Already a structured image dict
+            image_url = image.get("url") or image.get("image_url")
 
-        # Build prompt
+        # Build content blocks
         if image_url:
-            prompt = f"<|vision_start|>{image_url}<|vision_end|>\n{task}"
+            content_blocks = [
+                {"type": "image_url", "image_url": {"url": image_url}},
+                {"type": "text", "text": task},
+            ]
         else:
-            prompt = task
+            content_blocks = [{"type": "text", "text": task}]
 
         messages = context.get_messages(self.name)
-        messages.append({"role": "user", "content": prompt})
+        messages.append({"role": "user", "content": content_blocks})
 
-        if self.backend is not None:
+        # Generate response via VLM backend
+        if self._vl_backend is not None:
             temp = context.config.get("temperature", 0.3)
             max_tok = context.config.get("max_tokens", 1024)
-            response = self.backend.generate(
-                model_key=self.name,
+            response = self._vl_backend.generate(
                 messages=messages,
-                temperature=temp,
                 max_tokens=max_tok,
+                temperature=temp,
             )
         else:
-            response = "[VL Backend not available]"
+            response = "[VLM backend not available — set .vl_backend or .set_backend()]"
 
-        context.add_message(self.name, "user", prompt)
+        context.add_message(self.name, "user", f"[image: {image_url[:50]}... if image_url else 'none'] {task}")
         context.add_message(self.name, "assistant", response)
 
         return AgentOutput(
-            thought="Analyzed image content",
+            thought=f"Analyzed image: {image_url[:50] if image_url else 'none'}",
             action="respond",
             payload={
                 "description": response,
