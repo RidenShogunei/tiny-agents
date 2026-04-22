@@ -94,14 +94,25 @@ class VLLMBackend:
         **kwargs,
     ) -> str:
         """Generate text from a conversation using the model's chat template."""
-        if model_key not in self.instances:
-            # Fallback: resolve model_key as a model name/path and find the matching instance
-            resolved = self._resolve_path(model_key)
-            for k, v in self._model_path_map.items():
-                if v == resolved:
-                    model_key = k
-                    break
-            else:
+        resolved_key = model_key
+        if resolved_key not in self.instances:
+            # Smart GPU suffix resolution: writer_gpu3 → gpu3
+            import re
+            m = re.match(r"^(.*?)_gpu(\d+)$", resolved_key)
+            if m:
+                base_key = f"gpu{m.group(2)}"
+                if base_key in self.instances:
+                    resolved_key = base_key
+
+            # Path-based fallback: resolve model_key as a model name/path
+            if resolved_key not in self.instances:
+                resolved = self._resolve_path(model_key)
+                for k, v in self._model_path_map.items():
+                    if v == resolved:
+                        resolved_key = k
+                        break
+
+            if resolved_key not in self.instances:
                 raise ValueError(
                     f"Model '{model_key}' not loaded. "
                     f"Available keys: {list(self.instances.keys())}"
@@ -115,7 +126,7 @@ class VLLMBackend:
             **kwargs,
         )
 
-        outputs = self.instances[model_key].chat(messages, sampling_params)
+        outputs = self.instances[resolved_key].chat(messages, sampling_params)
         return outputs[0].outputs[0].text.strip()
 
     def unload(self, model_key: str) -> None:

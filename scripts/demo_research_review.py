@@ -2,10 +2,11 @@
 
 Minimal end-to-end test of the full survey generation pipeline.
 
-GPU usage (MultiGPUWriterPool):
-    GPU 0: 2 writers + planner/reader/synthesizer (1.5B, shared KV cache)
-    GPU 1: 2 writers (1.5B, shared KV cache)
-    GPU 2: 1 writer + citation (0.5B)
+GPU layout:
+    GPU 0: planner/reader/synthesizer/citation (1.5B, shared KV cache)
+    GPU 1: 1.5B writers (shared)
+    GPU 2: 1.5B writers (shared)
+    GPU 3: 9B writer + 9B critic (Qwen3.5-9B, enforce_eager, gpu_mem=0.85)
 """
 
 import asyncio
@@ -25,7 +26,8 @@ def main():
     print(f"Topic: {topic}")
     print(f"{'=' * 60}")
 
-    # Initialize orchestrator with 5 writers spread across 3 GPUs
+    # Initialize orchestrator with 5 writers spread across 4 GPUs
+    # GPU 3 = 9B (Qwen3.5-9B), GPU 0/1/2 = 1.5B
     orchestrator = ResearchOrchestrator(
         num_writers=5,
         writer_model="Qwen/Qwen2.5-1.5B-Instruct",
@@ -38,24 +40,31 @@ def main():
     )
 
     # Set up VLLM backend
-    # Set up VLLM backend
-    # GPU layout (3 GPUs, each with one 1.5B model):
-    #   GPU 0: 2 writers (shared 1.5B)
-    #   GPU 1: 2 writers (shared 1.5B)
-    #   GPU 2: 1 writer (1.5B)
-    # Citation runs on CPU (轻量任务, 不占 GPU)
     from tiny_agents.models.vllm_backend import VLLMBackend
     backend = VLLMBackend(default_gpu=0)
 
-    # GPU 0: 2 writers (shared 1.5B)
+    # GPU 0: planner, reader, synthesizer, citation (shared 1.5B)
     backend.load_model("gpu0", "Qwen/Qwen2.5-1.5B-Instruct", gpu=0)
-    # GPU 1: 2 writers (shared 1.5B)
+
+    # GPU 1: writers (shared 1.5B)
     backend.load_model("gpu1", "Qwen/Qwen2.5-1.5B-Instruct", gpu=1)
-    # GPU 2: 1 writer (1.5B)
+
+    # GPU 2: writers (shared 1.5B)
     backend.load_model("gpu2", "Qwen/Qwen2.5-1.5B-Instruct", gpu=2)
 
-    # Orchestrator's set_backend() detects GPU assignment from MultiGPUWriterPool
-    # and loads remaining writer slots on the right GPUs
+    # GPU 3: 9B writer + critic (high quality writing)
+    # enforce_eager=True avoids CUDA graph issues with large models
+    # gpu_memory_utilization=0.85 leaves room for KV cache
+    backend.load_model(
+        "gpu3",
+        "Qwen/Qwen3.5-9B",
+        gpu=3,
+        gpu_memory_utilization=0.85,
+        enforce_eager=True,
+    )
+
+    # Orchestrator detects GPU assignment and distributes writers
+    # Writers on GPU 3 use 9B for higher quality output
     orchestrator.set_backend(backend)
 
     # Run the pipeline

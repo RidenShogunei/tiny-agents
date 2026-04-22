@@ -97,23 +97,22 @@ class ResearchOrchestrator:
         self._citation = CitationAgent(model_name="gpu0")
         self._citation.backend = backend
 
-        # GPU assignment: writers distributed across GPUs 0, 1, 2
-        # Each GPU gets ~2 writers sharing its KV cache
-        num_gpus = 3
-        gpu_assignment = [i % num_gpus for i in range(self.num_writers)]
+        # GPU assignment: writers on GPU 0/1/2 only (1.5B models)
+        # GPU 3 is reserved for 9B writer/critic loaded externally in demo
+        writer_gpu_assignment = [i % 3 for i in range(self.num_writers)]
         self._writer_pool = MultiGPUWriterPool(
             num_instances=self.num_writers,
-            gpu_assignment=gpu_assignment,
+            gpu_assignment=writer_gpu_assignment,
             available_gpus=[0, 1, 2],
             model_name=self.writer_model,
         )
         # V2 writer pool with critic + revision loop
         self._writer_pool_v2 = MultiGPUWriterPoolV2(
             num_instances=self.num_writers,
-            gpu_assignment=gpu_assignment,
-            available_gpus=[0, 1, 2],
+            gpu_assignment=writer_gpu_assignment,
+            available_gpus=[0, 1, 2, 3],
             model_name=self.writer_model,
-            critic_model_key="gpu0",
+            critic_model_key="gpu3",
             revision_threshold=6.0,
             max_revision_attempts=2,
         )
