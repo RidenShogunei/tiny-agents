@@ -1,7 +1,9 @@
 """Router agent: decomposes tasks and dispatches to worker agents."""
 
 from typing import Any, Dict
+
 from tiny_agents.core.agent import BaseAgent, AgentOutput
+from tiny_agents.core.session import SessionContext
 
 
 ROUTER_PROMPT = """You are a task router. Analyze the user's request and decide which agent should handle it.
@@ -15,7 +17,7 @@ Respond with exactly one word: the agent name. No explanation."""
 
 
 class RouterAgent(BaseAgent):
-    """Routes incoming tasks to appropriate worker agents."""
+    """Routes incoming tasks to appropriate worker agents (stateless)."""
 
     def __init__(self, model_name: str = "Qwen/Qwen2.5-1.5B-Instruct", **kwargs):
         super().__init__(
@@ -25,7 +27,11 @@ class RouterAgent(BaseAgent):
             **kwargs,
         )
 
-    async def run(self, input_data: Dict[str, Any]) -> AgentOutput:
+    async def run(
+        self,
+        input_data: Dict[str, Any],
+        context: SessionContext,
+    ) -> AgentOutput:
         """Route task to the best worker agent using LLM."""
         task = input_data.get("task", "")
         has_image = input_data.get("image") is not None
@@ -41,13 +47,20 @@ class RouterAgent(BaseAgent):
 
         # Use LLM for routing decision
         if self.backend is not None:
-            response = self._call_llm(
-                f"Task: {task}\nWhich agent should handle this? (coder/reasoner/vl_perception)",
-                temperature=0.1,
+            prompt = f"Task: {task}\nWhich agent should handle this? (coder/reasoner/vl_perception)"
+            messages = context.get_messages(self.name)
+            messages.append({"role": "user", "content": prompt})
+            temp = context.config.get("temperature", 0.1)
+            response = self.backend.generate(
+                model_key=self.name,
+                messages=messages,
+                temperature=temp,
                 max_tokens=10,
             )
+            context.add_message(self.name, "user", prompt)
+            context.add_message(self.name, "assistant", response)
             target = response.strip().lower()
-            # Normalize
+
             if "coder" in target:
                 target = "coder"
             elif "reason" in target:
@@ -57,11 +70,10 @@ class RouterAgent(BaseAgent):
             else:
                 target = "coder"  # default fallback
         else:
-            # Fallback heuristic when no backend
             target = "coder" if any(kw in task.lower() for kw in ["code", "function", "program", "debug"]) else "reasoner"
 
         return AgentOutput(
-            thought=f"LLM routed task to {target}",
+            thought=f"Routed task to {target}",
             action="delegate",
             target_agent=target,
             payload={"task": task, **input_data},

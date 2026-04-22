@@ -148,8 +148,7 @@ async def main():
 
         print(f"\n[{task_id}] {question}")
 
-        # Reset agent state for each problem
-        reasoner.reset()
+        # No reset needed — context is session-scoped
 
         # Step 1: VLM analyzes the image (mock)
         vlm_result = await orch.execute(

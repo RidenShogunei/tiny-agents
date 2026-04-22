@@ -1,159 +1,206 @@
-"""Orchestrator: manages multi-agent task decomposition and execution."""
+"""Orchestrator: manages multi-agent task decomposition and execution.
 
-import asyncio
+Core contract change from v1:
+- Orchestrator creates ONE SessionContext per execute() call.
+- Every agent.run(input_data, context) receives the same context object.
+- No agent holds message_history internally — context.messages is the sole record.
+- No manual reset() needed; each execute() call gets a fresh context.
+
+Workflow (serial chain):
+    Entry agent -> Worker -> [optional Critic -> loop back] -> respond
+
+Supported action types:
+    respond  — agent produced final output; return to caller
+    delegate — agent hands off to another agent (target in payload["target"])
+    review   — critic has reviewed; orchestrator handles loop-back logic
+    tool_call — agent requested tool execution; handled inline (see tools/)
+"""
+
+import uuid
 from typing import Any, Dict, List, Optional
 
 from tiny_agents.core.agent import BaseAgent, AgentOutput
-from tiny_agents.core.memory import SharedMemory
+from tiny_agents.core.session import SessionContext
 from tiny_agents.core.message_bus import MessageBus
 
 
 class Orchestrator:
-    """Routes tasks and coordinates multi-agent workflows with iteration support."""
+    """Routes tasks and coordinates multi-agent workflows."""
 
-    def __init__(self, max_iterations: int = 3, enable_review: bool = False):
+    def __init__(
+        self,
+        max_iterations: int = 3,
+        enable_review: bool = False,
+    ):
         self.agents: Dict[str, BaseAgent] = {}
-        self.memory = SharedMemory()
         self.bus = MessageBus()
         self.max_iterations = max_iterations
         self.enable_review = enable_review
         self.critic_agent: Optional[str] = None
 
     def register_agent(self, agent: BaseAgent) -> None:
-        """Register an agent with the orchestrator."""
+        """Register an agent. Inject the shared message bus."""
         self.agents[agent.name] = agent
-        # Inject shared memory and bus into agent
-        agent.memory = self.memory
         agent.bus = self.bus
 
-    def _get_agent(self, name: str) -> BaseAgent:
-        if name not in self.agents:
-            raise ValueError(f"Agent '{name}' not registered")
-        return self.agents[name]
+    def set_critic(self, agent_name: str) -> None:
+        """Set the critic agent for review loops."""
+        if agent_name not in self.agents:
+            raise ValueError(f"Critic agent '{agent_name}' not registered")
+        self.critic_agent = agent_name
 
     async def execute(
         self,
         task_input: Dict[str, Any],
         entry_agent: str = "router",
         session_id: Optional[str] = None,
+        config: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        """Execute a task with full traceability and optional multi-round iteration.
+        """Execute a task with a fresh SessionContext.
 
-        Workflow:
-            1. Entry agent processes input
-            2. If action == delegate -> forward to target_agent
-            3. If action == review   -> forward to critic for review
-            4. If critic says NEEDS_FIX -> loop back to original worker
-            5. Repeat up to max_iterations
+        Args:
+            task_input:  the initial payload for the entry agent
+            entry_agent: name of the agent to start with
+            session_id:  optional stable ID (auto-generated if omitted)
+            config:      per-session overrides (temperature, max_tokens, etc.)
         """
-        session_id = session_id or f"sess_{id(task_input)}"
-        steps: List[Dict[str, Any]] = []
-        current_agent = entry_agent
-        current_input = task_input.copy()
-        current_input["session_id"] = session_id
+        session_id = session_id or f"sess_{uuid.uuid4().hex[:8]}"
+        config = config or {}
 
-        # Store original task in memory
-        self.memory.add_short_term({
-            "session_id": session_id,
+        # Fresh context per call — no cross-call leakage
+        ctx = SessionContext(
+            session_id=session_id,
+            config=config,
+        )
+
+        # Register system prompts for all agents
+        for name, agent in self.agents.items():
+            ctx.set_system_prompt(name, agent.role_prompt)
+
+        # Store task start
+        ctx.add_step({
             "event": "task_start",
+            "session_id": session_id,
             "input": task_input,
         })
 
+        current_agent = entry_agent
+        current_input = task_input.copy()
         iteration = 0
+
         while iteration < self.max_iterations:
             iteration += 1
-            agent = self._get_agent(current_agent)
 
-            # Run agent
-            output: AgentOutput = await agent.run(current_input)
+            if current_agent not in self.agents:
+                return self._failure(
+                    session_id, f"Agent '{current_agent}' not registered", []
+                )
 
-            step_record = {
+            agent = self.agents[current_agent]
+
+            # Record step start
+            ctx.add_step({
                 "step": iteration,
                 "agent": current_agent,
-                "input": current_input,
-                "output": output.model_dump(),
-            }
-            steps.append(step_record)
-            self.memory.add_short_term({
-                "session_id": session_id,
-                "event": "agent_step",
-                **step_record,
+                "input": dict(current_input),   # copy to avoid mutation
             })
 
-            # Publish to bus for real-time observers
+            # Call agent with BOTH input_data and context
+            output: AgentOutput = await agent.run(current_input, ctx)
+
+            # Record step end (attach output)
+            ctx.short_term[-1]["output"] = output.model_dump()
+
+            # Publish to bus
             await self.bus.publish(
                 f"session.{session_id}",
                 {"agent": current_agent, "output": output.model_dump()},
             )
 
+            # ── action routing ──────────────────────────────────
             if output.action == "delegate":
-                # Hand off to another worker agent
-                target = output.target_agent or "coder"
-                if target not in self.agents:
-                    return {
-                        "success": False,
-                        "reason": f"Target agent '{target}' not found",
-                        "steps": steps,
-                        "session_id": session_id,
-                    }
+                target = output.target_agent or output.payload.get("target")
+                if not target or target not in self.agents:
+                    return self._failure(
+                        session_id,
+                        f"Delegate target '{target}' not found",
+                        ctx.short_term,
+                    )
                 current_agent = target
-                current_input = output.payload or {}
-                current_input["session_id"] = session_id
+                current_input = output.payload.copy()
                 continue
 
             elif output.action == "respond":
-                # Worker produced final output
-                # If review chain is enabled and critic exists, forward to critic
-                if self.enable_review and self.critic_agent and self.critic_agent in self.agents:
-                    # Only forward if this agent is not the critic itself
-                    if current_agent != self.critic_agent:
-                        current_agent = self.critic_agent
-                        current_input = output.payload or {}
-                        current_input["session_id"] = session_id
-                        continue
+                # Final output — optionally route to critic for review
+                if (
+                    self.enable_review
+                    and self.critic_agent
+                    and current_agent != self.critic_agent
+                ):
+                    current_agent = self.critic_agent
+                    current_input = output.payload.copy()
+                    continue
 
-                return {
-                    "success": True,
-                    "result": output.payload,
-                    "steps": steps,
-                    "session_id": session_id,
-                }
+                return self._success(session_id, output.payload, ctx.short_term)
 
             elif output.action == "review":
-                # Critic has reviewed; check verdict
                 verdict = output.payload.get("verdict", "PASS")
                 if verdict == "NEEDS_FIX" and iteration < self.max_iterations:
-                    # Loop back to the previous worker with review feedback
-                    prev_steps = [s for s in steps if s["agent"] != self.critic_agent]
-                    if prev_steps:
-                        last_worker_step = prev_steps[-1]
-                        worker_name = last_worker_step["agent"]
-                        worker_input = last_worker_step["input"].copy()
-                        worker_input["review_feedback"] = output.payload.get("review", "")
-                        worker_input["needs_fix"] = True
-                        current_agent = worker_name
-                        current_input = worker_input
+                    # Loop back to last worker with feedback
+                    worker_steps = [s for s in ctx.short_term
+                                    if s.get("agent") != self.critic_agent]
+                    if worker_steps:
+                        last_worker = worker_steps[-1]["agent"]
+                        feedback = output.payload.get("review", "")
+                        current_agent = last_worker
+                        current_input = {
+                            **worker_steps[-1]["input"],
+                            "review_feedback": feedback,
+                            "needs_fix": True,
+                        }
                         continue
-                # Either PASS or max iterations reached -> finish
-                return {
-                    "success": True,
-                    "result": output.payload,
-                    "steps": steps,
-                    "session_id": session_id,
-                }
+
+                # PASS or max iterations -> done
+                return self._success(session_id, output.payload, ctx.short_term)
 
             else:
-                return {
-                    "success": False,
-                    "reason": f"Unknown action: {output.action}",
-                    "steps": steps,
-                    "session_id": session_id,
-                }
+                return self._failure(
+                    session_id,
+                    f"Unknown action: {output.action}",
+                    ctx.short_term,
+                )
 
         # Max iterations reached
+        return self._failure(
+            session_id,
+            f"Max iterations ({self.max_iterations}) reached",
+            ctx.short_term,
+        )
+
+    # ── helpers ────────────────────────────────────────────────────
+
+    def _success(
+        self,
+        session_id: str,
+        result: Dict[str, Any],
+        steps: List[Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        return {
+            "success": True,
+            "result": result,
+            "steps": steps,
+            "session_id": session_id,
+        }
+
+    def _failure(
+        self,
+        session_id: str,
+        reason: str,
+        steps: List[Dict[str, Any]],
+    ) -> Dict[str, Any]:
         return {
             "success": False,
-            "reason": f"Max iterations ({self.max_iterations}) reached",
+            "reason": reason,
             "steps": steps,
             "session_id": session_id,
         }

@@ -147,10 +147,7 @@ async def main():
 
         print(f"\n[{task_id}] {entry_point}")
 
-        # Reset agent state for each problem
-        coder.reset()
-
-        # Directly invoke coder with the prompt
+        # Directly invoke coder with the prompt (no reset needed — context is session-scoped)
         result = await orch.execute(
             {"task": f"Complete this function:\n\n{prompt}", "code": "", "review_feedback": ""},
             entry_agent="coder",

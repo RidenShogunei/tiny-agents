@@ -4,6 +4,7 @@ import re
 from typing import Any, Dict
 
 from tiny_agents.core.agent import BaseAgent, AgentOutput
+from tiny_agents.core.session import SessionContext
 from tiny_agents.tools.python_executor import PythonExecutor
 
 
@@ -30,7 +31,7 @@ Rules:
 
 
 class ToolReasonerAgent(BaseAgent):
-    """Reasoner that can execute Python code to verify calculations."""
+    """Reasoner that can execute Python code to verify calculations (stateless)."""
 
     def __init__(self, model_name: str = "Qwen/Qwen2.5-3B-Instruct", **kwargs):
         super().__init__(
@@ -43,29 +44,16 @@ class ToolReasonerAgent(BaseAgent):
 
     def _extract_python_code(self, text: str) -> str:
         """Extract first python code block, robust to missing closing tag."""
-        # Try standard ```python ... ```
-        pattern = r"```python\n(.*?)\n```"
-        match = re.search(pattern, text, re.DOTALL)
-        if match:
-            return match.group(1).strip()
-
-        # Try ```python ... (until end of text, no closing ```)
-        pattern2 = r"```python\n(.*)"
-        match2 = re.search(pattern2, text, re.DOTALL)
-        if match2:
-            return match2.group(1).strip()
-
-        # Fallback: try without language tag
-        pattern3 = r"```\n(.*?)\n```"
-        match3 = re.search(pattern3, text, re.DOTALL)
-        if match3:
-            return match3.group(1).strip()
-
-        pattern4 = r"```\n(.*)"
-        match4 = re.search(pattern4, text, re.DOTALL)
-        if match4:
-            return match4.group(1).strip()
-
+        # Try ```python ... ```
+        for pattern in [
+            r"```python\n(.*?)\n```",
+            r"```python\n(.*)",
+            r"```\n(.*?)\n```",
+            r"```\n(.*)",
+        ]:
+            match = re.search(pattern, text, re.DOTALL)
+            if match:
+                return match.group(1).strip()
         return ""
 
     def _extract_answer(self, text: str) -> str:
@@ -74,11 +62,9 @@ class ToolReasonerAgent(BaseAgent):
             parts = text.split("####")
             last = parts[-1].strip().split()[0] if parts[-1].strip() else ""
             return last.replace(",", "")
-        # Try \boxed{}
         match = re.search(r"\\boxed\{(.*?)\}", text)
         if match:
             return match.group(1).replace(",", "")
-        # Fallback: last non-empty line
         lines = text.strip().splitlines()
         for line in reversed(lines):
             line = line.strip()
@@ -86,8 +72,12 @@ class ToolReasonerAgent(BaseAgent):
                 return line.replace(",", "")
         return text.strip().replace(",", "")
 
-    async def run(self, input_data: Dict[str, Any]) -> AgentOutput:
-        """Solve problem with optional Python tool use."""
+    async def run(
+        self,
+        input_data: Dict[str, Any],
+        context: SessionContext,
+    ) -> AgentOutput:
+        """Solve problem with optional Python tool use (stateless)."""
         task = input_data.get("task", "")
 
         if self.backend is None:
@@ -98,20 +88,21 @@ class ToolReasonerAgent(BaseAgent):
                 finished=True,
             )
 
-        # Build fresh context for this problem (no accumulated history)
-        messages = [
-            {"role": "system", "content": self.role_prompt},
-            {"role": "user", "content": task},
-        ]
+        # Build fresh messages from context
+        messages = context.get_messages(self.name)
+        messages.append({"role": "user", "content": task})
+
+        temp = context.config.get("temperature", 0.1)
+        max_tok = context.config.get("max_tokens", 1024)
 
         # Step 1: Generate initial reasoning (may include Python code)
         response1 = self.backend.generate(
             model_key=self.name,
             messages=messages,
-            temperature=0.1,
-            max_tokens=1024,
+            temperature=temp,
+            max_tokens=max_tok,
         )
-        messages.append({"role": "assistant", "content": response1})
+        context.add_message(self.name, "assistant", response1)
 
         # Step 2: Check if Python code was generated
         code = self._extract_python_code(response1)
@@ -122,15 +113,16 @@ class ToolReasonerAgent(BaseAgent):
                 f"stdout: {exec_result['stdout']}\n"
                 f"stderr: {exec_result['stderr']}\n"
             )
-            messages.append({"role": "user", "content": tool_output})
+            context.add_message(self.name, "user", tool_output)
 
             # Step 3: Generate final answer with tool output
             response2 = self.backend.generate(
                 model_key=self.name,
-                messages=messages,
-                temperature=0.1,
+                messages=context.get_messages(self.name),
+                temperature=temp,
                 max_tokens=256,
             )
+            context.add_message(self.name, "assistant", response2)
             final_answer = self._extract_answer(response2)
         else:
             final_answer = self._extract_answer(response1)

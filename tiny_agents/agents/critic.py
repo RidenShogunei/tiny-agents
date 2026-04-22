@@ -1,7 +1,9 @@
 """Critic agent: reviews and validates outputs from other agents."""
 
 from typing import Any, Dict
+
 from tiny_agents.core.agent import BaseAgent, AgentOutput
+from tiny_agents.core.session import SessionContext
 
 
 CRITIC_PROMPT = """You are a strict code reviewer and logic validator.
@@ -22,7 +24,7 @@ Be concise and actionable."""
 
 
 class CriticAgent(BaseAgent):
-    """Reviews code, logic, and reasoning from worker agents."""
+    """Reviews code, logic, and reasoning from worker agents (stateless)."""
 
     def __init__(self, model_name: str = "Qwen/Qwen2.5-1.5B-Instruct", **kwargs):
         super().__init__(
@@ -32,13 +34,16 @@ class CriticAgent(BaseAgent):
             **kwargs,
         )
 
-    async def run(self, input_data: Dict[str, Any]) -> AgentOutput:
+    async def run(
+        self,
+        input_data: Dict[str, Any],
+        context: SessionContext,
+    ) -> AgentOutput:
         """Review the output from another agent."""
         code = input_data.get("code", "")
         task = input_data.get("task", "")
         reasoning = input_data.get("reasoning", "")
 
-        # Build review prompt
         review_prompt = f"Task: {task}\n\n"
         if code:
             review_prompt += f"Code to review:\n```python\n{code}\n```\n\n"
@@ -46,20 +51,24 @@ class CriticAgent(BaseAgent):
             review_prompt += f"Reasoning to validate:\n{reasoning}\n\n"
         review_prompt += "Please review the above and provide your verdict."
 
-        self.add_message("user", review_prompt)
+        messages = context.get_messages(self.name)
+        messages.append({"role": "user", "content": review_prompt})
 
         if self.backend is not None:
-            review_text = self._call_llm(
-                review_prompt,
-                temperature=0.2,
-                max_tokens=512,
+            temp = context.config.get("temperature", 0.2)
+            max_tok = context.config.get("max_tokens", 512)
+            review_text = self.backend.generate(
+                model_key=self.name,
+                messages=messages,
+                temperature=temp,
+                max_tokens=max_tok,
             )
         else:
             review_text = "verdict: PASS\nissues: None\nsuggestions: None"
 
-        self.add_message("assistant", review_text)
+        context.add_message(self.name, "user", review_prompt)
+        context.add_message(self.name, "assistant", review_text)
 
-        # Parse verdict
         verdict = "PASS"
         if "NEEDS_FIX" in review_text.upper() or "FAIL" in review_text.upper():
             verdict = "NEEDS_FIX"

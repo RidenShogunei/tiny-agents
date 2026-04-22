@@ -1,7 +1,9 @@
 """Coder agent: generates and reviews code."""
 
 from typing import Any, Dict
+
 from tiny_agents.core.agent import BaseAgent, AgentOutput
+from tiny_agents.core.session import SessionContext
 
 
 CODER_PROMPT = """You are an expert coding assistant. Write clean, correct, well-documented Python code.
@@ -15,7 +17,7 @@ Rules:
 
 
 class CoderAgent(BaseAgent):
-    """Generates code and handles programming tasks."""
+    """Generates code and handles programming tasks (stateless)."""
 
     def __init__(self, model_name: str = "Qwen/Qwen2.5-3B-Instruct", **kwargs):
         super().__init__(
@@ -25,7 +27,11 @@ class CoderAgent(BaseAgent):
             **kwargs,
         )
 
-    async def run(self, input_data: Dict[str, Any]) -> AgentOutput:
+    async def run(
+        self,
+        input_data: Dict[str, Any],
+        context: SessionContext,
+    ) -> AgentOutput:
         """Generate code for the given task, optionally with review feedback."""
         task = input_data.get("task", "")
         feedback = input_data.get("review_feedback", "")
@@ -37,21 +43,28 @@ class CoderAgent(BaseAgent):
                 f"Review feedback:\n{feedback}\n\n"
                 "Please rewrite the code addressing ALL the issues mentioned above."
             )
-            self.add_message("user", f"Rewrite with feedback: {feedback}")
         else:
             prompt = f"Write Python code for: {task}"
-            self.add_message("user", task)
+
+        # Build messages using context (no internal history)
+        messages = context.get_messages(self.name)
+        messages.append({"role": "user", "content": prompt})
 
         if self.backend is not None:
-            code = self._call_llm(
-                prompt,
-                temperature=0.3,
-                max_tokens=1024,
+            temp = context.config.get("temperature", 0.3)
+            max_tok = context.config.get("max_tokens", 1024)
+            code = self.backend.generate(
+                model_key=self.name,
+                messages=messages,
+                temperature=temp,
+                max_tokens=max_tok,
             )
         else:
             code = "# Backend not available\ndef placeholder():\n    pass"
 
-        self.add_message("assistant", code)
+        # Record in context
+        context.add_message(self.name, "user", prompt)
+        context.add_message(self.name, "assistant", code)
 
         return AgentOutput(
             thought="Generated code using LLM" + (" (rewrite with feedback)" if needs_fix else ""),

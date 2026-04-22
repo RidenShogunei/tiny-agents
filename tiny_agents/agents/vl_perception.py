@@ -2,9 +2,10 @@
 
 import base64
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from tiny_agents.core.agent import BaseAgent, AgentOutput
+from tiny_agents.core.session import SessionContext
 
 
 VL_PROMPT = """You are a visual perception assistant. Analyze the provided image carefully.
@@ -35,7 +36,7 @@ def _encode_image(image_path: str) -> str:
 
 
 class VLPerceptionAgent(BaseAgent):
-    """Processes images and visual content using Qwen2.5-VL-3B."""
+    """Processes images and visual content using Qwen2.5-VL-3B (stateless)."""
 
     def __init__(self, model_name: str = "Qwen/Qwen2.5-VL-3B-Instruct", **kwargs):
         super().__init__(
@@ -45,13 +46,17 @@ class VLPerceptionAgent(BaseAgent):
             **kwargs,
         )
 
-    async def run(self, input_data: Dict[str, Any]) -> AgentOutput:
-        """Process an image and answer the task question."""
+    async def run(
+        self,
+        input_data: Dict[str, Any],
+        context: SessionContext,
+    ) -> AgentOutput:
+        """Process an image and answer the task question (stateless)."""
         task = input_data.get("task", "")
         image = input_data.get("image")
         image_path = input_data.get("image_path")
 
-        # Build multimodal prompt
+        # Resolve image URL
         if image_path:
             image_url = _encode_image(image_path)
         elif image and isinstance(image, str) and image.startswith("data:"):
@@ -59,25 +64,29 @@ class VLPerceptionAgent(BaseAgent):
         else:
             image_url = None
 
+        # Build prompt
         if image_url:
             prompt = f"<|vision_start|>{image_url}<|vision_end|>\n{task}"
         else:
             prompt = task
 
-        self.add_message("user", prompt)
+        messages = context.get_messages(self.name)
+        messages.append({"role": "user", "content": prompt})
 
         if self.backend is not None:
-            # Use backend with image support if available
-            # vLLM for VLM needs special handling; fallback to text-only for now
-            response = self._call_llm(
-                prompt,
-                temperature=0.3,
-                max_tokens=1024,
+            temp = context.config.get("temperature", 0.3)
+            max_tok = context.config.get("max_tokens", 1024)
+            response = self.backend.generate(
+                model_key=self.name,
+                messages=messages,
+                temperature=temp,
+                max_tokens=max_tok,
             )
         else:
             response = "[VL Backend not available]"
 
-        self.add_message("assistant", response)
+        context.add_message(self.name, "user", prompt)
+        context.add_message(self.name, "assistant", response)
 
         return AgentOutput(
             thought="Analyzed image content",

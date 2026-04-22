@@ -1,67 +1,69 @@
-"""Base agent class for Tiny Agents."""
+"""Base agent class for Tiny Agents — stateless by design.
+
+Key principle: agents are pure transformation functions.
+They receive (input_data, context) and return AgentOutput.
+All conversation history lives in SessionContext, not on the agent object.
+This eliminates the need for manual reset() calls between problems.
+"""
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
-from pydantic import BaseModel
+from typing import Any, Dict, Optional
+
+from pydantic import BaseModel, Field
+
+from tiny_agents.core.session import SessionContext
 
 
 class AgentOutput(BaseModel):
-    """Standardized agent output format."""
-    thought: str
-    action: str
+    """Standardized agent output format returned by every agent.run()."""
+    thought: str = ""
+    action: str = "respond"   # respond | delegate | tool_call | review
     target_agent: Optional[str] = None
-    payload: Dict[str, Any] = {}
-    finished: bool = False
+    payload: Dict[str, Any] = Field(default_factory=dict)
+    finished: bool = True
 
 
 class BaseAgent(ABC):
-    """Base class for all agents in the framework."""
+    """Base class for all agents.
+
+    Agents MUST NOT hold conversation state internally.
+    The SessionContext is the single source of truth for all history.
+
+    Subclasses implement run(input_data, context) which should be a
+    pure function: same inputs -> same outputs (no internal side-effects).
+    """
 
     def __init__(
         self,
         name: str,
         model_name: str,
         role_prompt: str,
-        memory: Optional[Any] = None,
         backend: Optional[Any] = None,
     ):
         self.name = name
         self.model_name = model_name
         self.role_prompt = role_prompt
-        self.memory = memory
         self.backend = backend
-        self.bus = None  # injected by orchestrator
-        self.message_history: List[Dict[str, Any]] = []
 
     @abstractmethod
-    async def run(self, input_data: Dict[str, Any]) -> AgentOutput:
-        """Execute one agent step. Must be implemented by subclasses."""
-        pass
+    async def run(
+        self,
+        input_data: Dict[str, Any],
+        context: SessionContext,
+    ) -> AgentOutput:
+        """Execute one agent step.
 
-    def add_message(self, role: str, content: str, **kwargs) -> None:
-        """Add a message to the agent's local history."""
-        msg = {"role": role, "content": content}
-        msg.update(kwargs)
-        self.message_history.append(msg)
+        Args:
+            input_data: task-specific payload from the orchestrator.
+            context: SessionContext — contains messages, working_state, config.
+                     The agent MUST NOT store references to context or mutate
+                     context.session_id or context.config.
 
-    def get_messages(self) -> List[Dict[str, Any]]:
-        """Return conversation history for LLM prompt construction."""
-        system_msg = {"role": "system", "content": self.role_prompt}
-        return [system_msg] + self.message_history
+        Returns:
+            AgentOutput with action, thought, payload, and optional target_agent.
+        """
+        raise NotImplementedError
 
-    def reset(self) -> None:
-        """Clear message history."""
-        self.message_history.clear()
-
-    def _call_llm(self, user_message: str, temperature: float = 0.7, max_tokens: int = 512) -> str:
-        """Call the backend LLM with the current context + new user message."""
-        if self.backend is None:
-            raise RuntimeError(f"Agent '{self.name}' has no backend configured")
-        messages = self.get_messages()
-        messages.append({"role": "user", "content": user_message})
-        return self.backend.generate(
-            model_key=self.name,
-            messages=messages,
-            temperature=temperature,
-            max_tokens=max_tokens,
-        )
+    def _get_override(self, context: SessionContext, key: str, default: Any) -> Any:
+        """Get a config override from context, falling back to agent default."""
+        return context.config.get(key, default)
