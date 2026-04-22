@@ -23,14 +23,19 @@ Usage:
 from __future__ import annotations
 
 import asyncio
+import logging
 import os
 import time
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 from typing import Any, Dict, List, Optional
 
 from tiny_agents.core.agent import AgentOutput
 from tiny_agents.core.session import SessionContext
 from tiny_agents.core.multi_gpu_writer_pool import MultiGPUWriterPool
+from tiny_agents.core.writer_pool_v2 import MultiGPUWriterPoolV2
+from tiny_agents.core.knowledge_graph import KnowledgeGraph
 from tiny_agents.tools import ArxivTool, MarkdownWriterTool
 
 
@@ -102,6 +107,20 @@ class ResearchOrchestrator:
             available_gpus=[0, 1, 2],
             model_name=self.writer_model,
         )
+        # V2 writer pool with critic + revision loop
+        self._writer_pool_v2 = MultiGPUWriterPoolV2(
+            num_instances=self.num_writers,
+            gpu_assignment=gpu_assignment,
+            available_gpus=[0, 1, 2],
+            model_name=self.writer_model,
+            critic_model_key="gpu0",
+            revision_threshold=6.0,
+            max_revision_attempts=2,
+        )
+        self._writer_pool_v2.set_backend(backend)
+
+        # Knowledge graph for cross-reference tracking (Direction B)
+        self._knowledge_graph = KnowledgeGraph()
         self._writer_pool.set_backend(backend)
 
     async def run(
@@ -199,11 +218,27 @@ class ResearchOrchestrator:
             errors.append("No summaries generated")
             return self._fail(session_id, errors, steps, time.time() - start_time)
 
-        # ── Step 4: Write sections in parallel ───────────────────────────
-        print(f"[{session_id}] Step 4/7: Writing {len(sections)} sections with {self.num_writers} writers...")
+        # ── Step 3.5: Build knowledge graph ────────────────────────────────
+        # Populate graph with papers (Direction B: cross-reference tracking)
+        print(f"[{session_id}] Step 3.5/7: Building paper knowledge graph...")
+        step_kg_start = time.time()
+        for paper in summaries:
+            self._knowledge_graph.add_paper(paper)
+        kg_stats = self._knowledge_graph.get_paper_stats()
+        print(f"[{session_id}]   → {kg_stats['total_papers']} papers in graph "
+              f"({len(kg_stats.get('categories', {}))} categories, "
+              f"{len(kg_stats.get('methods', {}))} methods)")
+        steps.append({"step": "knowledge_graph", "time": time.time() - step_kg_start, **kg_stats})
+
+        # ── Step 4: Write sections with critique + revision ──────────────
+        print(f"[{session_id}] Step 4/7: Writing {len(sections)} sections "
+              f"(critic threshold={self._writer_pool_v2.revision_threshold}, "
+              f"max {self._writer_pool_v2.max_revision_attempts} rewrites)...")
         step_start = time.time()
         try:
-            section_results = await self._writer_pool.write_all(
+            # Inject knowledge graph for overlap detection
+            self._writer_pool_v2.set_knowledge_graph(self._knowledge_graph)
+            section_results = await self._writer_pool_v2.write_all_v2(
                 sections=sections,
                 summaries=summaries,
                 topic=topic,
@@ -218,11 +253,12 @@ class ResearchOrchestrator:
         for sec in sections:
             sid = sec.get("id", "?")
             if sid in section_results:
+                result = section_results[sid]
                 drafted_sections.append({
                     "id": sid,
                     "title": sec.get("title", ""),
-                    "content": section_results[sid].get("content", ""),
-                    "papers_cited": section_results[sid].get("papers_cited", []),
+                    "content": result.get("content", ""),
+                    "papers_cited": result.get("papers_used", []),  # NOTE: writer pool returns papers_used
                 })
 
         steps.append({"step": "writing", "time": time.time() - step_start, "sections_written": len(drafted_sections)})
@@ -274,20 +310,44 @@ class ResearchOrchestrator:
         print(f"[{session_id}] Step 7/7: Writing output file...")
         step_start = time.time()
 
-        # Assemble final paper
         date_str = datetime.now().strftime("%Y-%m-%d")
         final_content = f"# {title}\n\n*Generated: {date_str}*\n\n"
         final_content += f"*Topic: {topic}*\n\n"
-        final_content += f"*Statistics: {len(sections)} sections, {len(papers)} papers found, "
+        final_content += f"*Statistics: {len(sections)} sections planned, {len(papers)} papers found, "
         final_content += f"{len(summaries)} papers read, {len(drafted_sections)} sections drafted*\n\n"
         final_content += "---\n\n"
 
+        # ── Assemble paper: Abstract/Conclusion from synthesizer + drafted sections + skip intro ──
         if full_paper:
-            final_content += full_paper
+            import re as _re
+
+            # Extract Abstract: first section (before any ## header)
+            first_section = _re.search(r'^(.*?)^##', full_paper, _re.DOTALL | _re.MULTILINE)
+            if first_section:
+                abstract_block = first_section.group(1).strip()
+                # Take first 300 words only
+                abstract_words = abstract_block.split()[:300]
+                abstract_text = " ".join(abstract_words)
+                final_content += "### Abstract\n\n" + abstract_text + "\n\n---\n\n"
+
+            # Use our drafted sections for body content
+            for sec in sorted(drafted_sections, key=lambda s: s.get("id", "")):
+                sec_content = sec.get("content", "")
+                if sec_content.strip():
+                    final_content += sec_content.strip() + "\n\n---\n\n"
+
+            # Extract Conclusion: last section (after last ## before references)
+            conclusion_match = _re.search(
+                r'(?i)conclusion[:\s]*\n(.*?)$', full_paper, _re.DOTALL | _re.MULTILINE
+            )
+            if conclusion_match:
+                conclusion_text = conclusion_match.group(1).strip()
+                conclusion_words = conclusion_text.split()[:300]
+                conclusion_text = " ".join(conclusion_words)
+                final_content += "### Conclusion\n\n" + conclusion_text + "\n\n"
         else:
-            # Fallback: just concatenate drafted sections
-            for sec in drafted_sections:
-                final_content += sec.get("content", "") + "\n\n"
+            for sec in sorted(drafted_sections, key=lambda s: s.get("id", "")):
+                final_content += sec.get("content", "").strip() + "\n\n---\n\n"
 
         if references:
             final_content += "\n---\n\n" + references + "\n"

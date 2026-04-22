@@ -73,7 +73,7 @@ class VLLMBackend:
         self.instances[model_key] = LLM(
             model=model_path,
             tensor_parallel_size=1,
-            gpu_memory_utilization=0.45,  # 0.45 * 40GB = 18GB per model (3.5GB model + 14GB KV cache)
+            gpu_memory_utilization=kwargs.pop("gpu_memory_utilization", 0.45),  # 0.45 * 40GB = 18GB
             max_model_len=max_model_len,
             trust_remote_code=True,
             enable_prefix_caching=True,  # explicit for clarity
