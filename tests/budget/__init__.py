@@ -1,0 +1,1 @@
+"""Budget module tests."""

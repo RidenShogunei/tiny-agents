@@ -64,7 +64,7 @@ class ControllerHistory:
         else:
             self.consecutive_verifies = 0
 
-        if msg_gain < 0.01:  # near-zero gain
+        if msg_gain < 0.02:  # below gain_threshold
             self.consecutive_low_gains += 1
         else:
             self.consecutive_low_gains = 0
@@ -139,10 +139,12 @@ class BudgetController:
         # Track previous best answer for logging
         prev_best = state.candidate_manager.get_best_text() if state.candidate_manager else None
 
-        action, rule_id, rule_name = self._apply_rules(state, verifier_output)
+        # Use MA for smoother decision signals; this is computed from credit_stats
+        # which reflects the state AFTER the latest step
+        msg_gain = c.msg_gain_ma
+        action, rule_id, rule_name = self._apply_rules(state, verifier_output, msg_gain)
 
-        # Update history for hysteresis
-        msg_gain = c.msg_gain_ma  # use MA for smoother tracking
+        # Update history for hysteresis (tracks what happened in this step)
         verify_conf = verifier_output.confidence if verifier_output else 0.0
         self._history.record(
             action=action,
@@ -181,6 +183,7 @@ class BudgetController:
         self,
         state: BudgetLoopState,
         verifier_output: Optional[VerificationResult],
+        msg_gain: float,
     ) -> Tuple[ActionType, int, str]:
         """Apply rules in priority order. Returns (action, rule_id, rule_name)."""
 
@@ -199,7 +202,11 @@ class BudgetController:
             return ActionType.STOP, self.R_BUDGET_EXHAUSTED, "budget_exhausted"
 
         # R3: Consecutive low marginal gains → diminishing returns
-        if self._history.consecutive_low_gains >= cfg.consecutive_low_gain_stop:
+        # Check the value AFTER potential increment (i.e., current gain counts)
+        # If current msg_gain is low, it will increment after this check,
+        # so we check: current_consecutive + 1 >= threshold
+        future_count = self._history.consecutive_low_gains + (1 if msg_gain < 0.02 else 0)
+        if future_count >= cfg.consecutive_low_gain_stop:
             # Only STOP on slope if last verify was confident (or no verify yet)
             if not cfg.slope_stop_requires_verify:
                 return ActionType.STOP, self.R_CONSECUTIVE_LOW_GAIN, "consecutive_low_gain"

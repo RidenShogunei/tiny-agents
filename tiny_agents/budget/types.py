@@ -84,7 +84,12 @@ class BudgetState:
     latency_ms: float = 0.0
 
     def __post_init__(self):
-        self.remaining = self.total_budget
+        # Only initialize remaining/spent if not explicitly provided (i.e., at default 0)
+        # This allows BudgetState(total_budget=1000, remaining=500) to work
+        if self.remaining == 0:
+            self.remaining = self.total_budget
+        if self.spent == 0 and self.remaining == self.total_budget:
+            self.spent = 0
 
     def can_afford(self, cost: int) -> bool:
         return self.remaining >= cost
@@ -148,3 +153,25 @@ class DecisionRecord:
     msg_gain_after: float = 0.0
     best_answer_before: Optional[str] = None
     best_answer_after: Optional[str] = None
+
+
+# ── Budget Loop State ─────────────────────────────────────────────────────────
+
+@dataclass
+class BudgetLoopState:
+    """
+    Complete state snapshot at each control loop iteration.
+
+    s_t = (x, τ_t, A_t, b_t, c_t) as defined in the paper.
+
+    This is the ONLY state object passed to BudgetController.decide().
+    """
+    problem: Dict[str, Any]         # x
+    trajectory: List  # τ_t  (list of CollaborationStep)
+    active_agents: List[str]          # A_t
+    budget_state: BudgetState         # b_t
+    credit_stats: CreditStats        # c_t
+    step_id: int = 0                # current step counter
+    remaining_steps: int = 0         # steps remaining in budget (estimate)
+    # Additional read-only context for convenience
+    candidate_manager: Optional[Any] = None  # set by orchestrator before decide()

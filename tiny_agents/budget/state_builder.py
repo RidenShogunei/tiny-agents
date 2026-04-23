@@ -13,33 +13,13 @@ from typing import Any, Dict, List, Optional, TYPE_CHECKING
 from tiny_agents.budget.types import (
     ActionType,
     BudgetState,
+    BudgetLoopState,
     CreditStats,
 )
 
 if TYPE_CHECKING:
     from tiny_agents.budget.candidate_manager import CandidateManager
     from tiny_agents.budget.credit_tracer import CreditTracer
-
-
-@dataclass
-class BudgetLoopState:
-    """
-    Complete state snapshot at each control loop iteration.
-    
-    s_t = (x, τ_t, A_t, b_t, c_t) as defined in the paper.
-    
-    This is the ONLY state object passed to BudgetController.decide().
-    """
-    problem: Dict[str, Any]         # x
-    trajectory: List[Any]            # τ_t  (list of CollaborationStep)
-    active_agents: List[str]          # A_t
-    budget_state: BudgetState         # b_t
-    credit_stats: CreditStats        # c_t
-    step_id: int = 0                # current step counter
-    remaining_steps: int = 0         # steps remaining in budget (estimate)
-    
-    # Additional read-only context for convenience
-    candidate_manager: Optional[Any] = None  # set by orchestrator before decide()
 
 
 class StateBuilder:
