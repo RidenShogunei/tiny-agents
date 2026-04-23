@@ -472,7 +472,8 @@ class CreditAwareController:
 
         action, record = self.controller.decide(state)
         self.rule_log.append(record.triggered_rule_id)
-        self.spent += 50 if action == ActionType.CONTINUE_DISCUSS else self.verify_cost
+        # NOTE: spending happens in the outer loop (ctrl.spend(50) at iteration top)
+        # do NOT double-charge here
         return action.value if hasattr(action, 'value') else str(action), record.triggered_rule_id
 
 
@@ -703,8 +704,8 @@ class GSM8KBenchmarkRunner:
 
         # ActionStr -> ActionType mapping for branch checks
         ACTION_MAP = {
-            "CONTINUE": ActionType.CONTINUE_DISCUSS,
-            "VERIFY": ActionType.CALL_VERIFIER,
+            "CONTINUE_DISCUSS": ActionType.CONTINUE_DISCUSS,
+            "CALL_VERIFIER": ActionType.CALL_VERIFIER,
             "STOP": ActionType.STOP,
         }
 
@@ -717,10 +718,6 @@ class GSM8KBenchmarkRunner:
             verify_discount = 1.0  # VERIFY 后乘以折扣系数
 
             for step in range(1, 100):
-                # 循环头部先扣本步花销，再判断下一动作
-                # 语义：已消耗的算力决定下一步该不该继续
-                ctrl.spend(50)
-
                 remaining = budget - ctrl.spent
 
                 # 分层预算可行性检查（动作执行前）
@@ -754,7 +751,15 @@ class GSM8KBenchmarkRunner:
 
                 if action_str == "STOP":
                     num_stop += 1
+                    ctrl.spend(50)  # final step cost
                     break
+
+                # Base step cost (reasoner LLM call)
+                ctrl.spend(50)
+
+                # VERIFY action: deduct additional verifier cost (total = 200)
+                if action_type == ActionType.CALL_VERIFIER:
+                    ctrl.spend(150)  # additional verifier cost
 
                 # Execute reasoner
                 out = self.backend.chat(messages)
@@ -769,8 +774,20 @@ class GSM8KBenchmarkRunner:
                 ])
                 critic_text = critic_out.choices[0].message.content.strip()
 
-                # msg_gain from critic feedback — use REAL model output
-                msg_gain = 0.08 if "PASS" in critic_text.upper() else 0.01
+                # msg_gain from critic feedback — real model uses "correct"/"incorrect"
+                # Look for verdict signals in model output
+                critic_upper = critic_text.upper()
+                if "PASS" in critic_upper or "CORRECT" in critic_upper or "VERDICT: PASS" in critic_text.upper():
+                    msg_gain = 0.08
+                elif "FAIL" in critic_upper or "INCORRECT" in critic_upper or "VERDICT: FAIL" in critic_text.upper():
+                    msg_gain = 0.01
+                elif re.search(r'\b(correct|right|accurate)\b', critic_text, re.IGNORECASE):
+                    msg_gain = 0.08
+                elif re.search(r'\b(incorrect|wrong|error|bad)\b', critic_text, re.IGNORECASE):
+                    msg_gain = 0.01
+                else:
+                    # Ambiguous output — moderate gain
+                    msg_gain = 0.04
                 msg_gains.append(msg_gain)
                 last_gain = msg_gain
                 disagreement_values.append(disagreement_val)
