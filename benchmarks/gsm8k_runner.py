@@ -146,6 +146,37 @@ def check_correct(pred: Optional[str], gt: str) -> bool:
     return pred_clean == gt_clean
 
 
+# ── Real vLLM backend adapter ───────────────────────────────────────────────
+
+class RealLLMBackend:
+    """Adapter: wraps VLLMBackend.generate() to expose .choices[0].message.content.
+
+    The runner expects:  backend.chat(messages) → object with .choices[0].message.content
+    VLLMBackend returns: backend.generate(...)   → plain str
+    """
+
+    def __init__(self, vllm_backend, model_key: str,
+                 temperature: float = 0.7, max_tokens: int = 512):
+        self.vllm = vllm_backend
+        self.model_key = model_key
+        self.temperature = temperature
+        self.max_tokens = max_tokens
+        self.call_count = 0
+
+    def chat(self, messages, **kwargs):
+        from unittest.mock import MagicMock
+        self.call_count += 1
+        text = self.vllm.generate(
+            self.model_key,
+            messages,
+            temperature=kwargs.get("temperature", self.temperature),
+            max_tokens=kwargs.get("max_tokens", self.max_tokens),
+        )
+        mock = MagicMock()
+        mock.choices = [MagicMock(message=MagicMock(content=text))]
+        return mock
+
+
 # ── Mock vLLM backend for testing ────────────────────────────────────────────
 
 class MockLLMBackend:
@@ -725,9 +756,6 @@ class GSM8KBenchmarkRunner:
                     num_stop += 1
                     break
 
-                # Note: cost deduction happens inside CreditAwareController.decide()
-                # so we do NOT call ctrl.spend() here (avoids double-deduction)
-
                 # Execute reasoner
                 out = self.backend.chat(messages)
                 text = out.choices[0].message.content.strip()
@@ -741,7 +769,7 @@ class GSM8KBenchmarkRunner:
                 ])
                 critic_text = critic_out.choices[0].message.content.strip()
 
-                # Simulate msg_gain based on critic feedback
+                # msg_gain from critic feedback — use REAL model output
                 msg_gain = 0.08 if "PASS" in critic_text.upper() else 0.01
                 msg_gains.append(msg_gain)
                 last_gain = msg_gain
@@ -939,20 +967,29 @@ def main():
     parser.add_argument("--verify-cost", type=int, default=200)
     parser.add_argument("--output-dir", default="./output/benchmark")
     parser.add_argument("--mock", action="store_true", help="Use mock backend (no real LLM calls)")
+    parser.add_argument("--real", action="store_true", help="Use real vLLM backend (Qwen2.5-3B-Instruct)")
     parser.add_argument("--gpu", type=int, default=0, help="GPU index for vLLM")
     args = parser.parse_args()
 
     if args.mock:
         backend = MockLLMBackend(response="The answer is 42.")
         print("[MODE] Mock backend — deterministic responses")
-    else:
-        # Real vLLM backend
+    elif args.real:
         from tiny_agents.models.vllm_backend import VLLMBackend
-        backend = VLLMBackend(default_gpu=args.gpu)
         model_key = f"Qwen2.5-3B_gpu{args.gpu}"
         model_path = os.path.expanduser(f"~/.cache/tiny-agents/models/Qwen/Qwen2.5-3B-Instruct")
-        backend.load_model(model_key, model_path, gpu=args.gpu, max_model_len=8192)
-        print(f"[MODE] Real vLLM backend — gpu={args.gpu}")
+        vllm_backend = VLLMBackend(default_gpu=args.gpu)
+        vllm_backend.load_model(
+            model_key, model_path,
+            gpu=args.gpu,
+            max_model_len=8192,
+            gpu_memory_utilization=0.45,
+        )
+        backend = RealLLMBackend(vllm_backend, model_key, temperature=0.7, max_tokens=512)
+        print(f"[MODE] Real vLLM backend — {model_path} on gpu={args.gpu}")
+    else:
+        print("[ERROR] Must specify --mock or --real")
+        return
 
     runner = GSM8KBenchmarkRunner(
         backend=backend,
