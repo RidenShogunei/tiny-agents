@@ -191,7 +191,7 @@ class MockLLMBackend:
         from unittest.mock import MagicMock
         self.call_count += 1
         content = self.response
-        # Pattern responses for variety
+        # Pattern responses for variety — uses same msg_gain logic as real model
         if "critic" in str(messages):
             content = "verdict: PASS\nissues: None\nsuggestions: None"
         elif "verify" in str(messages).lower():
@@ -619,8 +619,18 @@ class GSM8KBenchmarkRunner:
                 ])
                 critic_text = critic_out.choices[0].message.content.strip()
 
-                # Simulate msg_gain from critic feedback
-                msg_gain = 0.08 if "PASS" in critic_text.upper() else 0.01
+                # Parse critic feedback for correctness signals (same logic as S4)
+                critic_upper = critic_text.upper()
+                if "PASS" in critic_upper or "CORRECT" in critic_upper or "VERDICT: PASS" in critic_text.upper():
+                    msg_gain = 0.08
+                elif "FAIL" in critic_upper or "INCORRECT" in critic_upper or "VERDICT: FAIL" in critic_text.upper():
+                    msg_gain = 0.01
+                elif re.search(r'\b(correct|right|accurate)\b', critic_text, re.IGNORECASE):
+                    msg_gain = 0.08
+                elif re.search(r'\b(incorrect|wrong|error|bad)\b', critic_text, re.IGNORECASE):
+                    msg_gain = 0.01
+                else:
+                    msg_gain = 0.04
                 msg_gains.append(msg_gain)
                 last_gain = msg_gain
 
