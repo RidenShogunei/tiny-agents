@@ -9,6 +9,7 @@ from tiny_agents.agents.coder import CoderAgent
 from tiny_agents.agents.critic import CriticAgent
 from tiny_agents.agents.vl_perception import VLPerceptionAgent
 from tiny_agents.agents.tool_reasoner import ToolReasonerAgent
+from tiny_agents.agents.verifier import VerifierAgent
 
 __all__ = [
     "RouterAgent",
@@ -16,4 +17,5 @@ __all__ = [
     "CriticAgent",
     "VLPerceptionAgent",
     "ToolReasonerAgent",
+    "VerifierAgent",
 ]
