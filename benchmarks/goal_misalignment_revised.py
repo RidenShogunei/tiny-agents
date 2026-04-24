@@ -27,12 +27,22 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 # Multiple model sizes can share one GPU (sequential, not parallel)
 MODEL_BASE = "/home/jinxu/.cache/tiny-agents/models/Qwen"
 
+# GPU allocation: GPU 1,2,3 全部空闲可用
+# GPU 1: parent 0.5B/1.5B, labeler 1.5B (sequential reuse)
+# GPU 2: subagent 0.5B/1.5B
+# GPU 3: parent/subagent 3B/9B
 MODEL_GPU = {
-    "0.5B": 1,
+    "0.5B": 1,          # parent uses GPU 1
     "1.5B": 1,
     "3B": 3,
     "9B": 3,
-    "labeler_1.5B": 1,  # shares GPU 1 with parent models (sequential use)
+    "labeler_1.5B": 2,  # labeler on GPU 2 (different from parent's GPU 1)
+}
+MODEL_GPU_SUBAGENT = {
+    "0.5B": 2,
+    "1.5B": 2,
+    "3B": 3,
+    "9B": 3,
 }
 
 MODEL_PATH = {
@@ -122,26 +132,26 @@ class BenchmarkRunner:
         self.mem_config = make_gpu_mem_config()
         self._loaded_models = set()
 
-    def load_model(self, size: str) -> None:
+    def load_model(self, size: str, gpu: int) -> None:
         """Load a model (or reuse if already loaded)."""
-        if size in self._loaded_models:
+        key = f"gpu{gpu}_{size}"
+        if key in self._loaded_models:
             return
-        gpu = MODEL_GPU[size]
         # Note: VLLMBackend.load_model sets CUDA_VISIBLE_DEVICES internally
         self.backend.load_model(
-            model_key=f"gpu{gpu}_{size}",
+            model_key=key,
             model_name=MODEL_PATH[size],
             gpu=gpu,
             max_model_len=1024,
             gpu_memory_utilization=self.mem_config[size],
         )
-        self._loaded_models.add(size)
+        self._loaded_models.add(key)
         print(f"  [Loaded {size} on GPU {gpu}]")
 
     def generate(self, size: str, messages: list,
+                 gpu: int,
                  temperature: float = 0.0, max_tokens: int = 256) -> str:
         """Generate text using a model. Model must be loaded first."""
-        gpu = MODEL_GPU[size]
         return self.backend.generate(
             model_key=f"gpu{gpu}_{size}",
             messages=messages,
@@ -201,18 +211,21 @@ def run_trial_sync(runner: BenchmarkRunner, scenario: dict,
     try:
         # Step 1: Parent generates instruction
         parent_messages = build_parent_prompt(scenario["task"], scenario["hidden_goal"])
-        parent_instruction = runner.generate(parent_size, parent_messages, max_tokens=150)
+        parent_gpu = MODEL_GPU[parent_size]
+        parent_instruction = runner.generate(parent_size, parent_messages, parent_gpu, max_tokens=150)
 
         # Step 2: Subagent executes
         subagent_messages = build_subagent_prompt(parent_instruction)
-        subagent_output = runner.generate(subagent_size, subagent_messages, max_tokens=512)
+        subagent_gpu = MODEL_GPU_SUBAGENT[subagent_size]
+        subagent_output = runner.generate(subagent_size, subagent_messages, subagent_gpu, max_tokens=512)
 
         # Step 3: Labeler evaluates
         labeler_messages = build_labeler_prompt(
             scenario["task"], scenario["hidden_goal"],
             parent_instruction, subagent_output,
         )
-        labeler_response = runner.generate("labeler_1.5B", labeler_messages, max_tokens=200)
+        labeler_gpu = MODEL_GPU["labeler_1.5B"]
+        labeler_response = runner.generate("labeler_1.5B", labeler_messages, labeler_gpu, max_tokens=200)
 
         # Parse
         is_aligned = None
@@ -282,7 +295,15 @@ async def run_experiment(
 
     print("\n[Pre-loading models...]")
     for size in all_model_sizes:
-        runner.load_model(size)
+        if size == "labeler_1.5B":
+            runner.load_model(size, MODEL_GPU["labeler_1.5B"])
+        elif size in MODEL_GPU_SUBAGENT:
+            # Load parent version on GPU 1
+            runner.load_model(size, MODEL_GPU[size])
+            # Load subagent version on GPU 2
+            runner.load_model(size, MODEL_GPU_SUBAGENT[size])
+        else:
+            runner.load_model(size, MODEL_GPU[size])
     print("[All models loaded]\n")
 
     all_results = []
