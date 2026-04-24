@@ -1,0 +1,252 @@
+[
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_01",
+    "question": "Leonardo da Vinci painted the Mona Lisa. Who was his birth year?",
+    "expected_answer": "1452",
+    "model_output": "1452",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_02",
+    "question": "Albert Einstein developed the theory of relativity. In what year was he born?",
+    "expected_answer": "1879",
+    "model_output": "1879",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_03",
+    "question": "William Shakespeare wrote Hamlet. In which city was he born?",
+    "expected_answer": "Stratford-upon-Avon",
+    "model_output": "William Shakespeare was born in Stratford-upon-Avon.",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_04",
+    "question": "The Eiffel Tower is located in Paris. In which country is it located?",
+    "expected_answer": "France",
+    "model_output": "答案：法国",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_05",
+    "question": "Isaac Newton formulated the laws of motion. What year was he born?",
+    "expected_answer": "1643",
+    "model_output": "1643",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_06",
+    "question": "The CEO of Apple Inc. is Tim Cook. What is his nationality?",
+    "expected_answer": "American",
+    "model_output": "American",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_07",
+    "question": "Python was created by Guido van Rossum. What is his nationality?",
+    "expected_answer": "Dutch",
+    "model_output": "Dutch",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_08",
+    "question": "Marie Curie discovered radium. In which country was she born?",
+    "expected_answer": "Poland",
+    "model_output": "Poland",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_09",
+    "question": "The Great Wall of China is in Asia. On which continent is it located?",
+    "expected_answer": "Asia",
+    "model_output": "答案：Asia",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_10",
+    "question": "Shakespeare wrote Romeo and Juliet. In which century did he live?",
+    "expected_answer": "16th century",
+    "model_output": "16世纪",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_11",
+    "question": "Albert Einstein was born in 1879. How old was he in 1905?",
+    "expected_answer": "26",
+    "model_output": "26岁",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_12",
+    "question": "Isaac Newton was born in 1643. He died in 1727. How old was he when he died?",
+    "expected_answer": "84",
+    "model_output": "84岁",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_13",
+    "question": "Marie Curie was born in 1867. She won her first Nobel Prize in 1903. How old was she then?",
+    "expected_answer": "36",
+    "model_output": "Marie Curie was 36 years old when she won her first Nobel Prize in 1903.",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_14",
+    "question": "Leonardo da Vinci was born in 1452. He painted the Mona Lisa in 1503. How old was he then?",
+    "expected_answer": "51",
+    "model_output": "61岁",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_15",
+    "question": "Elon Musk was born in 1971. In what year did he turn 50?",
+    "expected_answer": "2021",
+    "model_output": "2021",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_16",
+    "question": "The architect who designed the Library of Congress also designed which university's library?",
+    "expected_answer": "University of Virginia",
+    "model_output": "The architect who designed the Library of Congress, Robert Mills, also designed the University of Virginia's library.",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_17",
+    "question": "The author of Pride and Prejudice also wrote which other famous novel?",
+    "expected_answer": "Sense and Sensibility",
+    "model_output": "Sense and Sensibility",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_18",
+    "question": "The painter of The Starry Night also painted which other famous artwork?",
+    "expected_answer": "Café Terrace at Night",
+    "model_output": "The painter of The Starry Night is Vincent van Gogh, and he also painted The Bedroom.",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_19",
+    "question": "The first person to walk on the Moon also served as which U.S. President?",
+    "expected_answer": "None",
+    "model_output": "答案：Ronald Reagan",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_20",
+    "question": "The capital of France is Paris. What is the capital of Japan?",
+    "expected_answer": "Tokyo",
+    "model_output": "Tokyo",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_21",
+    "question": "Which is larger in area, France or Germany?",
+    "expected_answer": "France",
+    "model_output": "France",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_22",
+    "question": "Which is taller, Mount Everest or K2?",
+    "expected_answer": "Mount Everest",
+    "model_output": "Mount Everest",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_23",
+    "question": "Which country has a larger population, Canada or Australia?",
+    "expected_answer": "Canada",
+    "model_output": "Canada",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_24",
+    "question": "Which is older, the Great Wall of China or the Colosseum in Rome?",
+    "expected_answer": "Great Wall of China",
+    "model_output": "The Great Wall of China",
+    "is_correct": null,
+    "notes": ""
+  },
+  {
+    "mode": "single_agent",
+    "model": "3B",
+    "question_id": "qa_25",
+    "question": "Which has more letters, 'Strawberry' or 'Blueberry'?",
+    "expected_answer": "Strawberry",
+    "model_output": "Strawberry",
+    "is_correct": null,
+    "notes": ""
+  }
+]
