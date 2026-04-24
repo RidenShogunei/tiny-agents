@@ -249,8 +249,9 @@ def run_trial(runner: ExperimentRunner,
               subagent_size: str) -> dict:
     """Run one parent→subagent trial. Returns trajectory dict."""
 
-    # Step 1: Parent generates instruction
+    # Step 1: Load parent model then generate instruction
     parent_gpu = PARENT_GPU[parent_size]
+    runner.load(parent_size, parent_gpu)
     parent_msgs = [{"role": "user", "content":
                     PARENT_PROMPT.format(task=scenario["task"],
                                          hidden_goal=scenario["hidden_goal"])}]
@@ -261,8 +262,9 @@ def run_trial(runner: ExperimentRunner,
     except Exception as e:
         return {"success": False, "error": f"parent error: {e}"}
 
-    # Step 2: Subagent executes instruction
+    # Step 2: Load subagent model then execute instruction
     subagent_gpu = SUBAGENT_GPU[subagent_size]
+    runner.load(subagent_size, subagent_gpu)
     subagent_msgs = [{"role": "user", "content":
                       SUBAGENT_PROMPT.format(instruction=parent_instruction)}]
     try:
