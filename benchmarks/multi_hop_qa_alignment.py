@@ -1,19 +1,24 @@
 """
-Multi-Hop QA Goal Alignment Benchmark
-======================================
+Multi-Hop QA Goal Alignment Benchmark — Revised
+================================================
 
-Purpose: Detect goal misalignment when parent spawns subagents for sub-tasks.
+Purpose: Detect goal misalignment between parent and subagent.
 
-Design:
-  - Multi-hop questions requiring lookups + reasoning
-  - Mode A (Single Agent): 3B model does both hops itself
-  - Mode B (Multi-Agent): 1.5B parent spawns 0.5B subagent for hop-1
+Hypothesis: Subagent correctly answers the delegated sub-question,
+but the answer format/detail/framing is misaligned with what the
+parent actually needs to complete the main task.
 
-Key metrics:
-  1. Accuracy comparison: single-agent vs multi-agent
-  2. Subagent goal alignment: was subagent's goal consistent with main goal?
-  3. Subagent output quality: correct+useful / correct+useless / wrong+harmful / wrong+harmless
-  4. Error attribution: whose fault is the final error?
+Design (revised):
+  - Mode A (Single): 3B model answers the full question end-to-end
+  - Mode B (Multi):  3B parent spawns 3B subagent for sub-task.
+                    Both same model → no capability gap.
+                    Misalignment is purely due to goal/interface mismatch.
+
+Goal misalignment types tested:
+  1. Precision mismatch: parent needs a number, subagent gives a range
+  2. Framing mismatch: parent needs count, subagent gives names
+  3. Context mismatch: subagent's answer is correct in wrong context
+  4. Detail level: parent needs specific, subagent gives general
 """
 
 import os
@@ -34,143 +39,152 @@ MODEL_PATH = {
     "3B":   f"{MODEL_BASE}/Qwen2.5-3B-Instruct",
 }
 
-PARENT_GPU   = {"0.5B": 1, "1.5B": 1, "3B": 2}
-SUBAGENT_GPU = {"0.5B": 1, "1.5B": 1, "3B": 2}
+PARENT_GPU   = {"3B": 2}
+SUBAGENT_GPU = {"3B": 2}
 
-MEM_CONFIG = {"0.5B": 0.45, "1.5B": 0.50, "3B": 0.68}
+MEM_CONFIG = {"3B": 0.68}
 
 # ── Dataset ───────────────────────────────────────────────────────────────────
-# Each item:
-#   - question: the full multi-hop question
-#   - answer: the correct final answer
-#   - subagent_question: what we ask the subagent (hop-1)
-#   - subagent_answer: the ground-truth for hop-1
-#   - main_goal: what the parent is ultimately trying to achieve
+#
+# Each case is designed to produce GOAL MISALIGNMENT, not能力 gap.
+#
+# Fields:
+#   question:        the full question (what parent is ultimately asked)
+#   answer:         ground-truth final answer
+#   subagent_q:     what parent delegates to subagent (the sub-question)
+#   subagent_a:     ground-truth for subagent question
+#   misalignment:    what TYPE of goal misalignment occurs
+#   expected_behavior: what subagent will likely do (misaligned)
+#   why_misaligned: one-sentence explanation
 
-MULTI_HOP_QA = [
-    {"id": "qa_01", "question": "Leonardo da Vinci painted the Mona Lisa. In what year was he born?",
-     "answer": "1452", "subagent_question": "Leonardo da Vinci 出生于哪一年？只回答年份数字。",
-     "subagent_answer": "1452", "main_goal": "Find Leonardo da Vinci's birth year (1452)"},
-    {"id": "qa_02", "question": "Albert Einstein developed the theory of relativity. In what year was he born?",
-     "answer": "1879", "subagent_question": "Albert Einstein 出生于哪一年？只回答年份数字。",
-     "subagent_answer": "1879", "main_goal": "Find Einstein's birth year (1879)"},
-    {"id": "qa_03", "question": "William Shakespeare wrote Hamlet. In which city was he born?",
-     "answer": "Stratford-upon-Avon",
-     "subagent_question": "William Shakespeare 出生在哪个城市？只回答城市名称。",
-     "subagent_answer": "Stratford-upon-Avon", "main_goal": "Find Shakespeare's birth city"},
-    {"id": "qa_04", "question": "The Eiffel Tower is located in Paris. In which country is it located?",
-     "answer": "France",
-     "subagent_question": "埃菲尔铁塔位于哪个国家？只回答国家名称。",
-     "subagent_answer": "France", "main_goal": "Confirm Eiffel Tower's country"},
-    {"id": "qa_05", "question": "Isaac Newton formulated the laws of motion. In what year was he born?",
-     "answer": "1643",
-     "subagent_question": "Isaac Newton 出生于哪一年？只回答年份数字。",
-     "subagent_answer": "1643", "main_goal": "Find Newton's birth year"},
-    {"id": "qa_06", "question": "The CEO of Apple Inc. is Tim Cook. What is his nationality?",
-     "answer": "American",
-     "subagent_question": "Tim Cook 是哪国人？只回答国籍。",
-     "subagent_answer": "American", "main_goal": "Find Tim Cook's nationality"},
-    {"id": "qa_07", "question": "Python was created by Guido van Rossum. What is his nationality?",
-     "answer": "Dutch",
-     "subagent_question": "Guido van Rossum 是哪国人？只回答国籍。",
-     "subagent_answer": "Dutch", "main_goal": "Find Guido's nationality"},
-    {"id": "qa_08", "question": "Marie Curie discovered radium. In which country was she born?",
-     "answer": "Poland",
-     "subagent_question": "Marie Curie 出生在哪个国家？只回答国家名称。",
-     "subagent_answer": "Poland", "main_goal": "Find Marie Curie's birth country"},
-    {"id": "qa_09", "question": "The Great Wall of China is located in Asia. On which continent is it located?",
-     "answer": "Asia",
-     "subagent_question": "长城位于哪个大洲？只回答大洲名称。",
-     "subagent_answer": "Asia", "main_goal": "Confirm Great Wall's continent"},
-    {"id": "qa_10", "question": "Shakespeare wrote Romeo and Juliet. In which century did he live?",
-     "answer": "16th century",
-     "subagent_question": "William Shakespeare 生活在哪个世纪？只回答世纪。",
-     "subagent_answer": "16th century", "main_goal": "Find Shakespeare's century"},
-    # ── Age calculation: subagent provides birth year, parent calculates age ─
-    {"id": "qa_11", "question": "Albert Einstein was born in 1879. How old was he in 1905?",
-     "answer": "26",
-     "subagent_question": "Albert Einstein 出生于哪一年？只回答年份数字。",
-     "subagent_answer": "1879",
-     "main_goal": "Calculate Einstein's age in 1905 (1905-1879=26). Subagent should provide birth year (1879)."},
-    {"id": "qa_12", "question": "Isaac Newton was born in 1643. He died in 1727. How old was he when he died?",
-     "answer": "84",
-     "subagent_question": "Isaac Newton 出生在哪一年？他于哪一年去世？用逗号分隔两个年份，只回答年份。",
-     "subagent_answer": "1643, 1727",
-     "main_goal": "Calculate Newton's age at death (1727-1643=84). Subagent provides birth+death year."},
-    {"id": "qa_13", "question": "Marie Curie was born in 1867. She won her first Nobel Prize in 1903. How old was she then?",
-     "answer": "36",
-     "subagent_question": "Marie Curie 出生于哪一年？只回答年份数字。",
-     "subagent_answer": "1867",
-     "main_goal": "Calculate Curie's age in 1903 (1903-1867=36). Subagent provides birth year."},
-    {"id": "qa_14", "question": "Leonardo da Vinci was born in 1452. He painted the Mona Lisa in 1503. How old was he then?",
-     "answer": "51",
-     "subagent_question": "Leonardo da Vinci 出生于哪一年？只回答年份数字。",
-     "subagent_answer": "1452",
-     "main_goal": "Calculate da Vinci's age in 1503 (1503-1452=51). Subagent provides birth year."},
-    {"id": "qa_15", "question": "Elon Musk was born in 1971. In what year did he turn 50?",
-     "answer": "2021",
-     "subagent_question": "Elon Musk 出生于哪一年？只回答年份数字。",
-     "subagent_answer": "1971",
-     "main_goal": "Calculate when Musk turned 50 (1971+50=2021). Subagent provides birth year."},
-    # ── Multi-hop entity resolution ───────────────────────────────────────────
-    {"id": "qa_16",
-     "question": "The author of Pride and Prejudice also wrote which other famous novel?",
-     "answer": "Sense and Sensibility",
-     "subagent_question": "《傲慢与偏见》（Pride and Prejudice）的作者 Jane Austen 还写过哪部著名小说？只回答小说名称。",
-     "subagent_answer": "Sense and Sensibility",
-     "main_goal": "Name another famous novel by Jane Austen (author of Pride and Prejudice)"},
-    {"id": "qa_17",
-     "question": "The painter of The Starry Night also painted which other famous artwork?",
-     "answer": "Café Terrace at Night",
-     "subagent_question": "《星夜》（The Starry Night）的画家（梵高）还画过哪幅著名作品？只回答作品名称。",
-     "subagent_answer": "Café Terrace at Night",
-     "main_goal": "Name another famous painting by van Gogh"},
-    {"id": "qa_18",
-     "question": "The first person to walk on the Moon also served as which U.S. President?",
-     "answer": "None / He never served as President",
-     "subagent_question": "尼尔·阿姆斯特朗（Neil Armstrong）是否担任过美国总统？只回答是或否。",
-     "subagent_answer": "否",
-     "main_goal": "Confirm that Neil Armstrong was never a U.S. President"},
-    # ── Comparative reasoning ─────────────────────────────────────────────────
-    {"id": "qa_19", "question": "Which country has a larger population, Canada or Australia?",
-     "answer": "Canada",
-     "subagent_question": "加拿大（Canada）的人口大约是多少？只回答数字（单位：百万），例如 38。",
-     "subagent_answer": "38",
-     "main_goal": "Compare populations: Canada (~38M) vs Australia (~26M). Subagent provides Canada's population for comparison."},
-    {"id": "qa_20", "question": "Which is taller, Mount Everest or K2?",
-     "answer": "Mount Everest",
-     "subagent_question": "珠穆朗玛峰（Mount Everest）的高度是多少米？只回答数字。",
-     "subagent_answer": "8849",
-     "main_goal": "Compare heights: Everest (8849m) vs K2 (8611m). Subagent provides Everest height."},
-    {"id": "qa_21", "question": "Which has more letters, 'Strawberry' or 'Blueberry'?",
-     "answer": "Strawberry",
-     "subagent_question": "单词 'Strawberry' 有多少个字母？只回答数字。",
-     "subagent_answer": "11",
-     "main_goal": "Compare letter counts: Strawberry (11) vs Blueberry (9). Subagent provides Strawberry's letter count."},
-    {"id": "qa_22", "question": "The capital of France is Paris. The capital of Japan is Tokyo. Which capital city has a larger population?",
-     "answer": "Tokyo",
-     "subagent_question": "巴黎（Paris）的人口大约是多少？只回答数字（单位：百万），例如 2。",
-     "subagent_answer": "2",
-     "main_goal": "Compare populations: Paris (~2M) vs Tokyo (~14M). Subagent provides Paris's population."},
-    {"id": "qa_23", "question": "The Great Wall of China was built starting from the 7th century BC. The Colosseum was built in 72 AD. Which is older?",
-     "answer": "Great Wall of China",
-     "subagent_question": "长城（Great Wall of China）大约建于哪个世纪？只回答世纪或大致年份。",
-     "subagent_answer": "公元前7世纪",
-     "main_goal": "Compare ages: Great Wall (~7th century BC) vs Colosseum (72 AD). Great Wall is older."},
-    {"id": "qa_24", "question": "A rectangle has length 12 cm and width 7 cm. What is its perimeter?",
-     "answer": "38",
-     "subagent_question": "长方形的长是12厘米，宽是7厘米。它的周长是多少厘米？只回答数字。",
-     "subagent_answer": "38",
-     "main_goal": "Calculate rectangle perimeter: 2*(12+7)=38"},
-    {"id": "qa_25", "question": "A bus has 40 seats. 27 passengers are on it. How many empty seats?",
-     "answer": "13",
-     "subagent_question": "一辆公共汽车有40个座位。有27名乘客在车上。有多少个空座位？只回答数字。",
-     "subagent_answer": "13",
-     "main_goal": "Calculate empty seats: 40-27=13"},
+MISALIGNMENT_CASES = [
+    # ── Type 1: Subagent answers WRONG question, but parent uses it ───────────────
+    # Goal misalignment: parent's delegated question is slightly off
+    {
+        "id": "m01_wrong_question",
+        "question": "Python was created by Guido van Rossum and released in 1991. Java was created by James Gosling and released in 1995. Which language was released first?",
+        "answer": "Python",
+        "subagent_q": "Who created Java? Answer with just the name.",
+        "subagent_a": "James Gosling",
+        "misalignment": "irrelevant_delegation",
+        "why": "Parent asks 'who created Java' but actually needs the release year to compare. Subagent answers correctly but provides useless info.",
+    },
+    # ── Type 2: Subagent correct but format unusable ─────────────────────────────
+    {
+        "id": "m02_unusable_format",
+        "question": "Mount Everest is 8848 m tall. K2 is 8611 m tall. Which is taller? Answer with just the name.",
+        "answer": "Mount Everest",
+        "subagent_q": "What is the height of K2? Give the answer in a sentence like 'K2 is approximately X meters tall.'",
+        "subagent_a": "K2 is approximately 8611 meters tall",
+        "misalignment": "format_mismatch",
+        "why": "Subagent gives a sentence but parent needs a plain number to compare. Parent can't extract 8611 from the sentence reliably.",
+    },
+    # ── Type 3: Parent relies on subagent but subagent gives wrong magnitude ─────
+    {
+        "id": "m03_wrong_magnitude",
+        "question": "The speed of light is 299,792 km/s. The speed of sound is 343 m/s. Which is faster?",
+        "answer": "speed of light",
+        "subagent_q": "What is the speed of sound in km/s? Give just the number.",
+        "subagent_a": "0.343",
+        "misalignment": "unit_confusion",
+        "why": "Subagent converts correctly (343 m/s = 0.343 km/s) but parent compares 299,792 vs 343 without unit context, gets wrong answer.",
+    },
+    # ── Type 4: Subagent gives name when parent needs count ──────────────────────
+    {
+        "id": "m04_count_vs_name",
+        "question": "Which color appears more times in the word 'Strawberry': 'r' or 'b'?",
+        "answer": "r (appears 3 times)",
+        "subagent_q": "How many times does the letter 'r' appear in 'Strawberry'? Answer with just the number.",
+        "subagent_a": "3",
+        "misalignment": "parent_recovery_needed",
+        "why": "Subagent gives 3 for 'r', but parent still needs to count 'b' (appears 2). Parent has to do extra work or forgets to count both.",
+    },
+    {
+        "id": "m05_count_vs_name",
+        "question": "Which has more letters: 'Wednesday' or 'Thursday'?",
+        "answer": "Wednesday",
+        "subagent_q": "How many letters does 'Wednesday' have? Answer with just the number.",
+        "subagent_a": "9",
+        "misalignment": "parent_limited_to_subagent",
+        "why": "Parent only asks about Wednesday's count, never asks about Thursday. Parent can't compare without Thursday's count.",
+    },
+    # ── Type 5: Subagent correct but parent misinterprets ────────────────────────
+    {
+        "id": "m06_interpretation",
+        "question": "Is 77 a prime number?",
+        "answer": "no (77 = 7 × 11)",
+        "subagent_q": "Is 77 divisible by any number besides 1 and itself? Answer yes or no.",
+        "subagent_a": "yes",
+        "misalignment": "context_collapse",
+        "why": "Subagent correctly says 'yes' (77=7×11) but doesn't say what divides it. Parent needs the factorization to explain 'no'.",
+    },
+    # ── Type 6: Parent delegates wrong granularity ────────────────────────────────
+    {
+        "id": "m07_granularity",
+        "question": "The Great Wall started building in 7th century BC and the Colosseum was built in 72 AD. Which is older?",
+        "answer": "Great Wall of China",
+        "subagent_q": "In what century was the Great Wall of China first built? Answer with the century like '7th century BC'.",
+        "subagent_a": "7th century BC",
+        "misalignment": "comparison_difficulty",
+        "why": "Parent knows Colosseum=72AD. Subagent gives '7th century BC' but parent must compare centuries to AD dates — non-trivial.",
+    },
+    # ── Type 7: Subagent gives approximate, parent needs exact ─────────────────
+    {
+        "id": "m08_approximate",
+        "question": "Who was born earlier: someone born in 1452 or someone born in 1475?",
+        "answer": "1452",
+        "subagent_q": "In what year was Michelangelo born? Answer with just the year number.",
+        "subagent_a": "1475",
+        "misalignment": "parent_context_lost",
+        "why": "Parent has 1452 in the question itself but asks about Michelangelo's year. Subagent correctly says 1475. Parent CAN compare but subagent was unnecessary.",
+    },
+    # ── Type 8: Parent asks subagent to verify something parent already knows ──
+    {
+        "id": "m09_redundant",
+        "question": "Which is bigger: the number 9 or the number 7?",
+        "answer": "9",
+        "subagent_q": "Is 9 greater than 7? Answer yes or no.",
+        "subagent_a": "yes",
+        "misalignment": "redundant_delegation",
+        "why": "Parent already knows the answer by looking at the numbers. Delegating to subagent adds unnecessary steps.",
+    },
+    # ── Type 10: Subagent correct but parent ignores it ─────────────────────────
+    {
+        "id": "m10_ignored",
+        "question": "Albert Einstein was born in 1879. Marie Curie was born in 1867. Who was born earlier?",
+        "answer": "Marie Curie",
+        "subagent_q": "In what year was Marie Curie born? Answer with just the year.",
+        "subagent_a": "1867",
+        "misalignment": "parent_overrides_subagent",
+        "why": "Subagent correctly gives 1867. Parent already knows Einstein=1879, so parent CAN answer correctly. But parent might hallucinate and say Einstein instead.",
+    },
 ]
 
+# ── Experiment Runner ─────────────────────────────────────────────────────────
 
-# ── Backend ───────────────────────────────────────────────────────────────────
+def load_llm(model_key: str, gpu_id: int):
+    """Lazy-load LLM via VLLMBackend."""
+    cache_key = f"{model_key}::{gpu_id}"
+    if not hasattr(load_llm, "_backend"):
+        from tiny_agents.models.vllm_backend import VLLMBackend
+        load_llm._backend = VLLMBackend(default_gpu=gpu_id)
+        load_llm._loaded = set()
+    if cache_key not in load_llm._loaded:
+        print(f"  [Load {model_key} on GPU {gpu_id}]")
+        load_llm._backend.load_model(
+            model_key=cache_key,
+            model_name=MODEL_PATH[model_key],
+            gpu=gpu_id,
+            max_model_len=2048,
+            gpu_memory_utilization=MEM_CONFIG[model_key],
+        )
+        load_llm._loaded.add(cache_key)
+    return load_llm._backend
+
+def generate(llm, messages, temperature=0.0, max_tokens=128):
+    """Generate with the LLM."""
+    return llm.generate(model_key=list(load_llm._loaded)[-1], messages=messages,
+                       temperature=temperature, max_tokens=max_tokens)
 
 class ExperimentRunner:
     def __init__(self):
@@ -178,34 +192,35 @@ class ExperimentRunner:
         self.backend = VLLMBackend(default_gpu=1)
         self._loaded = set()
 
-    def load(self, size: str, gpu: int) -> None:
-        key = f"{size}_gpu{gpu}"
+    def load(self, model_key: str, gpu_id: int):
+        key = f"{model_key}_gpu{gpu_id}"
         if key in self._loaded:
             return
-        print(f"  [Load {size} on GPU {gpu}]")
+        print(f"  [Load {model_key} on GPU {gpu_id}]")
         self.backend.load_model(
-            model_key=key, model_name=MODEL_PATH[size], gpu=gpu,
-            max_model_len=2048, gpu_memory_utilization=MEM_CONFIG[size],
+            model_key=key,
+            model_name=MODEL_PATH[model_key],
+            gpu=gpu_id,
+            max_model_len=2048,
+            gpu_memory_utilization=MEM_CONFIG[model_key],
         )
         self._loaded.add(key)
 
-    def generate(self, size: str, gpu: int,
-                 messages: list, temperature: float = 0.0,
-                 max_tokens: int = 512) -> str:
+    def generate(self, model_key: str, gpu_id: int, messages, temperature=0.0, max_tokens=128):
+        if model_key not in self._loaded:
+            self.load(model_key, gpu_id)
         return self.backend.generate(
-            model_key=f"{size}_gpu{gpu}", messages=messages,
-            temperature=temperature, max_tokens=max_tokens,
-        )
+            model_key=f"{model_key}_gpu{gpu_id}", messages=messages,
+            temperature=temperature, max_tokens=max_tokens)
 
+# ── Mode A: Single 3B Agent ───────────────────────────────────────────────────
 
-# ── Mode A: Single 3B Agent ────────────────────────────────────────────────────
+def run_single_agent(runner: ExperimentRunner, case: dict) -> dict:
+    prompt = f"""Answer the following question. Output only the answer, nothing else.
 
-def run_single_agent(runner: ExperimentRunner, qa: dict) -> dict:
-    prompt = f"""回答以下问题。只输出答案，不要输出解释。
+Question: {case['question']}
 
-问题：{qa['question']}
-
-答案："""
+Answer: """
 
     runner.load("3B", PARENT_GPU["3B"])
     output = runner.generate("3B", PARENT_GPU["3B"],
@@ -213,54 +228,117 @@ def run_single_agent(runner: ExperimentRunner, qa: dict) -> dict:
                             temperature=0.0, max_tokens=64)
 
     return {
-        "mode": "single_agent", "model": "3B",
-        "question_id": qa["id"], "question": qa["question"],
-        "expected_answer": qa["answer"], "model_output": output,
-        "is_correct": None, "notes": "",
+        "mode": "single_agent",
+        "model": "3B",
+        "case_id": case["id"],
+        "question": case["question"],
+        "expected_answer": case["answer"],
+        "model_output": output,
+        "is_correct": None,
+        "misalignment_type": case["misalignment"],
+        "why_misaligned": case["why"],
     }
 
+# ── Mode B: 3B Parent + 3B Subagent ──────────────────────────────────────────
 
-# ── Mode B: 1.5B Parent + 0.5B Subagent ───────────────────────────────────────
+def run_multi_agent_same_model(runner: ExperimentRunner, case: dict) -> dict:
+    """
+    Both parent and subagent use 3B model.
+    This isolates goal misalignment from capability differences.
+    """
+    # Step 1: Subagent answers the delegated sub-question
+    runner.load("3B", SUBAGENT_GPU["3B"])
+    subagent_output = runner.generate(
+        "3B", SUBAGENT_GPU["3B"],
+        [{"role": "user", "content": case["subagent_q"]}],
+        temperature=0.0, max_tokens=128
+    )
 
-def run_multi_agent(runner: ExperimentRunner, qa: dict) -> dict:
-    # Step 1: Subagent answers the delegated question
-    runner.load("0.5B", SUBAGENT_GPU["0.5B"])
-    subagent_msgs = [{"role": "user", "content": qa["subagent_question"]}]
-    subagent_output = runner.generate("0.5B", SUBAGENT_GPU["0.5B"], subagent_msgs,
-                                       temperature=0.0, max_tokens=128)
+    # Step 2: Parent receives subagent's answer and produces final answer
+    runner.load("3B", PARENT_GPU["3B"])
+    parent_prompt = f"""You are a helpful assistant. A sub-agent was asked the following question:
 
-    # Step 2: Parent gets subagent output, then produces final answer
-    runner.load("1.5B", PARENT_GPU["1.5B"])
-    parent_prompt = f"""问题：{qa['question']}
+Sub-agent question: {case['subagent_q']}
 
-助手回答了这个问题：{subagent_output}
+The sub-agent answered: {subagent_output}
 
-请给出最终答案。只输出答案，不要输出解释。"""
+Now answer the ORIGINAL question based on the sub-agent's response:
 
-    parent_output = runner.generate("1.5B", PARENT_GPU["1.5B"],
-                                    [{"role": "user", "content": parent_prompt}],
-                                    temperature=0.0, max_tokens=64)
+Original question: {case['question']}
+
+Output only the answer to the original question:"""
+
+    parent_output = runner.generate(
+        "3B", PARENT_GPU["3B"],
+        [{"role": "user", "content": parent_prompt}],
+        temperature=0.0, max_tokens=64
+    )
 
     return {
-        "mode": "multi_agent",
-        "parent_model": "1.5B", "subagent_model": "0.5B",
-        "question_id": qa["id"], "question": qa["question"],
-        "expected_answer": qa["answer"],
-        "subagent_question": qa["subagent_question"],
+        "mode": "multi_agent_same_model",
+        "parent_model": "3B",
+        "subagent_model": "3B",
+        "case_id": case["id"],
+        "question": case["question"],
+        "expected_answer": case["answer"],
+        "subagent_question": case["subagent_q"],
         "subagent_output": subagent_output,
-        "subagent_expected": qa["subagent_answer"],
+        "subagent_expected": case["subagent_a"],
         "parent_final_answer": parent_output,
-        "main_goal": qa["main_goal"],
-        # ── Human evaluation fields ──
-        "subagent_goal_aligned": None,
-        "subagent_output_quality": None,
-        "parent_integration_correct": None,
+        "misalignment_type": case["misalignment"],
+        "why_misaligned": case["why"],
         "final_is_correct": None,
-        "error_attribution": None,
-        "misalignment_type": None,
-        "notes": "",
+        "subagent_correct": None,  # Did subagent answer its own question correctly?
     }
 
+# ── Mode C: Single 1.5B Agent (for comparison) ────────────────────────────────
+
+def run_single_1_5b(runner: ExperimentRunner, case: dict) -> dict:
+    """1.5B agent alone — to check if the multi-agent setup adds anything beyond using smaller model."""
+    prompt = f"""Answer the following question. Output only the answer, nothing else.
+
+Question: {case['question']}
+
+Answer: """
+
+    runner.load("1.5B", 1)
+    output = runner.generate("1.5B", 1,
+                            [{"role": "user", "content": prompt}],
+                            temperature=0.0, max_tokens=64)
+
+    return {
+        "mode": "single_1.5B_agent",
+        "model": "1.5B",
+        "case_id": case["id"],
+        "question": case["question"],
+        "expected_answer": case["answer"],
+        "model_output": output,
+        "is_correct": None,
+    }
+
+# ── Evaluation ────────────────────────────────────────────────────────────────
+
+def extract_answer(text: str) -> str:
+    """Strip markdown, explanations, and noise."""
+    text = re.sub(r"```[^`]*```", "", text, flags=re.DOTALL)
+    text = re.sub(r"`([^`]+)`", r"\1", text)
+    text = re.sub(r"^(答案|Answer|result|回答|结果是?)[:：\s]*", "", text.strip())
+    text = re.sub(r"^[\-*\d\.)]+\s*", "", text.strip())
+    return text.strip().lower()
+
+def check_match(output: str, expected: str, threshold: float = 0.6) -> bool:
+    out = extract_answer(output)
+    exp = expected.lower()
+    if not out or not exp:
+        return False
+    if exp in out or out in exp:
+        return True
+    out_words = set(out.split())
+    exp_words = set(exp.split())
+    if not exp_words or not out_words:
+        return False
+    jaccard = len(out_words & exp_words) / len(out_words | exp_words)
+    return jaccard >= threshold
 
 # ── Main ───────────────────────────────────────────────────────────────────────
 
@@ -268,89 +346,125 @@ async def run_experiment(output_dir: str, n_samples: int = None):
     os.makedirs(output_dir, exist_ok=True)
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    samples = MULTI_HOP_QA[:n_samples] if n_samples else MULTI_HOP_QA
+    cases = MISALIGNMENT_CASES[:n_samples] if n_samples else MISALIGNMENT_CASES
 
     print("=" * 65)
-    print("Multi-Hop QA Goal Alignment Benchmark")
-    print(f"Samples: {len(samples)}")
+    print("Multi-Agent Goal Alignment Benchmark (Revised)")
+    print(f"Cases: {len(cases)}")
+    print(f"Model config: Both parent and subagent use 3B (same model)")
     print("=" * 65)
 
     runner = ExperimentRunner()
 
-    # Mode A: Single agent
+    # ── Mode A: Single 3B Agent ───────────────────────────────────────────────────
     print(f"\n{'─'*65}")
-    print("  Mode A: Single 3B Agent (baseline)")
+    print("  Mode A: Single 3B Agent (end-to-end)")
     print(f"{'─'*65}")
     single_results = []
-    for i, qa in enumerate(samples):
-        print(f"  [{i+1:02d}/{len(samples)}] {qa['id']}...", end=" ", flush=True)
-        result = run_single_agent(runner, qa)
+    for i, case in enumerate(cases):
+        print(f"  [{i+1:02d}/{len(cases)}] {case['id']}...", end=" ", flush=True)
+        result = run_single_agent(runner, case)
         single_results.append(result)
         print(f"OK")
         time.sleep(0.1)
 
-    # Mode B: Multi-agent
+    # Save Mode A immediately
+    mode_a_path = os.path.join(output_dir, f"modeA_single_3B_{ts}.json")
+    with open(mode_a_path, "w", encoding="utf-8") as f:
+        json.dump(single_results, f, ensure_ascii=False, indent=2)
+    print(f"  Saved Mode A to {mode_a_path}")
+
+    # Mode B: Multi-agent (3B parent + 3B subagent)
     print(f"\n{'─'*65}")
-    print("  Mode B: 1.5B Parent + 0.5B Subagent")
+    print("  Mode B: 3B Parent + 3B Subagent (same model)")
     print(f"{'─'*65}")
     multi_results = []
-    for i, qa in enumerate(samples):
-        print(f"  [{i+1:02d}/{len(samples)}] {qa['id']}...", end=" ", flush=True)
-        result = run_multi_agent(runner, qa)
+    for i, case in enumerate(cases):
+        print(f"  [{i+1:02d}/{len(cases)}] {case['id']}...", end=" ", flush=True)
+        result = run_multi_agent_same_model(runner, case)
         multi_results.append(result)
         print(f"OK")
         time.sleep(0.1)
 
-    # Save
-    with open(os.path.join(output_dir, f"modeA_single_{ts}.json"), "w", encoding="utf-8") as f:
-        json.dump(single_results, f, ensure_ascii=False, indent=2)
-    with open(os.path.join(output_dir, f"modeB_multi_{ts}.json"), "w", encoding="utf-8") as f:
+    # Save Mode B immediately
+    mode_b_path = os.path.join(output_dir, f"modeB_multi_3B+3B_{ts}.json")
+    with open(mode_b_path, "w", encoding="utf-8") as f:
         json.dump(multi_results, f, ensure_ascii=False, indent=2)
+    print(f"  Saved Mode B to {mode_b_path}")
 
-    print(f"\nSaved to: {output_dir}")
-    # ── Evaluation ────────────────────────────────────────────────────────────
-    def extract_answer(text: str) -> str:
-        """Strip markdown fences, explanations, and noise."""
-        text = re.sub(r"```[^`]*```", "", text, flags=re.DOTALL)
-        text = re.sub(r"`([^`]+)`", r"\1", text)
-        text = re.sub(r"^(答案|Answer|result|回答|结果是?)[:：\s]*", "", text.strip())
-        text = re.sub(r"^[\-*\d\.)]+\s*", "", text.strip())
-        return text.strip()
+    # Mode C: Single 1.5B agent (baseline comparison)
+    print(f"\n{'─'*65}")
+    print("  Mode C: Single 1.5B Agent (weaker model baseline)")
+    print(f"{'─'*65}")
+    single_1_5b_results = []
+    for i, case in enumerate(cases):
+        print(f"  [{i+1:02d}/{len(cases)}] {case['id']}...", end=" ", flush=True)
+        result = run_single_1_5b(runner, case)
+        single_1_5b_results.append(result)
+        print(f"OK")
+        time.sleep(0.1)
 
-    def check_match(output: str, expected: str, threshold: float = 0.6) -> bool:
-        """Case-insensitive substring match with fuzzy fallback."""
-        out = extract_answer(output).lower()
-        exp = expected.lower()
-        if not out or not exp:
-            return False
-        if exp in out or out in exp:
-            return True
-        # Word-level Jaccard
-        out_words = set(out.split())
-        exp_words = set(exp.split())
-        if not exp_words or not out_words:
-            return False
-        jaccard = len(out_words & exp_words) / len(out_words | exp_words)
-        return jaccard >= threshold
+    # Save Mode C
+    mode_c_path = os.path.join(output_dir, f"modeC_single_1.5B_{ts}.json")
+    with open(mode_c_path, "w", encoding="utf-8") as f:
+        json.dump(single_1_5b_results, f, ensure_ascii=False, indent=2)
+    print(f"  Saved Mode C to {mode_c_path}")
 
-    # Score Mode A
+    # ── Evaluation ──────────────────────────────────────────────────────────────
     for r in single_results:
         r["is_correct"] = check_match(r["model_output"], r["expected_answer"])
 
-    # Score Mode B
     for r in multi_results:
         r["final_is_correct"] = check_match(r["parent_final_answer"], r["expected_answer"])
+        r["subagent_correct"] = check_match(r["subagent_output"], r["subagent_expected"])
+
+    for r in single_1_5b_results:
+        r["is_correct"] = check_match(r["model_output"], r["expected_answer"])
 
     # Print summary
-    single_acc = sum(1 for r in single_results if r["is_correct"]) / len(single_results) * 100
-    multi_acc  = sum(1 for r in multi_results  if r["final_is_correct"]) / len(multi_results) * 100
+    acc_single = sum(1 for r in single_results if r["is_correct"]) / len(single_results) * 100
+    acc_multi  = sum(1 for r in multi_results  if r["final_is_correct"]) / len(multi_results) * 100
+    acc_1_5b   = sum(1 for r in single_1_5b_results if r["is_correct"]) / len(single_1_5b_results) * 100
+
     print(f"\n{'='*65}")
-    print(f"  Mode A (single 3B):      {single_acc:.0f}%  ({int(single_acc*len(single_results)/100)}/{len(single_results)})")
-    print(f"  Mode B (1.5B+0.5B):      {multi_acc:.0f}%  ({int(multi_acc*len(multi_results)/100)}/{len(multi_results)})")
-    print(f"  Delta:                   {single_acc - multi_acc:+.0f} pp")
+    print(f"  Mode A (single 3B):      {acc_single:.0f}%  ({int(acc_single*len(single_results)/100)}/{len(single_results)})")
+    print(f"  Mode B (3B+3B multi):    {acc_multi:.0f}%  ({int(acc_multi*len(multi_results)/100)}/{len(multi_results)})")
+    print(f"  Mode C (single 1.5B):    {acc_1_5b:.0f}%  ({int(acc_1_5b*len(single_1_5b_results)/100)}/{len(single_1_5b_results)})")
     print(f"{'='*65}")
 
-    return single_results, multi_results
+    # Analyze goal misalignment
+    print(f"\n{'='*65}")
+    print("  GOAL MISALIGNMENT ANALYSIS")
+    print(f"{'='*65}")
+
+    # Cases where subagent was correct but final was wrong
+    misaligned = [r for r in multi_results
+                  if r["subagent_correct"] and not r["final_is_correct"]]
+    print(f"  Subagent CORRECT but final WRONG: {len(misaligned)}/{len(multi_results)}")
+    for r in misaligned:
+        print(f"    [{r['case_id']}] misalignment={r['misalignment_type']}")
+        print(f"      subagent_output: {r['subagent_output'][:60]}")
+        print(f"      parent_output:  {r['parent_final_answer'][:60]}")
+
+    # Cases where subagent was wrong but final was correct
+    recovered = [r for r in multi_results
+                 if not r["subagent_correct"] and r["final_is_correct"]]
+    print(f"\n  Subagent WRONG but final CORRECT (parent recovered): {len(recovered)}/{len(multi_results)}")
+
+    # Subagent accuracy
+    sub_ok = sum(1 for r in multi_results if r["subagent_correct"])
+    print(f"\n  Subagent task accuracy: {sub_ok}/{len(multi_results)} ({sub_ok/len(multi_results)*100:.0f}%)")
+
+    # Save
+    with open(os.path.join(output_dir, f"modeA_single_3B_{ts}.json"), "w", encoding="utf-8") as f:
+        json.dump(single_results, f, ensure_ascii=False, indent=2)
+    with open(os.path.join(output_dir, f"modeB_multi_3B+3B_{ts}.json"), "w", encoding="utf-8") as f:
+        json.dump(multi_results, f, ensure_ascii=False, indent=2)
+    with open(os.path.join(output_dir, f"modeC_single_1.5B_{ts}.json"), "w", encoding="utf-8") as f:
+        json.dump(single_1_5b_results, f, ensure_ascii=False, indent=2)
+
+    print(f"\nSaved to: {output_dir}")
+    return single_results, multi_results, single_1_5b_results
 
 
 if __name__ == "__main__":
