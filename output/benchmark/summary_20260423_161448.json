@@ -1,0 +1,46 @@
+{
+  "timestamp": "20260423_161448",
+  "strategies": {
+    "S1_single_agent": {
+      "accuracy": 0.0,
+      "avg_budget_used": 925.6,
+      "avg_steps": 1.0,
+      "avg_msg_gain": 0.0,
+      "total_continue": 0,
+      "total_verify": 0,
+      "total_stop": 0,
+      "n": 5
+    },
+    "S2_static_ma": {
+      "accuracy": 0.0,
+      "avg_budget_used": 2034.4,
+      "avg_steps": 4.0,
+      "avg_msg_gain": 0.0,
+      "total_continue": 0,
+      "total_verify": 0,
+      "total_stop": 0,
+      "n": 5
+    },
+    "S3_budget_only": {
+      "accuracy": 0.0,
+      "avg_budget_used": 4950.0,
+      "avg_steps": 99.0,
+      "avg_msg_gain": 0.02,
+      "total_continue": 495,
+      "total_verify": 0,
+      "total_stop": 0,
+      "n": 5
+    },
+    "S4_credit_aware": {
+      "accuracy": 0.0,
+      "avg_budget_used": 19800.0,
+      "avg_steps": 99.0,
+      "avg_msg_gain": 0.01,
+      "total_continue": 495,
+      "total_verify": 0,
+      "total_stop": 0,
+      "n": 5
+    }
+  },
+  "n_questions": 5
+}

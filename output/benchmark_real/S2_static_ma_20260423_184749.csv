@@ -1,0 +1,6 @@
+question_id,final_correct,budget_used,total_steps,num_continue,num_verify,num_stop,triggered_rule_sequence,avg_msg_gain,final_verifier_confidence,answer_disagreement_trace,latency_seconds,error
+gsm8k_001,0,10873,4,0,0,0,[],0.0,,[],9.64,
+gsm8k_002,0,12378,4,0,0,0,[],0.0,,[],10.72,
+gsm8k_003,0,12165,4,0,0,0,[],0.0,,[],11.4,
+gsm8k_004,0,7269,4,0,0,0,[],0.0,,[],6.05,
+gsm8k_005,0,10404,4,0,0,0,[],0.0,,[],8.87,

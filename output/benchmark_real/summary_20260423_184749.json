@@ -1,0 +1,66 @@
+{
+  "timestamp": "20260423_184749",
+  "strategies": {
+    "S1_single_agent": {
+      "accuracy": 0.4,
+      "avg_budget_used": 925.6,
+      "avg_steps": 1.0,
+      "avg_msg_gain": 0.0,
+      "total_continue": 0,
+      "total_verify": 0,
+      "total_stop": 0,
+      "n": 5,
+      "avg_steps_to_stop": 1.0,
+      "verify_rate": 0.0,
+      "top_triggered_rules": {}
+    },
+    "S2_static_ma": {
+      "accuracy": 0.0,
+      "avg_budget_used": 10617.8,
+      "avg_steps": 4.0,
+      "avg_msg_gain": 0.0,
+      "total_continue": 0,
+      "total_verify": 0,
+      "total_stop": 0,
+      "n": 5,
+      "avg_steps_to_stop": 4.0,
+      "verify_rate": 0.0,
+      "top_triggered_rules": {}
+    },
+    "S3_budget_only": {
+      "accuracy": 0.0,
+      "avg_budget_used": 1550.0,
+      "avg_steps": 15.0,
+      "avg_msg_gain": 0.01,
+      "total_continue": 54,
+      "total_verify": 21,
+      "total_stop": 5,
+      "n": 5,
+      "avg_steps_to_stop": 15.0,
+      "verify_rate": 4.2,
+      "top_triggered_rules": {
+        "rule_7": 54,
+        "rule_2": 21,
+        "rule_1": 5
+      }
+    },
+    "S4_credit_aware": {
+      "accuracy": 0.0,
+      "avg_budget_used": 700.0,
+      "avg_steps": 3.0,
+      "avg_msg_gain": 0.01,
+      "total_continue": 0,
+      "total_verify": 0,
+      "total_stop": 5,
+      "n": 5,
+      "avg_steps_to_stop": 3.0,
+      "verify_rate": 0.0,
+      "top_triggered_rules": {
+        "rule_2": 10,
+        "rule_7": 5,
+        "rule_3": 5
+      }
+    }
+  },
+  "n_questions": 5
+}

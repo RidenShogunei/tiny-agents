@@ -17,6 +17,7 @@ Key metrics:
 """
 
 import os
+import re
 import sys
 import json
 import asyncio
@@ -307,6 +308,48 @@ async def run_experiment(output_dir: str, n_samples: int = None):
         json.dump(multi_results, f, ensure_ascii=False, indent=2)
 
     print(f"\nSaved to: {output_dir}")
+    # ── Evaluation ────────────────────────────────────────────────────────────
+    def extract_answer(text: str) -> str:
+        """Strip markdown fences, explanations, and noise."""
+        text = re.sub(r"```[^`]*```", "", text, flags=re.DOTALL)
+        text = re.sub(r"`([^`]+)`", r"\1", text)
+        text = re.sub(r"^(答案|Answer|result|回答|结果是?)[:：\s]*", "", text.strip())
+        text = re.sub(r"^[\-*\d\.)]+\s*", "", text.strip())
+        return text.strip()
+
+    def check_match(output: str, expected: str, threshold: float = 0.6) -> bool:
+        """Case-insensitive substring match with fuzzy fallback."""
+        out = extract_answer(output).lower()
+        exp = expected.lower()
+        if not out or not exp:
+            return False
+        if exp in out or out in exp:
+            return True
+        # Word-level Jaccard
+        out_words = set(out.split())
+        exp_words = set(exp.split())
+        if not exp_words or not out_words:
+            return False
+        jaccard = len(out_words & exp_words) / len(out_words | exp_words)
+        return jaccard >= threshold
+
+    # Score Mode A
+    for r in single_results:
+        r["is_correct"] = check_match(r["model_output"], r["expected_answer"])
+
+    # Score Mode B
+    for r in multi_results:
+        r["final_is_correct"] = check_match(r["parent_final_answer"], r["expected_answer"])
+
+    # Print summary
+    single_acc = sum(1 for r in single_results if r["is_correct"]) / len(single_results) * 100
+    multi_acc  = sum(1 for r in multi_results  if r["final_is_correct"]) / len(multi_results) * 100
+    print(f"\n{'='*65}")
+    print(f"  Mode A (single 3B):      {single_acc:.0f}%  ({int(single_acc*len(single_results)/100)}/{len(single_results)})")
+    print(f"  Mode B (1.5B+0.5B):      {multi_acc:.0f}%  ({int(multi_acc*len(multi_results)/100)}/{len(multi_results)})")
+    print(f"  Delta:                   {single_acc - multi_acc:+.0f} pp")
+    print(f"{'='*65}")
+
     return single_results, multi_results
 
 
