@@ -1,0 +1,94 @@
+{
+  "n_tasks": 40,
+  "results": {
+    "baseline": {
+      "0.5B": 8,
+      "1.5B": 27,
+      "3B": 39
+    },
+    "A_3B+0.5B": {
+      "n": 40,
+      "parent_acc": 0.975,
+      "helped": 0,
+      "hurt": 1,
+      "hurt_rate": 0.02564102564102564,
+      "help_rate": 0.0
+    },
+    "A_3B+1.5B": {
+      "n": 40,
+      "parent_acc": 0.975,
+      "helped": 0,
+      "hurt": 7,
+      "hurt_rate": 0.1794871794871795,
+      "help_rate": 0.0
+    },
+    "A_3B+3B": {
+      "n": 40,
+      "parent_acc": 0.975,
+      "helped": 0,
+      "hurt": 8,
+      "hurt_rate": 0.20512820512820512,
+      "help_rate": 0.0
+    },
+    "B_0.5B+0.5B\u21920.5B": {
+      "n": 40,
+      "a_only_correct": 8,
+      "combined_correct": 8,
+      "disagree_pick_wrong": 0,
+      "agree_both_wrong": 32,
+      "delta": 0,
+      "disagree_total": 0,
+      "a_better": 0,
+      "b_better": 0,
+      "both_wrong_disagree": 0
+    },
+    "B_1.5B+1.5B\u21920.5B": {
+      "n": 40,
+      "a_only_correct": 27,
+      "combined_correct": 27,
+      "disagree_pick_wrong": 0,
+      "agree_both_wrong": 13,
+      "delta": 0,
+      "disagree_total": 0,
+      "a_better": 0,
+      "b_better": 0,
+      "both_wrong_disagree": 0
+    },
+    "B_3B+3B\u21920.5B": {
+      "n": 40,
+      "a_only_correct": 39,
+      "combined_correct": 39,
+      "disagree_pick_wrong": 0,
+      "agree_both_wrong": 1,
+      "delta": 0,
+      "disagree_total": 0,
+      "a_better": 0,
+      "b_better": 0,
+      "both_wrong_disagree": 0
+    },
+    "C_0.5B": {
+      "n": 40,
+      "first_correct": 8,
+      "helped": 15,
+      "hurt": 1,
+      "hurt_rate": 0.125,
+      "help_rate": 0.46875
+    },
+    "C_1.5B": {
+      "n": 40,
+      "first_correct": 27,
+      "helped": 2,
+      "hurt": 1,
+      "hurt_rate": 0.037037037037037035,
+      "help_rate": 0.15384615384615385
+    },
+    "C_3B": {
+      "n": 40,
+      "first_correct": 39,
+      "helped": 0,
+      "hurt": 18,
+      "hurt_rate": 0.46153846153846156,
+      "help_rate": 0.0
+    }
+  }
+}

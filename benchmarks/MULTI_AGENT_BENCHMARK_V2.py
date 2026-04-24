@@ -237,6 +237,10 @@ def scenario_b(agent_a_key, agent_b_key, parent_key, tasks):
     combined_correct = 0
     disagree_pick_wrong = 0
     agree_both_wrong = 0
+    disagree_total = 0
+    a_better = 0
+    b_better = 0
+    both_wrong_disagree = 0
 
     for question, gt in tasks:
         ans_a = get_answer(llm_a, question)
@@ -251,6 +255,14 @@ def scenario_b(agent_a_key, agent_b_key, parent_key, tasks):
         if ans_a == ans_b:
             final = ans_a
         else:
+            # Count disagreement stats BEFORE parent picks
+            disagree_total += 1
+            if a_ok and not b_ok:
+                a_better += 1
+            elif b_ok and not a_ok:
+                b_better += 1
+            else:
+                both_wrong_disagree += 1
             # Parent picks
             prompt = (f"Two assistants gave different answers:\n"
                       f"Q: {question}\n"
@@ -277,6 +289,10 @@ def scenario_b(agent_a_key, agent_b_key, parent_key, tasks):
         "disagree_pick_wrong": disagree_pick_wrong,
         "agree_both_wrong": agree_both_wrong,
         "delta": combined_correct - a_only_correct,
+        "disagree_total": disagree_total,
+        "a_better": a_better,
+        "b_better": b_better,
+        "both_wrong_disagree": both_wrong_disagree,
     }
 
 # ═══════════════════════════════════════════════════════════════════════════════
