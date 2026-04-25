@@ -1,0 +1,7 @@
+pyyaml
+numpy
+pandas
+scipy
+statsmodels
+openai
+requests

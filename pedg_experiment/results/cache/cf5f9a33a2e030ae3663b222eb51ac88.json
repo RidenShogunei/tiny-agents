@@ -1,0 +1,1 @@
+{"content": "RECOMMENDATION: REJECT\nCONFIDENCE: 75\nRATIONALE: Security scan failed, code review not approved, and there are open critical bugs. Automated tests pass at 92%, but risks are too high."}

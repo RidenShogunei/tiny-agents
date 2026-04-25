@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 80\nRATIONALE: Security scan failure is critical. Low test pass rate and open bugs add risk. Audit needed to verify full context and ensure no hidden factors influence decision."}

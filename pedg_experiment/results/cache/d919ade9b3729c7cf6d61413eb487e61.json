@@ -1,0 +1,1 @@
+{"content": "RECOMMENDATION: REJECT\nCONFIDENCE: 75\nRATIONALE: Low test pass rate, open critical bugs, and lack of code review approval indicate significant risks. Rollback plan not documented adds further uncertainty."}

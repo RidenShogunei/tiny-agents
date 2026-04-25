@@ -1,0 +1,1 @@
+{"content": "RECOMMENDATION: REJECT\nCONFIDENCE: 85\nRATIONALE: High label accuracy but train-test leakage and low completeness score indicate poor data quality."}

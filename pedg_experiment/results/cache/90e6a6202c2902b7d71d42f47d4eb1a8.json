@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 80\nRATIONALE: High label accuracy but concerns about completeness and class imbalance suggest potential issues. Auditing will confirm these aspects before deciding."}

@@ -1,0 +1,1 @@
+{"content": "RECOMMENDATION: REJECT\nCONFIDENCE: 75\nRATIONALE: Automated tests have a low pass rate (70%) and there are 3 open critical bugs, indicating significant quality risks despite code review approval and a documented rollback plan."}

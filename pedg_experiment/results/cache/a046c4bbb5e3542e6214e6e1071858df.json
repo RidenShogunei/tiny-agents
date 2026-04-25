@@ -1,0 +1,1 @@
+{"content": "RECOMMENDATION: REJECT\nCONFIDENCE: 75\nRATIONALE: Security scan failed, high risk for production despite tests passing and code review approval."}

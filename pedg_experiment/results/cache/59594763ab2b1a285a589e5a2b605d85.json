@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 80\nRATIONALE: Low test pass rate and critical bugs suggest risks. Private evidence might reveal more context on these issues and the true stability of the hotfix."}

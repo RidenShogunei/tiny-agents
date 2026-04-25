@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 75\nRATIONALE: High exploitability and exposure of sensitive data suggest criticality, but no public exploit and 95% subagent confidence warrant checking private evidence for full context."}

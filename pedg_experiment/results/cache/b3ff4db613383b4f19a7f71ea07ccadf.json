@@ -1,0 +1,1 @@
+{"content": "DECISION: APPROVE\nCONFIDENCE: 85\nRATIONALE: Security scan passed, target is staging, and it's a feature change with a rollback plan. High test pass rate and code review support approval."}

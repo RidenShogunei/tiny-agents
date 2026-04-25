@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 80\nRATIONALE: Low test pass rate and open critical bugs suggest quality issues. Need to verify private evidence about severity and impact of these issues before deciding."}

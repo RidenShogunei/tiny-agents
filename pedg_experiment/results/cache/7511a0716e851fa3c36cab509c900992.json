@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 80\nRATIONALE: Low test pass rate raises concerns. Security scan passed, but code review status is unclear. Auditing will clarify missing details and ensure quality."}

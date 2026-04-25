@@ -1,0 +1,1 @@
+{"content": "RECOMMENDATION: REJECT\nCONFIDENCE: 85\nRATIONALE: High label accuracy but significant data leakage, low completeness score, and poor class balance indicate potential bias and unreliability."}

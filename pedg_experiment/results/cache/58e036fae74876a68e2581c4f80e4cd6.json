@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 70\nRATIONALE: Security warning and open bugs are serious, but code review and rollback plan might offer some protection. Private evidence could reveal more context about these mitigations."}

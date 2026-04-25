@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 80\nRATIONALE: While the completeness score is low, label accuracy is moderate. Private evidence might reveal more about data quality issues, justifying the audit cost."}

@@ -1,0 +1,1 @@
+{"content": "RECOMMENDATION: REJECT\nCONFIDENCE: 70\nRATIONALE: Security warning, low test pass rate, and lack of rollback plan indicate risks. Code review approval is positive but not enough to outweigh other negatives."}

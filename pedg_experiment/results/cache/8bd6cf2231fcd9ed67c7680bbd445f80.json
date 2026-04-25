@@ -1,0 +1,1 @@
+{"content": "RECOMMENDATION: APPROVE\nCONFIDENCE: 75\nRATIONALE: Public severity is 7, but private exploitability score is 6. No patch exists yet, but sensitive data exposure is none, and time to exploit is long."}

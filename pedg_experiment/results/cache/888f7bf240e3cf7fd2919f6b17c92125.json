@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 80\nRATIONALE: Completeness and class imbalance are concerns, but private evidence might provide context. Audit to ensure no critical details are missed, balancing utility loss from wrong decision against audit cost."}

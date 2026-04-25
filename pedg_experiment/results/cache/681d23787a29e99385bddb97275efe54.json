@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 80\nRATIONALE: High label accuracy suggests good quality, but low completeness and missing value issues need verification. Potential risks justify the audit cost."}

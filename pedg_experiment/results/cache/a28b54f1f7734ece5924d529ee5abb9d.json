@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 70\nRATIONALE: Public evidence shows low label accuracy but lacks details on leakage and class balance. Audit needed for comprehensive risk assessment."}

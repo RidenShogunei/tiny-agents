@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 80\nRATIONALE: Completeness score is low, but label accuracy is high. Need to verify if remaining features are reliable (audit cost justified)."}

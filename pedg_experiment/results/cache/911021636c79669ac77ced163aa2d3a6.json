@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 85\nRATIONALE: While label accuracy is good, low completeness score raises concerns about data quality. Auditing will confirm if missing data significantly impacts utility."}

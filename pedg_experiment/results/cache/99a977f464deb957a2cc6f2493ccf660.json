@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 90\nRATIONALE: Security scan failed and lacks code review/approval. Critical bugs and no rollback plan indicate significant risk. Private evidence needed for full context."}

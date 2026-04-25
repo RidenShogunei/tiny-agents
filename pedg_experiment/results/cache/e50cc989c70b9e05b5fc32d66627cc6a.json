@@ -1,0 +1,1 @@
+{"content": "DECISION: AUDIT\nCONFIDENCE: 85\nRATIONALE: Security scan failure is critical. Low test pass rate and open critical bugs suggest significant risk. Private evidence might reveal more context on these issues. Audit cost justified given stakes."}

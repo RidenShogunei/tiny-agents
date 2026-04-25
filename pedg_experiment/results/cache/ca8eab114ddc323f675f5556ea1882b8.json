@@ -1,0 +1,1 @@
+{"content": "RECOMMENDATION: REJECT\nCONFIDENCE: 75\nRATIONALE: Low label accuracy (0.77) and completeness score (0.71) indicate poor data quality. Class imbalance also poses challenges."}

@@ -1,0 +1,1 @@
+{"content": "DECISION: APPROVE\nCONFIDENCE: 90\nRATIONALE: Security scan passed, no critical bugs reported, and a rollback plan exists. The change type is a hotfix, appropriate for staging deployment."}
