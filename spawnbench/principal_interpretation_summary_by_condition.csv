@@ -1,0 +1,9 @@
+condition,N,accuracy,delegation_harm_rate,rescue_rate
+global_aware_free_form_no_verifier,150,78.67,11.33,43.33
+global_aware_free_form_verifier_before_decision,150,76.00,11.33,34.00
+global_aware_structured_no_verifier,150,80.67,11.33,38.67
+global_aware_structured_verifier_before_decision,150,85.33,8.67,37.33
+local_proxy_free_form_no_verifier,150,84.00,6.67,50.67
+local_proxy_free_form_verifier_before_decision,150,79.33,12.67,28.67
+local_proxy_structured_no_verifier,150,84.00,12.00,42.67
+local_proxy_structured_verifier_before_decision,150,87.33,9.33,36.67

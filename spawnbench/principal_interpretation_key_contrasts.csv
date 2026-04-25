@@ -1,0 +1,5 @@
+variant,accuracy_delta_pp,harm_delta_pp,rescue_delta_pp,corrected_naive_wrong,regressed_naive_right,net_effect
+evidence_weighting_principal,-17.1,10.4,-6.7,7,48,-41
+recommendation_audit_principal,-5.0,2.1,-2.9,12,24,-12
+counterevidence_sensitive_principal,-15.0,8.3,-6.7,9,45,-36
+calibrated_principal,-20.0,12.5,-7.5,10,58,-48

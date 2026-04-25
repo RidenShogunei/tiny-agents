@@ -1,0 +1,6 @@
+variant,N,accuracy,delegation_harm_rate,rescue_rate,followed_subagent_rec_rate
+naive_principal,240,93.33,3.75,43.75,96.67
+evidence_weighting_principal,240,76.25,14.17,37.08,79.17
+recommendation_audit_principal,240,88.33,5.83,40.83,77.08
+counterevidence_sensitive_principal,240,78.33,12.08,37.08,76.25
+calibrated_principal,240,73.33,16.25,36.25,72.08
