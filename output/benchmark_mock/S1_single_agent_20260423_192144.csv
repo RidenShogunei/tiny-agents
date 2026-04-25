@@ -1,0 +1,4 @@
+question_id,final_correct,budget_used,total_steps,num_continue,num_verify,num_stop,triggered_rule_sequence,avg_msg_gain,final_verifier_confidence,answer_disagreement_trace,latency_seconds,error
+gsm8k_001,0,976,1,0,0,0,[],0.0,,[],0.0,
+gsm8k_002,0,904,1,0,0,0,[],0.0,,[],0.0,
+gsm8k_003,0,920,1,0,0,0,[],0.0,,[],0.0,

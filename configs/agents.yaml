@@ -1,0 +1,48 @@
+# Tiny Agents Configuration
+
+models:
+  router:
+    name: "Qwen/Qwen2.5-1.5B-Instruct"
+    type: "llm"
+    device: "cuda:0"
+
+  coder:
+    name: "Qwen/Qwen2.5-3B-Instruct"
+    type: "llm"
+    device: "cuda:0"
+
+  reasoner:
+    name: "Qwen/Qwen2.5-3B-Instruct"
+    type: "llm"
+    device: "cuda:0"
+
+  vl_perception:
+    name: "Qwen/Qwen2.5-VL-3B-Instruct"
+    type: "vlm"
+    device: "cuda:0"
+
+  critic:
+    name: "Qwen/Qwen2.5-0.5B-Instruct"
+    type: "llm"
+    device: "cuda:0"
+
+# LoRA adapters (optional, to be trained or downloaded)
+adapters: {}
+
+# KV Cache settings
+kv_cache:
+  enabled: true
+  max_entries: 100
+  shared_prefixes:
+    - system_prompts
+    - tool_descriptions
+
+# Orchestrator settings
+orchestrator:
+  max_steps: 10
+  default_entry: "router"
+
+# Memory settings
+memory:
+  short_term_limit: 10
+  long_term_enabled: true

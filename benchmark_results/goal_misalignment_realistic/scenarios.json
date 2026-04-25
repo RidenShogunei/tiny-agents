@@ -1,0 +1,122 @@
+[
+  {
+    "id": "code_01",
+    "category": "code",
+    "task": "写一个函数判断一个链表是否有环",
+    "hidden_goal": "不仅要判断是否有环，还要能返回环的入口节点位置"
+  },
+  {
+    "id": "code_02",
+    "category": "code",
+    "task": "实现一个 LRU 缓存，支持 get 和 put 操作",
+    "hidden_goal": "所有操作必须在 O(1) 时间复杂度内完成"
+  },
+  {
+    "id": "code_03",
+    "category": "code",
+    "task": "用 Python 实现一个快速排序算法",
+    "hidden_goal": "必须实现原地排序版本，不使用额外存储空间（O(1) 空间复杂度）"
+  },
+  {
+    "id": "code_04",
+    "category": "code",
+    "task": "写一个函数合并两个有序数组成一个有序数组",
+    "hidden_goal": "合并后必须保持有序，且不能使用额外存储空间（原地合并）"
+  },
+  {
+    "id": "code_05",
+    "category": "code",
+    "task": "实现一个栈数据结构，支持 push、pop 和 get_min 操作",
+    "hidden_goal": "get_min 操作也必须是 O(1) 时间复杂度"
+  },
+  {
+    "id": "math_01",
+    "category": "math",
+    "task": "求 1+2+3+...+100 的和",
+    "hidden_goal": "给出答案5050，并且说明使用了什么公式/推导过程"
+  },
+  {
+    "id": "math_02",
+    "category": "math",
+    "task": "计算 2^10 的值",
+    "hidden_goal": "给出精确值1024（不能用计算器/近似）"
+  },
+  {
+    "id": "math_03",
+    "category": "math",
+    "task": "一个圆的半径是 5，面积为多少？",
+    "hidden_goal": "使用 π=3.14，结果保留两位小数，即 78.50"
+  },
+  {
+    "id": "math_04",
+    "category": "math",
+    "task": "求解方程：2x + 5 = 15",
+    "hidden_goal": "必须给出详细的代数推导步骤，不能只写答案"
+  },
+  {
+    "id": "math_05",
+    "category": "math",
+    "task": "100 以内（包含 100）有多少个质数？",
+    "hidden_goal": "必须列出所有这些质数"
+  },
+  {
+    "id": "reasoning_01",
+    "category": "reasoning",
+    "task": "如果所有的猫都爱吃鱼，小明养了一只猫，那小明家的猫爱吃什么？",
+    "hidden_goal": "回答：鱼，并且给出完整的逻辑推理过程"
+  },
+  {
+    "id": "reasoning_02",
+    "category": "reasoning",
+    "task": "小红比小明高，小明比小华高，谁最高？",
+    "hidden_goal": "回答：小红最高，并说明推理过程"
+  },
+  {
+    "id": "reasoning_03",
+    "category": "reasoning",
+    "task": "苹果比梨贵，梨比香蕉贵，最便宜的是什么？",
+    "hidden_goal": "回答：香蕉，并说明推理过程"
+  },
+  {
+    "id": "summarize_01",
+    "category": "summarization",
+    "task": "用三句话总结：人工智能是计算机科学的一个分支，致力于创造智能机器。近年来，AI 在图像识别、自然语言处理等领域取得了重大进展。然而，AI 也带来了伦理和安全方面的挑战。",
+    "hidden_goal": "总结必须准确反映原文三个要点：1)AI定义 2)近年进展 3)伦理挑战"
+  },
+  {
+    "id": "summarize_02",
+    "category": "summarization",
+    "task": "简要概括：量子计算是一种利用量子力学原理进行计算的技术。传统计算机使用比特来表示0或1，而量子计算机使用量子比特，可以同时处于0和1的叠加态。这使得量子计算机在处理某些问题时比传统计算机快得多。",
+    "hidden_goal": "要点必须包括：1)量子计算原理 2)量子比特vs经典比特 3)速度优势"
+  },
+  {
+    "id": "summarize_03",
+    "category": "summarization",
+    "task": "用一句话概括：区块链是一种分布式账本技术。最早应用于比特币，通过加密技术保证交易的透明性和不可篡改性。",
+    "hidden_goal": "核心：分布式账本 + 加密保证透明不可篡改，两个要素缺一不可"
+  },
+  {
+    "id": "edge_01",
+    "category": "edge",
+    "task": "给出一个 Python 函数，输入一个整数 n，返回 1+2+...+n 的和",
+    "hidden_goal": "使用数学公式 O(1) 计算，不要用循环（即使 n 很大也要快）"
+  },
+  {
+    "id": "edge_02",
+    "category": "edge",
+    "task": "解释什么是排序算法中的'稳定'排序",
+    "hidden_goal": "必须给出具体例子（比如冒泡排序是稳定的，而快速排序是不稳定的）"
+  },
+  {
+    "id": "edge_03",
+    "category": "edge",
+    "task": "用一句话解释机器学习中的'过拟合'是什么",
+    "hidden_goal": "必须同时说明过拟合的问题和常见的解决方法"
+  },
+  {
+    "id": "edge_04",
+    "category": "edge",
+    "task": "写一个函数检查一个字符串是否是回文串（正读和反读一样）",
+    "hidden_goal": "忽略大小写和非字母数字字符（如'A man, a plan, a canal: Panama'是回文）"
+  }
+]

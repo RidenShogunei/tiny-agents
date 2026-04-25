@@ -1,0 +1,229 @@
+{
+  "per_question": [
+    {
+      "question_id": "gsm8k_001",
+      "s3_steps": 15,
+      "s4_steps": 3,
+      "stop_type": "S4_MUCH_EARLIER",
+      "stop_quality": "AMBIGUOUS",
+      "s3_last3_rules": [
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          1,
+          "R1_BUDGET_EXHAUSTED"
+        ]
+      ],
+      "s4_last3_rules": [
+        [
+          2,
+          "R2_CALL_VERIFY"
+        ],
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          3,
+          "R3_CONSECUTIVE_LOW_GAIN"
+        ]
+      ],
+      "s3_avg_gain": 0.01,
+      "s4_avg_gain": 0.01,
+      "s3_final_disagree": 0.05,
+      "s4_final_disagree": 0.35,
+      "s3_num_verify": 4,
+      "s4_num_verify": 0,
+      "s3_correct": false,
+      "s4_correct": false
+    },
+    {
+      "question_id": "gsm8k_002",
+      "s3_steps": 15,
+      "s4_steps": 3,
+      "stop_type": "S4_MUCH_EARLIER",
+      "stop_quality": "AMBIGUOUS",
+      "s3_last3_rules": [
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          1,
+          "R1_BUDGET_EXHAUSTED"
+        ]
+      ],
+      "s4_last3_rules": [
+        [
+          2,
+          "R2_CALL_VERIFY"
+        ],
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          3,
+          "R3_CONSECUTIVE_LOW_GAIN"
+        ]
+      ],
+      "s3_avg_gain": 0.01,
+      "s4_avg_gain": 0.01,
+      "s3_final_disagree": 0.05,
+      "s4_final_disagree": 0.35,
+      "s3_num_verify": 4,
+      "s4_num_verify": 0,
+      "s3_correct": false,
+      "s4_correct": false
+    },
+    {
+      "question_id": "gsm8k_003",
+      "s3_steps": 15,
+      "s4_steps": 3,
+      "stop_type": "S4_MUCH_EARLIER",
+      "stop_quality": "AMBIGUOUS",
+      "s3_last3_rules": [
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          1,
+          "R1_BUDGET_EXHAUSTED"
+        ]
+      ],
+      "s4_last3_rules": [
+        [
+          2,
+          "R2_CALL_VERIFY"
+        ],
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          3,
+          "R3_CONSECUTIVE_LOW_GAIN"
+        ]
+      ],
+      "s3_avg_gain": 0.01,
+      "s4_avg_gain": 0.01,
+      "s3_final_disagree": 0.05,
+      "s4_final_disagree": 0.35,
+      "s3_num_verify": 3,
+      "s4_num_verify": 0,
+      "s3_correct": false,
+      "s4_correct": false
+    },
+    {
+      "question_id": "gsm8k_004",
+      "s3_steps": 15,
+      "s4_steps": 3,
+      "stop_type": "S4_MUCH_EARLIER",
+      "stop_quality": "AMBIGUOUS",
+      "s3_last3_rules": [
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          1,
+          "R1_BUDGET_EXHAUSTED"
+        ]
+      ],
+      "s4_last3_rules": [
+        [
+          2,
+          "R2_CALL_VERIFY"
+        ],
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          3,
+          "R3_CONSECUTIVE_LOW_GAIN"
+        ]
+      ],
+      "s3_avg_gain": 0.01,
+      "s4_avg_gain": 0.01,
+      "s3_final_disagree": 0.05,
+      "s4_final_disagree": 0.35,
+      "s3_num_verify": 5,
+      "s4_num_verify": 0,
+      "s3_correct": false,
+      "s4_correct": false
+    },
+    {
+      "question_id": "gsm8k_005",
+      "s3_steps": 15,
+      "s4_steps": 3,
+      "stop_type": "S4_MUCH_EARLIER",
+      "stop_quality": "AMBIGUOUS",
+      "s3_last3_rules": [
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          1,
+          "R1_BUDGET_EXHAUSTED"
+        ]
+      ],
+      "s4_last3_rules": [
+        [
+          2,
+          "R2_CALL_VERIFY"
+        ],
+        [
+          7,
+          "R7_DEFAULT_CONTINUE"
+        ],
+        [
+          3,
+          "R3_CONSECUTIVE_LOW_GAIN"
+        ]
+      ],
+      "s3_avg_gain": 0.01,
+      "s4_avg_gain": 0.01,
+      "s3_final_disagree": 0.05,
+      "s4_final_disagree": 0.35,
+      "s3_num_verify": 5,
+      "s4_num_verify": 0,
+      "s3_correct": false,
+      "s4_correct": false
+    }
+  ],
+  "stop_type_dist": {
+    "S4_MUCH_EARLIER": 5
+  },
+  "quality_dist": {
+    "AMBIGUOUS": 5
+  },
+  "s3_avg_steps": 15.0,
+  "s4_avg_steps": 3.0,
+  "s3_accuracy": 0.0,
+  "s4_accuracy": 0.0
+}

@@ -1,0 +1,730 @@
+{
+  "baseline": {
+    "0.5B": [
+      {
+        "id": "g1",
+        "answer": "To determine the total number of trees in the garden after planting 10 more trees, we can follow these steps:\n\n1. Identify the initial number of trees in the garden. According to the problem, there are 15 trees initially.\n2. Identify the number of trees that were initially planted. The problem states",
+        "expected": "25",
+        "correct": false
+      },
+      {
+        "id": "g2",
+        "answer": "To determine the total number of oranges the shop has after buying 15 more, we can follow these steps:\n\n1. Start with the initial number of oranges: 8 oranges.\n2. Add the number of oranges bought: 15 oranges.\n3. Calculate the total number of oranges: \\(8 + ",
+        "expected": "23",
+        "correct": false
+      },
+      {
+        "id": "g3",
+        "answer": "John has 12 candies initially. After giving 4 candies to his friend, he will have:\n\n12 - 4 = 8 candies left.",
+        "expected": "8",
+        "correct": false
+      },
+      {
+        "id": "g4",
+        "answer": "To determine how many birds are left on the tree after 3 birds fly away, we can follow these steps:\n\n1. Start with the initial number of birds on the tree. There are 7 birds.\n2. Subtract the number of birds that fly away. 3 birds fly away.\n\nSo, the calculation is",
+        "expected": "4",
+        "correct": false
+      },
+      {
+        "id": "g5",
+        "answer": "Sarah originally has 20 stickers. After buying 12 more, she will have a total of 20 + 12 = 32 stickers.",
+        "expected": "32",
+        "correct": false
+      },
+      {
+        "id": "g6",
+        "answer": "To determine how many loaves of bread remain after the baker sells some, we can follow these steps:\n\n1. Start with the total number of loaves of bread the baker initially has.\n2. Subtract the number of loaves sold from the initial total.\n\nLet's do the calculation:\n\n1. Initial number of lo",
+        "expected": "7",
+        "correct": false
+      },
+      {
+        "id": "g7",
+        "answer": "Tom now has 5 + 3 = 8 books.",
+        "expected": "8",
+        "correct": false
+      },
+      {
+        "id": "g8",
+        "answer": "To determine the number of students after 2 more join, we can follow these steps:\n\n1. Start with the initial number of students, which is 9.\n2. Add the number of students who join, which is 2.\n\nSo, we perform the addition:\n\\[ 9 + 2 = 1",
+        "expected": "11",
+        "correct": false
+      },
+      {
+        "id": "g9",
+        "answer": "The farmer initially has 18 sheep. If he buys 7 more sheep, the total number of sheep he has will be:\n\n18 (initial number of sheep) + 7 (additional sheep) = 25 sheep\n\nSo, the farmer has 25 sheep in total.",
+        "expected": "25",
+        "correct": false
+      },
+      {
+        "id": "g10",
+        "answer": "Lisa originally has 30 marbles. After losing 11 at the park, she will have:\n\n30 - 11 = 19 marbles remaining.",
+        "expected": "19",
+        "correct": false
+      },
+      {
+        "id": "g11",
+        "answer": "To determine the total number of cats in the house, we need to follow these steps:\n\n1. Identify the number of cats in the house initially.\n2. Determine the number of kittens each cat has.\n3. Calculate the total number of cats by adding the number of cats to the number of kittens.\n\nStep 1",
+        "expected": "30",
+        "correct": false
+      },
+      {
+        "id": "g12",
+        "answer": "To determine the number of empty seats on the bus, we need to subtract the number of passengers from the total number of seats on the bus. Here's the step-by-step calculation:\n\n1. Identify the total number of seats on the bus: 40 seats.\n2. Identify the number of passengers on the bus",
+        "expected": "13",
+        "correct": false
+      },
+      {
+        "id": "g13",
+        "answer": "To determine the total number of pages James read over the three days, we need to add the number of pages he read each day together. Here's the step-by-step calculation:\n\n1. Pages read on Monday: 15\n2. Pages read on Tuesday: 22\n3. Pages read on Wednesday",
+        "expected": "55",
+        "correct": false
+      },
+      {
+        "id": "g14",
+        "answer": "To determine how many apples are left in the store, we need to subtract the number of apples sold on Monday from the number of apples sold on Tuesday. Here's the step-by-step calculation:\n\n1. Start with the initial number of apples: 100 apples.\n2. Subtract the number of apples sold on",
+        "expected": "37",
+        "correct": false
+      },
+      {
+        "id": "g15",
+        "answer": "Emma has $45 initially. She spends $18 on a book. To find out how much money she has left, we subtract the cost of the book from her initial amount:\n\n$45 - $18 = $27\n\nSo, Emma has $27 left after buying the book.",
+        "expected": "27",
+        "correct": false
+      },
+      {
+        "id": "g16",
+        "answer": "The perimeter of a rectangle is calculated by adding together the lengths of all four sides. For a rectangle with length 12 cm and width 7 cm, the perimeter \\( P \\) is given by the formula:\n\n\\[ P = 2 \\times (\\text{length} + \\text{width}) \\]\n\n",
+        "expected": "38",
+        "correct": false
+      },
+      {
+        "id": "g17",
+        "answer": "To determine the total number of chairs, you can multiply the number of rows by the number of chairs in each row. Here's the calculation:\n\n4 rows * 9 chairs per row = 36 chairs\n\nSo, there are 36 chairs in total.",
+        "expected": "36",
+        "correct": false
+      },
+      {
+        "id": "g18",
+        "answer": "To determine how many coins Mike has, we need to follow these steps:\n\n1. Identify how many coins Jake has.\n2. Calculate how many coins Mike has based on the information given.\n\nStep 1: Identify how many coins Jake has.\nJake has 14 coins.\n\nStep 2: Calculate how many coins",
+        "expected": "42",
+        "correct": false
+      },
+      {
+        "id": "g19",
+        "answer": "To calculate the distance traveled by the train, you can use the formula:\n\n\\[ \\text{Distance} = \\text{Speed} \\times \\text{Time} \\]\n\nGiven that the train travels at a speed of 60 miles per hour for 3 hours, you can plug these values into the formula",
+        "expected": "180",
+        "correct": false
+      },
+      {
+        "id": "g20",
+        "answer": "To determine how many students passed the exam, we can follow these steps:\n\n1. Calculate the number of students who passed the exam.\n2. Use the total number of students to find the number of students who passed.\n\nStep 1: Calculate the number of students who passed.\nThe problem states that 60%",
+        "expected": "18",
+        "correct": false
+      },
+      {
+        "id": "g21",
+        "answer": "To determine how many slices of pizza are left after 5 people have eaten, we can follow these steps:\n\n1. Calculate the total number of slices eaten by the 5 people.\n2. Subtract the total number of slices eaten from the original number of slices.\n\nFirst, let's calculate the total number of slices eaten",
+        "expected": "2",
+        "correct": false
+      },
+      {
+        "id": "g22",
+        "answer": "To determine how much John spent, we need to add the cost of the shirt and the cost of the pants. Here are the steps:\n\n1. Identify the cost of the shirt: $25\n2. Identify the cost of the pants: $38\n3. Add the two amounts together: $2",
+        "expected": "63",
+        "correct": false
+      },
+      {
+        "id": "g23",
+        "answer": "To convert 2 hours and 24 minutes into minutes, we need to follow these steps:\n\n1. Convert 2 hours into minutes.\n2. Add the additional 24 minutes to the result from step 1.\n\nFirst, let's convert 2 hours into minutes. Since there are 60 minutes",
+        "expected": "144",
+        "correct": false
+      },
+      {
+        "id": "g24",
+        "answer": "To determine the total number of tomato plants in the garden, we need to multiply the number of rows by the number of plants in each row. Here's the step-by-step calculation:\n\n1. Identify the number of rows: 6 rows.\n2. Identify the number of plants in each row: 8 plants.\n",
+        "expected": "48",
+        "correct": false
+      },
+      {
+        "id": "g25",
+        "answer": "To determine how much each of Alice's children gets, we need to divide the total amount of money by the number of children. Here are the steps:\n\n1. Identify the total amount of money Alice has: $100.\n2. Identify the number of children Alice has: 4.\n3. Divide the",
+        "expected": "25",
+        "correct": false
+      },
+      {
+        "id": "g26",
+        "answer": "To find the other side of the rectangle, we can use the formula for the area of a rectangle, which is:\n\n\\[ \\text{Area} = \\text{length} \\times \\text{width} \\]\n\nGiven that the area is 56 square cm and one side (let's call it the",
+        "expected": "7",
+        "correct": false
+      },
+      {
+        "id": "g27",
+        "answer": "To determine how much juice is left after Tom drinks 300 ml, we can follow these steps:\n\n1. Start with the total amount of juice in the bottle, which is 750 ml.\n2. Subtract the amount of juice Tom drinks, which is 300 ml.\n\nSo, the",
+        "expected": "450",
+        "correct": false
+      },
+      {
+        "id": "g28",
+        "answer": "To determine Sara's age, we start by identifying the brother's age and then use the relationship between Sara's and her brother's ages to find Sara's age.\n\n1. We know that Sara's brother is 12 years old.\n2. According to the problem, Sara's age is twice her brother's age",
+        "expected": "24",
+        "correct": false
+      },
+      {
+        "id": "g29",
+        "answer": "To determine how many chickens the farmer has after the transactions, we can follow these steps:\n\n1. Start with the initial number of chickens:\n   \\[\n   45\n   \\]\n\n2. Subtract the number of chickens sold:\n   \\[\n   45 - 17 = 28\n",
+        "expected": "51",
+        "correct": false
+      },
+      {
+        "id": "g30",
+        "answer": "To determine the number of classes, we need to divide the total number of students by the number of students per class. Here's the step-by-step process:\n\n1. Identify the total number of students: 124\n2. Identify the number of students per class: 31\n3. Divide the",
+        "expected": "4",
+        "correct": false
+      },
+      {
+        "id": "g31",
+        "answer": "To determine how much Tom spends on the notebooks and pens, we need to calculate the cost of each item separately and then sum them up.\n\nFirst, let's calculate the cost of the notebooks:\n- Tom buys 3 notebooks.\n- Each notebook costs $4.\n- Therefore, the total cost for the notebooks is \\(",
+        "expected": "16",
+        "correct": false
+      },
+      {
+        "id": "g32",
+        "answer": "To find the difference between the area and the perimeter of a rectangle with dimensions 15 cm by 9 cm, we need to calculate both the area and the perimeter, and then find the difference between them.\n\n### Step 1: Calculate the Area\nThe area \\( A \\) of a rectangle is given by",
+        "expected": "111",
+        "correct": false
+      },
+      {
+        "id": "g33",
+        "answer": "To determine how many cookies Maria has left after giving some to John and Peter, we can follow these steps:\n\n1. Start with the total number of cookies Maria initially has.\n   \\[\n   \\text{Initial cookies} = 48\n   \\]\n\n2. Subtract the number of cookies given to John.\n",
+        "expected": "21",
+        "correct": false
+      },
+      {
+        "id": "g34",
+        "answer": "To determine how much faster the car is traveling per hour compared to the bicycle, we need to calculate the speed of each vehicle and then find the difference.\n\nFirst, let's calculate the speed of the car:\n- The car travels 240 miles in 4 hours.\n- Speed = Distance / Time\n-",
+        "expected": "45",
+        "correct": false
+      },
+      {
+        "id": "g35",
+        "answer": "Jack has $80 initially. He spends $35 on a game and $7 on a snack. To find out how much he has left, we subtract the total amount spent from the initial amount:\n\n$80 - $35 - $7 = $38\n\nSo, Jack has $38",
+        "expected": "38",
+        "correct": false
+      },
+      {
+        "id": "g36",
+        "answer": "To solve this problem, we need to follow these steps:\n\n1. Calculate the total number of pencils initially.\n2. Subtract the number of pencils removed from the total.\n\nLet's start with the first step:\n\n1. Calculate the total number of pencils initially:\n   \\[\n   3 \\text{ boxes} \\",
+        "expected": "54",
+        "correct": false
+      },
+      {
+        "id": "g37",
+        "answer": "To calculate the duration of the journey, we need to subtract the starting time from the ending time.\n\nStarting time: 9:15 AM\nEnding time: 2:45 PM\n\nFirst, let's convert the ending time to a 24-hour format for easier calculation:\n2:45 PM",
+        "expected": "330",
+        "correct": false
+      },
+      {
+        "id": "g38",
+        "answer": "To determine how many people like at least one of the fruits (apples or bananas), we can use the principle of inclusion and exclusion. Let's define the following:\n\n- \\( A \\) as the set of people who like apples.\n- \\( B \\) as the set of people who like bananas.\n- \\(",
+        "expected": "115",
+        "correct": false
+      },
+      {
+        "id": "g39",
+        "answer": "To determine the most number of burgers you can buy for $30, we need to compare the cost of purchasing burgers at different prices.\n\nFirst, let's calculate the cost of 3 burgers for $12:\n\\[\n\\text{Cost of 3 burgers for $12} = \\frac{1",
+        "expected": "8",
+        "correct": false
+      },
+      {
+        "id": "g40",
+        "answer": "Let's denote Jerry's current age as \\( J \\) and Tom's current age as \\( T \\). According to the problem, we have two key pieces of information:\n\n1. Tom is 5 years older than Jerry.\n2. In 3 years, Tom will be twice Jerry's age.\n\nWe can translate",
+        "expected": "2",
+        "correct": false
+      }
+    ],
+    "1.5B": [
+      {
+        "id": "g1",
+        "answer": "There are now 25 trees in the garden.",
+        "expected": "25",
+        "correct": true
+      },
+      {
+        "id": "g2",
+        "answer": "The shop now has 8 + 15 = 23 oranges.",
+        "expected": "23",
+        "correct": false
+      },
+      {
+        "id": "g3",
+        "answer": "John has 12 candies - 4 candies = 8 candies left.",
+        "expected": "8",
+        "correct": false
+      },
+      {
+        "id": "g4",
+        "answer": "There are 4 birds left.",
+        "expected": "4",
+        "correct": true
+      },
+      {
+        "id": "g5",
+        "answer": "Sarah has a total of 20 + 12 = 32 stickers.",
+        "expected": "32",
+        "correct": false
+      },
+      {
+        "id": "g6",
+        "answer": "The baker has 24 loaves of bread and sells 17 of them. To find out how many loaves remain, you subtract the number sold from the total number of loaves:\n\n24 - 17 = 7\n\nSo, the baker has 7 loaves of bread remaining.",
+        "expected": "7",
+        "correct": false
+      },
+      {
+        "id": "g7",
+        "answer": "Tom now has 5 + 3 = 8 books.",
+        "expected": "8",
+        "correct": false
+      },
+      {
+        "id": "g8",
+        "answer": "There are now 11 students in the class.",
+        "expected": "11",
+        "correct": true
+      },
+      {
+        "id": "g9",
+        "answer": "The farmer has 18 + 7 = 25 sheep.",
+        "expected": "25",
+        "correct": false
+      },
+      {
+        "id": "g10",
+        "answer": "Lisa originally has 30 marbles. After losing 11 marbles at the park, she would have:\n\n30 - 11 = 19 marbles remaining.",
+        "expected": "19",
+        "correct": false
+      },
+      {
+        "id": "g11",
+        "answer": "There are 10 cats in total. This is because you start with 6 adult cats and each of those adult cats has 4 kittens, so 6 adult cats * 4 kittens per adult cat = 24 kittens. Adding the adult cats to the kittens gives you 6 adult cats + 2",
+        "expected": "30",
+        "correct": false
+      },
+      {
+        "id": "g12",
+        "answer": "To find out how many empty seats there are, you subtract the number of passengers from the total number of seats:\n\n40 seats - 27 passengers = 13 empty seats\n\nSo, there are 13 empty seats on the bus.",
+        "expected": "13",
+        "correct": false
+      },
+      {
+        "id": "g13",
+        "answer": "To find out how many pages James read in total, we need to add the number of pages he read each day:\n\nMonday: 15 pages\nTuesday: 22 pages\nWednesday: 18 pages\n\nTotal pages read = 15 + 22 + 18 = 55",
+        "expected": "55",
+        "correct": false
+      },
+      {
+        "id": "g14",
+        "answer": "To find out how many apples are left, you need to subtract the number of apples sold from the total number of apples initially.\n\nTotal apples: 100\nApples sold on Monday: 35\nApples sold on Tuesday: 28\n\nApples left = Total apples - Apples sold",
+        "expected": "37",
+        "correct": false
+      },
+      {
+        "id": "g15",
+        "answer": "Emma has $45 - $18 = $27 left.",
+        "expected": "27",
+        "correct": false
+      },
+      {
+        "id": "g16",
+        "answer": "The perimeter of a rectangle is calculated by adding together the lengths of all its sides. For a rectangle with length \\( l \\) and width \\( w \\), the formula for the perimeter \\( P \\) is:\n\n\\[ P = 2l + 2w \\]\n\nGiven that the length \\( l \\) is",
+        "expected": "38",
+        "correct": false
+      },
+      {
+        "id": "g17",
+        "answer": "To find the total number of chairs, you can multiply the number of rows by the number of chairs in each row. \n\nSo, 4 rows * 9 chairs per row = 36 chairs in total.",
+        "expected": "36",
+        "correct": false
+      },
+      {
+        "id": "g18",
+        "answer": "To find out how many coins Mike has, we can use the information given in the question.\n\nJake has 14 coins. Since Mike has 3 times as many coins as Jake, we can calculate the number of coins Mike has by multiplying Jake's number of coins by 3.\n\nSo, Mike has \\( ",
+        "expected": "42",
+        "correct": false
+      },
+      {
+        "id": "g19",
+        "answer": "To calculate the distance a train travels, you can use the formula:\n\n\\[ \\text{Distance} = \\text{Speed} \\times \\text{Time} \\]\n\nGiven:\n- Speed = 60 miles per hour\n- Time = 3 hours\n\nPlugging in the values:\n\n\\[ \\text{",
+        "expected": "180",
+        "correct": false
+      },
+      {
+        "id": "g20",
+        "answer": "To find out how many students passed the exam, you can calculate 60% of the total number of students in the class.\n\nTotal number of students = 30\nPercentage of students who passed = 60%\n\nNumber of students who passed = (60/100) * 30",
+        "expected": "18",
+        "correct": false
+      },
+      {
+        "id": "g21",
+        "answer": "If 5 people eat 2 slices each, then the total number of slices eaten is 5 * 2 = 10 slices. Since the pizza was originally cut into 8 slices, the number of slices left is 8 - 10 = -2 slices. However, it's not possible to",
+        "expected": "2",
+        "correct": false
+      },
+      {
+        "id": "g22",
+        "answer": "To find out how much John spent, you simply add the cost of the shirt and the cost of the pants together:\n\n$25 (shirt) + $38 (pants) = $63\n\nSo, John spent a total of $63.",
+        "expected": "63",
+        "correct": false
+      },
+      {
+        "id": "g23",
+        "answer": "There are 144 minutes in 2 hours and 24 minutes.",
+        "expected": "144",
+        "correct": true
+      },
+      {
+        "id": "g24",
+        "answer": "To find the total number of tomato plants in the garden, you can multiply the number of rows by the number of plants in each row. \n\nSo, the calculation would be:\n\n6 rows * 8 plants per row = 48 plants\n\nTherefore, there are 48 tomato plants in the garden.",
+        "expected": "48",
+        "correct": false
+      },
+      {
+        "id": "g25",
+        "answer": "Each child gets $100 / 4 = $25.",
+        "expected": "25",
+        "correct": false
+      },
+      {
+        "id": "g26",
+        "answer": "To find the other side of the rectangle, you can use the formula for the area of a rectangle, which is:\n\n\\[ \\text{Area} = \\text{length} \\times \\text{width} \\]\n\nGiven that the area is 56 square cm and one side (let's call it the",
+        "expected": "7",
+        "correct": false
+      },
+      {
+        "id": "g27",
+        "answer": "To find out how much juice is left after Tom drinks 300 ml, you subtract the amount he drank from the total amount the bottle holds:\n\n750 ml (total amount) - 300 ml (amount drunk) = 450 ml (amount left)\n\nSo, there are ",
+        "expected": "450",
+        "correct": false
+      },
+      {
+        "id": "g28",
+        "answer": "Sara's brother is 12 years old. Since Sara's age is twice her brother's age, Sara is 2 * 12 = 24 years old.",
+        "expected": "24",
+        "correct": false
+      },
+      {
+        "id": "g29",
+        "answer": "The farmer starts with 45 chickens. He sells 17, so he has:\n\n45 - 17 = 28 chickens left.\n\nThen he buys 23 more, so he has:\n\n28 + 23 = 51 chickens.\n\nTherefore, the farmer has 51",
+        "expected": "51",
+        "correct": false
+      },
+      {
+        "id": "g30",
+        "answer": "To find out how many classes there are, you divide the total number of students by the number of students per class:\n\n124 students \u00f7 31 students/class = 4 classes\n\nSo, there are 4 classes in the school.",
+        "expected": "4",
+        "correct": false
+      },
+      {
+        "id": "g31",
+        "answer": "To calculate how much Tom spends, we need to multiply the cost of each item by the number of items he buys and then add the totals together.\n\nFor the notebooks:\n3 notebooks * $4/notebook = $12\n\nFor the pens:\n2 pens * $2/pen = $4\n\nNow,",
+        "expected": "16",
+        "correct": false
+      },
+      {
+        "id": "g32",
+        "answer": "To find the difference between the area and the perimeter of a rectangle, we first need to calculate both values.\n\nThe area of a rectangle is given by the formula:\n\\[ \\text{Area} = \\text{length} \\times \\text{width} \\]\n\nGiven the length is 15 cm and the",
+        "expected": "111",
+        "correct": false
+      },
+      {
+        "id": "g33",
+        "answer": "Maria starts with 48 cookies. She gives 15 to John and 12 to Peter. To find out how many cookies she has left, we subtract the cookies she gave away from the total she started with:\n\n48 - 15 - 12 = 21\n\nSo, Maria",
+        "expected": "21",
+        "correct": false
+      },
+      {
+        "id": "g34",
+        "answer": "To determine how much faster the car is per hour compared to the bicycle, we need to calculate the speed of both the car and the bicycle and then find the difference.\n\nFirst, let's calculate the speed of the car:\n- The car travels 240 miles in 4 hours.\n- Speed = Distance /",
+        "expected": "45",
+        "correct": false
+      },
+      {
+        "id": "g35",
+        "answer": "Jack starts with $80. He spends $35 on a game and $7 on a snack. To find out how much he has left, we subtract the total amount spent from his initial amount:\n\n$80 - $35 - $7 = $38\n\nSo, Jack has $38",
+        "expected": "38",
+        "correct": false
+      },
+      {
+        "id": "g36",
+        "answer": "There are 3 boxes with 24 pencils in each, so there are a total of 3 * 24 = 72 pencils. If 18 pencils are removed, then there are 72 - 18 = 54 pencils remaining.",
+        "expected": "54",
+        "correct": false
+      },
+      {
+        "id": "g37",
+        "answer": "To calculate the duration of the journey, we need to find the difference between the arrival time and the departure time.\n\nThe departure time is 9:15 AM.\nThe arrival time is 2:45 PM.\n\nFirst, let's convert both times to a 24-hour format for easier calculation:\n-",
+        "expected": "330",
+        "correct": false
+      },
+      {
+        "id": "g38",
+        "answer": "To find out how many people like at least one of the fruits (apples or bananas), we can use the principle of inclusion and exclusion.\n\nLet's denote:\n- \\( A \\) as the set of people who like apples.\n- \\( B \\) as the set of people who like bananas.\n\nWe are given",
+        "expected": "115",
+        "correct": false
+      },
+      {
+        "id": "g39",
+        "answer": "To determine the most number of burgers you can buy for $30, we need to consider the two pricing options:\n\n1. 3 burgers for $12\n2. 1 burger for $5\n\nFirst, let's see how many burgers we can buy with $30 using the first option:\n\n-",
+        "expected": "8",
+        "correct": false
+      },
+      {
+        "id": "g40",
+        "answer": "Let's denote Jerry's current age as \\( J \\) and Tom's current age as \\( T \\).\n\nFrom the information given, we have two key pieces of information:\n\n1. Tom is 5 years older than Jerry:\n\\[ T = J + 5 \\]\n\n2. In 3 years, Tom will",
+        "expected": "2",
+        "correct": false
+      }
+    ],
+    "3B": [
+      {
+        "id": "g1",
+        "answer": "To find out how many trees are there now, you need to add the number of trees he initially had to the number of trees he planted.\n\nSo, if there were 15 trees initially and he planted 10 more trees, you would calculate:\n\n15 + 10 = 25\n\nTherefore",
+        "expected": "25",
+        "correct": false
+      },
+      {
+        "id": "g2",
+        "answer": "The shop originally has 8 oranges. After buying 15 more oranges, they will have:\n\n8 oranges + 15 oranges = 23 oranges\n\nSo, the shop now has 23 oranges.",
+        "expected": "23",
+        "correct": false
+      },
+      {
+        "id": "g3",
+        "answer": "John originally has 12 candies. After giving 4 candies to his friend, he would have:\n\n12 - 4 = 8 candies left.",
+        "expected": "8",
+        "correct": false
+      },
+      {
+        "id": "g4",
+        "answer": "If there are initially 7 birds on a tree and 3 fly away, then there would be 4 birds left on the tree.",
+        "expected": "4",
+        "correct": false
+      },
+      {
+        "id": "g5",
+        "answer": "Sarah originally has 20 stickers. After buying 12 more, she will have:\n\n20 (original stickers) + 12 (new stickers) = 32 stickers\n\nSo, Sarah has 32 stickers in total.",
+        "expected": "32",
+        "correct": false
+      },
+      {
+        "id": "g6",
+        "answer": "The baker initially has 24 loaves of bread. After selling 17 loaves, the number of loaves remaining can be calculated by subtracting the number of loaves sold from the initial number of loaves:\n\n\\[ 24 - 17 = 7 \\]\n\nSo, the baker has",
+        "expected": "7",
+        "correct": false
+      },
+      {
+        "id": "g7",
+        "answer": "Tom originally has 5 books. After his mother gives him 3 more books, he will have:\n\n5 books + 3 books = 8 books\n\nSo, Tom now has 8 books.",
+        "expected": "8",
+        "correct": false
+      },
+      {
+        "id": "g8",
+        "answer": "To solve this problem, we start with the initial number of students, which is 9. Then, we add the 2 new students to the initial number.\n\nSo, the calculation is:\n\n\\[ 9 + 2 = 11 \\]\n\nTherefore, there are now 11 students in the class.",
+        "expected": "11",
+        "correct": false
+      },
+      {
+        "id": "g9",
+        "answer": "The farmer originally has 18 sheep. After buying 7 more sheep, he will have:\n\n18 + 7 = 25 sheep.\n\nSo, the farmer now has 25 sheep.",
+        "expected": "25",
+        "correct": false
+      },
+      {
+        "id": "g10",
+        "answer": "Lisa originally has 30 marbles. After losing 11 marbles at the park, she would have:\n\n\\[ 30 - 11 = 19 \\]\n\nSo, Lisa has 19 marbles left.",
+        "expected": "19",
+        "correct": false
+      },
+      {
+        "id": "g11",
+        "answer": "To solve this problem, we need to consider both the original cats and the kittens they have.\n\n1. We start with 6 original cats.\n2. Each of these 6 cats has 4 kittens.\n\nTo find the total number of kittens, we multiply the number of cats by the number of kittens each cat has",
+        "expected": "30",
+        "correct": false
+      },
+      {
+        "id": "g12",
+        "answer": "To find out how many empty seats there are, we can subtract the number of passengers from the total number of seats on the bus.\n\nTotal seats on the bus = 40\nNumber of passengers = 27\n\nEmpty seats = Total seats - Number of passengers\nEmpty seats = 40 - 2",
+        "expected": "13",
+        "correct": false
+      },
+      {
+        "id": "g13",
+        "answer": "To find out how many pages James read in total, you need to add the number of pages he read on each day:\n\n- Monday: 15 pages\n- Tuesday: 22 pages\n- Wednesday: 18 pages\n\nSo, the total number of pages James read is:\n\n15 + ",
+        "expected": "55",
+        "correct": false
+      },
+      {
+        "id": "g14",
+        "answer": "To find out how many apples are left, we need to subtract the number of apples sold from the initial number of apples.\n\nThe store started with 100 apples. On Monday, they sold 35 apples, and on Tuesday, they sold 28 apples.\n\nSo, the total number of apples sold",
+        "expected": "37",
+        "correct": false
+      },
+      {
+        "id": "g15",
+        "answer": "Emma originally has $45. After buying a book for $18, the amount of money she has left can be calculated by subtracting the cost of the book from her initial amount:\n\n\\[ 45 - 18 = 27 \\]\n\nSo, Emma has $27 left.",
+        "expected": "27",
+        "correct": false
+      },
+      {
+        "id": "g16",
+        "answer": "To find the perimeter of a rectangle, you can use the formula:\n\n\\[ \\text{Perimeter} = 2 \\times (\\text{length} + \\text{width}) \\]\n\nGiven that the length of the rectangle is 12 cm and the width is 7 cm, we can substitute these values",
+        "expected": "38",
+        "correct": false
+      },
+      {
+        "id": "g17",
+        "answer": "To find the total number of chairs, you can multiply the number of rows by the number of chairs in each row.\n\nSo, if there are 4 rows and 9 chairs in each row, the total number of chairs is:\n\n\\( 4 \\times 9 = 36 \\)\n\nTherefore, there are",
+        "expected": "36",
+        "correct": false
+      },
+      {
+        "id": "g18",
+        "answer": "To find out how many coins Mike has, we can use the information given:\n\n1. Jake has 14 coins.\n2. Mike has 3 times as many coins as Jake.\n\nSo, we can calculate the number of coins Mike has by multiplying the number of coins Jake has by 3:\n\n\\[ \\text",
+        "expected": "42",
+        "correct": false
+      },
+      {
+        "id": "g19",
+        "answer": "To find out how far the train travels, we can use the formula for distance:\n\n\\[ \\text{Distance} = \\text{Speed} \\times \\text{Time} \\]\n\nGiven:\n- Speed = 60 miles per hour\n- Time = 3 hours\n\nPlugging in the values:\n\n\\[",
+        "expected": "180",
+        "correct": false
+      },
+      {
+        "id": "g20",
+        "answer": "To find out how many students passed the exam, we can calculate 60% of the total number of students, which is 30.\n\n\\[ \\text{Number of students who passed} = 60\\% \\times 30 \\]\n\n\\[ \\text{Number of students who passed} =",
+        "expected": "18",
+        "correct": false
+      },
+      {
+        "id": "g21",
+        "answer": "Let's break this down step by step:\n\n1. The pizza is initially cut into 8 slices.\n2. There are 5 people, and each person eats 2 slices.\n3. To find out how many slices are eaten in total, we multiply the number of people by the number of slices each person eats",
+        "expected": "2",
+        "correct": false
+      },
+      {
+        "id": "g22",
+        "answer": "To find out how much John spent in total, you need to add the cost of the shirt to the cost of the pants.\n\nThe cost of the shirt is $25.\nThe cost of the pants is $38.\n\nSo, the total amount John spent is $25 + $38 = $6",
+        "expected": "63",
+        "correct": false
+      },
+      {
+        "id": "g23",
+        "answer": "There are 144 minutes in 2 hours and 24 minutes. This is correct. \n\nTo break it down:\n- 1 hour = 60 minutes\n- 2 hours = 2 * 60 = 120 minutes\n- Adding the additional 24 minutes to",
+        "expected": "144",
+        "correct": true
+      },
+      {
+        "id": "g24",
+        "answer": "To find the total number of tomato plants in the garden, you can multiply the number of rows by the number of plants in each row.\n\nSo, if there are 6 rows with 8 plants in each row, the total number of tomato plants is:\n\n\\[ 6 \\text{ rows} \\times 8",
+        "expected": "48",
+        "correct": false
+      },
+      {
+        "id": "g25",
+        "answer": "Alice splits $100 equally among her 4 children. To find out how much each child gets, you would divide $100 by 4.\n\n\\[ \\frac{100}{4} = 25 \\]\n\nSo, each child gets $25.",
+        "expected": "25",
+        "correct": false
+      },
+      {
+        "id": "g26",
+        "answer": "To find the other side of the rectangle, we can use the formula for the area of a rectangle, which is:\n\n\\[ \\text{Area} = \\text{length} \\times \\text{width} \\]\n\nGiven:\n- The area of the rectangle is 56 square cm.\n- One side (",
+        "expected": "7",
+        "correct": false
+      },
+      {
+        "id": "g27",
+        "answer": "To find out how much juice is left after Tom drinks 300 ml from a bottle that originally holds 750 ml, you can subtract the amount Tom drank from the original amount:\n\n750 ml - 300 ml = 450 ml\n\nSo, there is 45",
+        "expected": "450",
+        "correct": false
+      },
+      {
+        "id": "g28",
+        "answer": "If Sara's brother is 12 years old and Sara's age is twice her brother's age, then Sara is 2 * 12 = 24 years old.",
+        "expected": "24",
+        "correct": false
+      },
+      {
+        "id": "g29",
+        "answer": "Let's break this down step by step:\n\n1. The farmer starts with 45 chickens.\n2. He sells 17 chickens. So, the number of chickens left is:\n   45 - 17 = 28 chickens.\n3. Then, he buys 23 more chickens.",
+        "expected": "51",
+        "correct": false
+      },
+      {
+        "id": "g30",
+        "answer": "To find out how many classes there are, you would divide the total number of students by the number of students per class. \n\nSo, you would divide 124 students by 31 students per class:\n\n\\[ \\frac{124}{31} = 4 \\text{ remainder } ",
+        "expected": "4",
+        "correct": false
+      },
+      {
+        "id": "g31",
+        "answer": "To calculate how much Tom spends, we need to find the total cost of the notebooks and the total cost of the pens, and then add these two amounts together.\n\nThe cost of the notebooks:\n- Tom buys 3 notebooks.\n- Each notebook costs $4.\n- So, the total cost for the notebooks is \\(",
+        "expected": "16",
+        "correct": false
+      },
+      {
+        "id": "g32",
+        "answer": "To find the difference between the area and the perimeter of the rectangle, we first need to calculate both the area and the perimeter.\n\nThe formula for the area \\( A \\) of a rectangle is:\n\\[ A = \\text{length} \\times \\text{width} \\]\n\nGiven the length is 15",
+        "expected": "111",
+        "correct": false
+      },
+      {
+        "id": "g33",
+        "answer": "Maria originally has 48 cookies. She gives away 15 cookies to John and 12 cookies to Peter. To find out how many cookies she has left, we subtract the number of cookies she gave away from the original number.\n\nSo, the calculation is:\n\n\\[ 48 - 15 -",
+        "expected": "21",
+        "correct": false
+      },
+      {
+        "id": "g34",
+        "answer": "To find out how much faster the car is per hour compared to the bicycle, we need to calculate the speed of both the car and the bicycle, and then find the difference between these speeds.\n\nFirst, let's calculate the speed of the car:\n- The car travels 240 miles in 4 hours.\n",
+        "expected": "45",
+        "correct": false
+      },
+      {
+        "id": "g35",
+        "answer": "Jack initially has $80. He spends $35 on a game and $7 on a snack. To find out how much he has left, we subtract the total amount spent from the initial amount.\n\nSo, the calculation is:\n\n$80 - $35 - $7 = $38\n\nJack",
+        "expected": "38",
+        "correct": false
+      },
+      {
+        "id": "g36",
+        "answer": "Let's break this down step by step:\n\n1. First, we need to determine the total number of pencils initially. There are 3 boxes, and each box contains 24 pencils.\n   \\[\n   3 \\times 24 = 72 \\text{ pencils}\n   \\]\n\n2.",
+        "expected": "54",
+        "correct": false
+      },
+      {
+        "id": "g37",
+        "answer": "To calculate the journey time, we need to find the difference between the arrival time and the departure time.\n\nThe train departs at 9:15 AM and arrives at 2:45 PM.\n\nFirst, let's break down the times into hours and minutes:\n\n- Departure time: 9:1",
+        "expected": "330",
+        "correct": false
+      },
+      {
+        "id": "g38",
+        "answer": "To find out how many people like at least one of the fruits (apples or bananas), we can use the principle of inclusion-exclusion. This principle helps us avoid double-counting those who like both fruits.\n\nThe formula for the number of people who like at least one of the fruits is:\n\n\\[ \\text{",
+        "expected": "115",
+        "correct": false
+      },
+      {
+        "id": "g39",
+        "answer": "To determine the most number of burgers you can buy for $30, we need to consider the two pricing options:\n\n1. Buying 3 burgers for $12.\n2. Buying 1 burger for $5.\n\nLet's calculate how many burgers we can get with $30 using each option:\n\n**Option",
+        "expected": "8",
+        "correct": false
+      },
+      {
+        "id": "g40",
+        "answer": "Let's denote Jerry's current age as \\( J \\) and Tom's current age as \\( T \\).\n\nFrom the problem, we know two things:\n\n1. Tom is 5 years older than Jerry:\n\\[ T = J + 5 \\]\n\n2. In 3 years, Tom's age will be twice",
+        "expected": "2",
+        "correct": false
+      }
+    ]
+  }
+}

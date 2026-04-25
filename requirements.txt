@@ -1,0 +1,14 @@
+torch>=2.3.0
+transformers>=4.40.0
+accelerate>=0.30.0
+peft>=0.11.0
+vllm>=0.5.0
+outlines>=0.0.46
+pydantic>=2.0
+pyyaml>=6.0
+jinja2>=3.1.0
+tqdm>=4.66.0
+datasets>=2.19.0
+numpy>=1.26.0
+pillow>=10.0.0
+qwen-vl-utils>=0.0.8

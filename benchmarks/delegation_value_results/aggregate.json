@@ -1,0 +1,368 @@
+{
+  "3B": {
+    "A": [
+      {
+        "task_id": "math01",
+        "output": "20",
+        "expected": "20",
+        "correct": true
+      },
+      {
+        "task_id": "math02",
+        "output": "36",
+        "expected": "36",
+        "correct": true
+      },
+      {
+        "task_id": "math03",
+        "output": "75",
+        "expected": "75",
+        "correct": true
+      },
+      {
+        "task_id": "math04",
+        "output": "40",
+        "expected": "40",
+        "correct": true
+      },
+      {
+        "task_id": "math05",
+        "output": "12",
+        "expected": "12",
+        "correct": true
+      },
+      {
+        "task_id": "math06",
+        "output": "To determine which fraction is larger between \\( \\frac{3}{7} \\",
+        "expected": "4/9",
+        "correct": false
+      },
+      {
+        "task_id": "math07",
+        "output": "21",
+        "expected": "25",
+        "correct": false
+      },
+      {
+        "task_id": "math08",
+        "output": "87.92",
+        "expected": "78.5",
+        "correct": false
+      },
+      {
+        "task_id": "math09",
+        "output": "19",
+        "expected": "19",
+        "correct": true
+      },
+      {
+        "task_id": "math10",
+        "output": "13",
+        "expected": "13",
+        "correct": true
+      },
+      {
+        "task_id": "logic01",
+        "output": "Yes.",
+        "expected": "no",
+        "correct": false
+      },
+      {
+        "task_id": "logic02",
+        "output": "Sam",
+        "expected": "Sam",
+        "correct": true
+      },
+      {
+        "task_id": "logic03",
+        "output": "maybe",
+        "expected": "maybe",
+        "correct": true
+      },
+      {
+        "task_id": "logic04",
+        "output": "same",
+        "expected": "same",
+        "correct": true
+      },
+      {
+        "task_id": "logic05",
+        "output": "no",
+        "expected": "yes",
+        "correct": false
+      },
+      {
+        "task_id": "comp01",
+        "output": "Everest 237",
+        "expected": "Everest 237",
+        "correct": true
+      },
+      {
+        "task_id": "comp02",
+        "output": "Nile 6650",
+        "expected": "Nile 250",
+        "correct": true
+      },
+      {
+        "task_id": "comp03",
+        "output": "16 cm",
+        "expected": "28 cm",
+        "correct": false
+      },
+      {
+        "task_id": "comp04",
+        "output": "4.75",
+        "expected": "5.25",
+        "correct": false
+      },
+      {
+        "task_id": "comp05",
+        "output": "275",
+        "expected": "80",
+        "correct": false
+      },
+      {
+        "task_id": "dk01",
+        "output": "Canberra",
+        "expected": "Canberra",
+        "correct": true
+      },
+      {
+        "task_id": "dk02",
+        "output": "Au",
+        "expected": "Au",
+        "correct": true
+      },
+      {
+        "task_id": "dk03",
+        "output": "6",
+        "expected": "6",
+        "correct": true
+      },
+      {
+        "task_id": "dk04",
+        "output": "Jupiter",
+        "expected": "Jupiter",
+        "correct": true
+      },
+      {
+        "task_id": "dk05",
+        "output": "1945",
+        "expected": "1945",
+        "correct": true
+      },
+      {
+        "task_id": "step01",
+        "output": "46",
+        "expected": "38",
+        "correct": false
+      },
+      {
+        "task_id": "step02",
+        "output": "0.05",
+        "expected": "0.05",
+        "correct": true
+      },
+      {
+        "task_id": "step03",
+        "output": "150",
+        "expected": "150",
+        "correct": true
+      },
+      {
+        "task_id": "step04",
+        "output": "20",
+        "expected": "20",
+        "correct": true
+      },
+      {
+        "task_id": "step05",
+        "output": "18 cm",
+        "expected": "36 cm",
+        "correct": false
+      }
+    ],
+    "B": [
+      {
+        "task_id": "math01",
+        "output": "20",
+        "expected": "20",
+        "correct": true
+      },
+      {
+        "task_id": "math02",
+        "output": "36",
+        "expected": "36",
+        "correct": true
+      },
+      {
+        "task_id": "math03",
+        "output": "The speed of the train can be calculated using the formula:\n\n\\[ \\text{",
+        "expected": "75",
+        "correct": false
+      },
+      {
+        "task_id": "math04",
+        "output": "To find the perimeter of a rectangle, you use the formula:\n\n\\[ \\text",
+        "expected": "40",
+        "correct": false
+      },
+      {
+        "task_id": "math05",
+        "output": "12",
+        "expected": "12",
+        "correct": true
+      },
+      {
+        "task_id": "math06",
+        "output": "To determine which fraction is larger between \\( \\frac{3}{7} \\",
+        "expected": "4/9",
+        "correct": false
+      },
+      {
+        "task_id": "math07",
+        "output": "To solve this, we'll break it down into steps:\n\n1. Calculate ",
+        "expected": "25",
+        "correct": false
+      },
+      {
+        "task_id": "math08",
+        "output": "The area \\(A\\) of a circle can be calculated using the formula:\n\n\\[",
+        "expected": "78.5",
+        "correct": false
+      },
+      {
+        "task_id": "math09",
+        "output": "The next prime number after 17 is 19.",
+        "expected": "19",
+        "correct": false
+      },
+      {
+        "task_id": "math10",
+        "output": "If \\( x + 7 = 20 \\), then to find \\(",
+        "expected": "13",
+        "correct": false
+      },
+      {
+        "task_id": "logic01",
+        "output": "No.\n\nThe statements provided do not logically guarantee that some cats are black. We",
+        "expected": "no",
+        "correct": false
+      },
+      {
+        "task_id": "logic02",
+        "output": "Based on the information provided:\n\n1. Tom is taller than Jim.\n2.",
+        "expected": "Sam",
+        "correct": false
+      },
+      {
+        "task_id": "logic03",
+        "output": "To determine if it rained given that the ground is wet, let's analyze",
+        "expected": "maybe",
+        "correct": false
+      },
+      {
+        "task_id": "logic04",
+        "output": "same",
+        "expected": "same",
+        "correct": true
+      },
+      {
+        "task_id": "logic05",
+        "output": "To determine if \\( \\frac{16}{24} \\) is",
+        "expected": "yes",
+        "correct": false
+      },
+      {
+        "task_id": "comp01",
+        "output": "To determine which mountain is taller and by how many meters, we need to compare",
+        "expected": "Everest 237",
+        "correct": false
+      },
+      {
+        "task_id": "comp02",
+        "output": "To determine which river is longer and by how much, we need to compare the",
+        "expected": "Nile 250",
+        "correct": false
+      },
+      {
+        "task_id": "comp03",
+        "output": "To find the perimeter of the rectangle, we first need to determine its length.",
+        "expected": "28 cm",
+        "correct": false
+      },
+      {
+        "task_id": "comp04",
+        "output": "To calculate the time difference between 9:30 AM and 2:",
+        "expected": "5.25",
+        "correct": false
+      },
+      {
+        "task_id": "comp05",
+        "output": "To determine how many pages remain after 9 days of reading 30 pages",
+        "expected": "80",
+        "correct": false
+      },
+      {
+        "task_id": "dk01",
+        "output": "The capital of Australia is Canberra.",
+        "expected": "Canberra",
+        "correct": true
+      },
+      {
+        "task_id": "dk02",
+        "output": "Au",
+        "expected": "Au",
+        "correct": true
+      },
+      {
+        "task_id": "dk03",
+        "output": "6",
+        "expected": "6",
+        "correct": true
+      },
+      {
+        "task_id": "dk04",
+        "output": "The final answer is Jupiter.",
+        "expected": "Jupiter",
+        "correct": true
+      },
+      {
+        "task_id": "dk05",
+        "output": "The end of World War II occurred in 1945.",
+        "expected": "1945",
+        "correct": true
+      },
+      {
+        "task_id": "step01",
+        "output": "First, calculate the total cost of the 4 books before the discount:\n\n\\[",
+        "expected": "38",
+        "correct": false
+      },
+      {
+        "task_id": "step02",
+        "output": "To solve this problem, let's denote the cost of the ball as \\( x",
+        "expected": "0.05",
+        "correct": false
+      },
+      {
+        "task_id": "step03",
+        "output": "2.5 hours is equal to 150 minutes. Therefore, the",
+        "expected": "150",
+        "correct": true
+      },
+      {
+        "task_id": "step04",
+        "output": "To find 20% of 50% of 200",
+        "expected": "20",
+        "correct": true
+      },
+      {
+        "task_id": "step05",
+        "output": "To find the perimeter of a square when given its area, we first need to",
+        "expected": "36 cm",
+        "correct": false
+      }
+    ]
+  }
+}

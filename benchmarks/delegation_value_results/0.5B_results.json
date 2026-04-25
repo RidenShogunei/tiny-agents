@@ -1,0 +1,366 @@
+{
+  "A": [
+    {
+      "task_id": "math01",
+      "output": "$60",
+      "expected": "20",
+      "correct": false
+    },
+    {
+      "task_id": "math02",
+      "output": "36",
+      "expected": "36",
+      "correct": true
+    },
+    {
+      "task_id": "math03",
+      "output": "150",
+      "expected": "75",
+      "correct": false
+    },
+    {
+      "task_id": "math04",
+      "output": "32",
+      "expected": "40",
+      "correct": false
+    },
+    {
+      "task_id": "math05",
+      "output": "12",
+      "expected": "12",
+      "correct": true
+    },
+    {
+      "task_id": "math06",
+      "output": "To determine which fraction is larger between \\( \\frac{3}{7} \\",
+      "expected": "4/9",
+      "correct": false
+    },
+    {
+      "task_id": "math07",
+      "output": "60",
+      "expected": "25",
+      "correct": false
+    },
+    {
+      "task_id": "math08",
+      "output": "24.827",
+      "expected": "78.5",
+      "correct": false
+    },
+    {
+      "task_id": "math09",
+      "output": "19",
+      "expected": "19",
+      "correct": true
+    },
+    {
+      "task_id": "math10",
+      "output": "13",
+      "expected": "13",
+      "correct": true
+    },
+    {
+      "task_id": "logic01",
+      "output": "Yes.",
+      "expected": "no",
+      "correct": false
+    },
+    {
+      "task_id": "logic02",
+      "output": "Based on the information provided:\n\n1. Tom is taller than Jim.\n2.",
+      "expected": "Sam",
+      "correct": false
+    },
+    {
+      "task_id": "logic03",
+      "output": "The answer is \"maybe\". While it's possible that it rained and caused",
+      "expected": "maybe",
+      "correct": true
+    },
+    {
+      "task_id": "logic04",
+      "output": "The answer is \"feathers.\" Feathers are lightweight and float on the surface",
+      "expected": "same",
+      "correct": false
+    },
+    {
+      "task_id": "logic05",
+      "output": "No.\nTo determine if the fraction \\( \\frac{16}{24",
+      "expected": "yes",
+      "correct": false
+    },
+    {
+      "task_id": "comp01",
+      "output": "To determine which mountain is taller and by how many meters, we need to compare",
+      "expected": "Everest 237",
+      "correct": false
+    },
+    {
+      "task_id": "comp02",
+      "output": "To find out which river is longer and by how much, we need to subtract",
+      "expected": "Nile 250",
+      "correct": false
+    },
+    {
+      "task_id": "comp03",
+      "output": "The perimeter of the rectangle can be calculated using the formula:\n\n\\[ \\text{",
+      "expected": "28 cm",
+      "correct": false
+    },
+    {
+      "task_id": "comp04",
+      "output": "780",
+      "expected": "5.25",
+      "correct": false
+    },
+    {
+      "task_id": "comp05",
+      "output": "120",
+      "expected": "80",
+      "correct": false
+    },
+    {
+      "task_id": "dk01",
+      "output": "Sydney",
+      "expected": "Canberra",
+      "correct": false
+    },
+    {
+      "task_id": "dk02",
+      "output": "Au",
+      "expected": "Au",
+      "correct": true
+    },
+    {
+      "task_id": "dk03",
+      "output": "6",
+      "expected": "6",
+      "correct": true
+    },
+    {
+      "task_id": "dk04",
+      "output": "Jupiter",
+      "expected": "Jupiter",
+      "correct": true
+    },
+    {
+      "task_id": "dk05",
+      "output": "1945",
+      "expected": "1945",
+      "correct": true
+    },
+    {
+      "task_id": "step01",
+      "output": "$56",
+      "expected": "38",
+      "correct": false
+    },
+    {
+      "task_id": "step02",
+      "output": "The ball costs 0.10 dollars.",
+      "expected": "0.05",
+      "correct": false
+    },
+    {
+      "task_id": "step03",
+      "output": "150",
+      "expected": "150",
+      "correct": true
+    },
+    {
+      "task_id": "step04",
+      "output": "40",
+      "expected": "20",
+      "correct": false
+    },
+    {
+      "task_id": "step05",
+      "output": "The perimeter of a square is calculated by multiplying the length of one side by four",
+      "expected": "36 cm",
+      "correct": false
+    }
+  ],
+  "B": [
+    {
+      "task_id": "math01",
+      "output": "$6",
+      "expected": "20",
+      "correct": false
+    },
+    {
+      "task_id": "math02",
+      "output": "The final answer is 36.",
+      "expected": "36",
+      "correct": true
+    },
+    {
+      "task_id": "math03",
+      "output": "150",
+      "expected": "75",
+      "correct": false
+    },
+    {
+      "task_id": "math04",
+      "output": "32",
+      "expected": "40",
+      "correct": false
+    },
+    {
+      "task_id": "math05",
+      "output": "The square root of 144 is 12.",
+      "expected": "12",
+      "correct": false
+    },
+    {
+      "task_id": "math06",
+      "output": "To determine which fraction is larger between \\( \\frac{3}{7} \\",
+      "expected": "4/9",
+      "correct": false
+    },
+    {
+      "task_id": "math07",
+      "output": "The final answer is 60.",
+      "expected": "25",
+      "correct": false
+    },
+    {
+      "task_id": "math08",
+      "output": "The area of a circle is calculated using the formula \\( \\pi r^2",
+      "expected": "78.5",
+      "correct": false
+    },
+    {
+      "task_id": "math09",
+      "output": "23",
+      "expected": "19",
+      "correct": false
+    },
+    {
+      "task_id": "math10",
+      "output": "4",
+      "expected": "13",
+      "correct": false
+    },
+    {
+      "task_id": "logic01",
+      "output": "Yes.\nThe statement \"All cats are animals\" and \"Some animals are black",
+      "expected": "no",
+      "correct": false
+    },
+    {
+      "task_id": "logic02",
+      "output": "To determine who is the shortest based on the given statements, we need to analyze",
+      "expected": "Sam",
+      "correct": false
+    },
+    {
+      "task_id": "logic03",
+      "output": "The final answer is 'maybe'. While the statement \"If it rains, the",
+      "expected": "maybe",
+      "correct": true
+    },
+    {
+      "task_id": "logic04",
+      "output": "The final answer is same.",
+      "expected": "same",
+      "correct": true
+    },
+    {
+      "task_id": "logic05",
+      "output": "Yes. The fraction \\( \\frac{16}{24} \\)",
+      "expected": "yes",
+      "correct": true
+    },
+    {
+      "task_id": "comp01",
+      "output": "To determine which mountain is taller and by how many meters, we need to compare",
+      "expected": "Everest 237",
+      "correct": false
+    },
+    {
+      "task_id": "comp02",
+      "output": "To determine which river is longer and by how much, we need to compare the",
+      "expected": "Nile 250",
+      "correct": false
+    },
+    {
+      "task_id": "comp03",
+      "output": "The area of the rectangle is given as 48 cm\u00b2 and the width",
+      "expected": "28 cm",
+      "correct": false
+    },
+    {
+      "task_id": "comp04",
+      "output": "810",
+      "expected": "5.25",
+      "correct": false
+    },
+    {
+      "task_id": "comp05",
+      "output": "The final answer is 210.",
+      "expected": "80",
+      "correct": false
+    },
+    {
+      "task_id": "dk01",
+      "output": "Sydney",
+      "expected": "Canberra",
+      "correct": false
+    },
+    {
+      "task_id": "dk02",
+      "output": "Au",
+      "expected": "Au",
+      "correct": true
+    },
+    {
+      "task_id": "dk03",
+      "output": "6",
+      "expected": "6",
+      "correct": true
+    },
+    {
+      "task_id": "dk04",
+      "output": "Jupiter",
+      "expected": "Jupiter",
+      "correct": true
+    },
+    {
+      "task_id": "dk05",
+      "output": "1945",
+      "expected": "1945",
+      "correct": true
+    },
+    {
+      "task_id": "step01",
+      "output": "The total cost of the books before the discount is calculated as follows:\n\n\\[ ",
+      "expected": "38",
+      "correct": false
+    },
+    {
+      "task_id": "step02",
+      "output": "The ball costs 0.10 dollars.",
+      "expected": "0.05",
+      "correct": false
+    },
+    {
+      "task_id": "step03",
+      "output": "150",
+      "expected": "150",
+      "correct": true
+    },
+    {
+      "task_id": "step04",
+      "output": "10",
+      "expected": "20",
+      "correct": false
+    },
+    {
+      "task_id": "step05",
+      "output": "To find the perimeter of a square given its area, we can follow these steps",
+      "expected": "36 cm",
+      "correct": false
+    }
+  ]
+}

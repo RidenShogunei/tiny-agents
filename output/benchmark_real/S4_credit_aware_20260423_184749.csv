@@ -1,0 +1,6 @@
+question_id,final_correct,budget_used,total_steps,num_continue,num_verify,num_stop,triggered_rule_sequence,avg_msg_gain,final_verifier_confidence,answer_disagreement_trace,latency_seconds,error
+gsm8k_001,0,700,3,0,0,1,"[2, 2, 7, 3]",0.01,,"[0.65, 0.5, 0.35]",4.4,
+gsm8k_002,0,700,3,0,0,1,"[2, 2, 7, 3]",0.01,,"[0.65, 0.5, 0.35]",4.83,
+gsm8k_003,0,700,3,0,0,1,"[2, 2, 7, 3]",0.01,,"[0.65, 0.5, 0.35]",4.83,
+gsm8k_004,0,700,3,0,0,1,"[2, 2, 7, 3]",0.01,,"[0.65, 0.5, 0.35]",4.1,
+gsm8k_005,0,700,3,0,0,1,"[2, 2, 7, 3]",0.01,,"[0.65, 0.5, 0.35]",5.26,
