@@ -118,6 +118,9 @@ class VLLMBackend:
                     f"Available keys: {list(self.instances.keys())}"
                 )
 
+        # Extract chat_template_kwargs before passing to SamplingParams
+        chat_template_kwargs = kwargs.pop("chat_template_kwargs", None)
+
         # Use the model's chat template (via .chat()) for correct formatting
         sampling_params = SamplingParams(
             temperature=temperature,
@@ -126,7 +129,11 @@ class VLLMBackend:
             **kwargs,
         )
 
-        outputs = self.instances[resolved_key].chat(messages, sampling_params)
+        outputs = self.instances[resolved_key].chat(
+            messages,
+            sampling_params,
+            chat_template_kwargs=chat_template_kwargs,
+        )
         return outputs[0].outputs[0].text.strip()
 
     def unload(self, model_key: str) -> None:
